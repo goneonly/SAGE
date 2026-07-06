@@ -2,11 +2,13 @@ import type { Article } from '../../types/article'
 
 // Phase 1 하드코딩 시드 — PLAN.md §7 articles 테이블 shape과 동일하게 맞춰
 // 나중에 실제 뉴스 fetch로 교체할 때 컴포넌트는 그대로 두면 되도록 함.
-// 앞 3건은 "추천 뉴스"(AI 선정)로 취급, 전체는 "전체 뉴스" 피드로 노출.
+// "전체 뉴스"는 이 배열 전체를 그대로 노출하고, "추천 뉴스"는 Phase 5부터
+// features/home/recommend.ts 의 관심종목 매칭 스코어링으로 계산한다(고정 슬라이스 아님).
 // body 는 문단 사이를 빈 줄로 구분한 멀티 문단 텍스트(§7의 단일 text 컬럼과 동일하게
 // 하나의 문자열로 저장) — ArticleReaderPage 가 "\n\n" 기준으로 나눠 <p> 로 렌더링한다.
 // Phase 2 스마트 하이라이트 데모를 위해 features/paraphrase/seedTerms.ts 의 용어들을
-// 실제 문장 안에 포함시켜 뒀다.
+// 실제 문장 안에 포함시켜 뒀다. tickers 는 Phase 5 관심종목 매칭용 — 기사 내용과
+// 관련된 대표 종목코드를 채워뒀다(전부 비어있지 않도록 Phase 5에서 보강).
 export const seedArticles: Article[] = [
   {
     id: 'a1',
@@ -58,7 +60,7 @@ export const seedArticles: Article[] = [
 전문가들은 환율 흐름이 다음 분기 실적 발표에서 주요 변수로 작용할 것으로 내다봤다.`,
     url: 'https://example.com/news/a4',
     publishedAt: '2026-07-05T15:20:00+09:00',
-    tickers: [],
+    tickers: ['005380'],
   },
   {
     id: 'a5',
@@ -71,7 +73,7 @@ export const seedArticles: Article[] = [
 개인 순매도 규모가 축소될지, 추가 확대될지는 다음 주 지수 흐름을 좌우할 주요 변수로 꼽힌다.`,
     url: 'https://example.com/news/a5',
     publishedAt: '2026-07-05T11:02:00+09:00',
-    tickers: [],
+    tickers: ['005930'],
   },
   {
     id: 'a6',
@@ -97,7 +99,7 @@ export const seedArticles: Article[] = [
 일부 기관은 공매도 확대가 오히려 저평가 매수 기회라는 반론도 제기하고 있어 시장의 시각이 엇갈리는 상황이다.`,
     url: 'https://example.com/news/a7',
     publishedAt: '2026-07-04T13:47:00+09:00',
-    tickers: [],
+    tickers: ['000660'],
   },
   {
     id: 'a8',
@@ -110,15 +112,9 @@ export const seedArticles: Article[] = [
 증권가는 실적 안정성과 배당 지속 가능성을 함께 살펴야 한다고 조언한다.`,
     url: 'https://example.com/news/a8',
     publishedAt: '2026-07-03T09:30:00+09:00',
-    tickers: [],
+    tickers: ['033780'],
   },
 ]
-
-export const RECOMMENDED_ARTICLE_IDS = ['a1', 'a2', 'a3']
-
-export function getRecommendedArticles(articles: Article[]): Article[] {
-  return articles.filter((article) => RECOMMENDED_ARTICLE_IDS.includes(article.id))
-}
 
 export function getArticleById(id: string): Article | undefined {
   return seedArticles.find((article) => article.id === id)
