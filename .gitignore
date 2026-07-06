@@ -30,4 +30,5 @@ __pycache__/
 
 # 수동 업데이트
 PLAN.md
+Setup_Guide_Windows.md
 tmp/
