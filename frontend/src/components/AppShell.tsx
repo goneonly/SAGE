@@ -3,6 +3,7 @@ import { useAuthStore } from '../lib/store/authStore'
 import Sidebar from './Sidebar'
 import RightBar from './RightBar'
 import NotificationBell from './NotificationBell'
+import Footer from './Footer'
 
 function TopBar() {
   const user = useAuthStore((state) => state.user)
@@ -18,14 +19,18 @@ function TopBar() {
     // 높이 h-14 → h-[84px] (1.5배). 로고는 사이드바 폭(w-56) 컬럼에 두고, 검색바의 왼쪽
     // 끝을 사이드바가 끝나는 지점(x=224px)에 정확히 맞춘다 — 검색 input 이 로고 컬럼 바로
     // 뒤 flex 형제로 오므로 왼쪽 끝이 사이드바 오른쪽 경계에서 시작한다.
-    <header className="flex h-[84px] shrink-0 items-center border-b border-line bg-white pr-4">
-      <div className="flex w-56 shrink-0 items-center px-4">
-        <span className="text-lg font-bold text-primary-600">UFN</span>
+    // 데모 navbar-eco — 반투명 배경(#FAFAF5 90%) + backdrop blur + 하단 보더
+    <header className="flex h-[84px] shrink-0 items-center border-b border-line bg-bg/90 pr-4 backdrop-blur-[10px]">
+      <div className="flex w-56 shrink-0 items-center gap-2 px-4">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-nature text-sm font-bold text-white">
+          U
+        </div>
+        <span className="text-lg font-bold text-ink">UFN</span>
       </div>
       <input
         type="search"
         placeholder="뉴스·종목 검색"
-        className="w-72 rounded-md border border-line bg-bg px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
+        className="w-72 rounded-xl border-2 border-line bg-bg px-4 py-2 text-sm text-ink placeholder:text-muted focus:border-primary-600 focus:outline-none focus:ring-4 focus:ring-primary-600/10"
       />
       <div className="ml-auto flex items-center gap-4 pl-4">
         <NotificationBell />
@@ -35,7 +40,7 @@ function TopBar() {
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-md border border-line px-2 py-1 text-xs text-muted hover:bg-primary-50 hover:text-ink"
+              className="rounded-full border-2 border-primary-600 px-4 py-1.5 text-xs font-semibold text-primary-600 transition-all hover:bg-primary-600 hover:text-white"
             >
               로그아웃
             </button>
@@ -63,6 +68,7 @@ function AppShell() {
         </main>
         {showRightBar && <RightBar />}
       </div>
+      <Footer />
     </div>
   )
 }

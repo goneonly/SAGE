@@ -10,7 +10,7 @@ function navLinkClassName({ isActive }: { isActive: boolean }): string {
 
 function Sidebar() {
   return (
-    <nav className="flex w-56 shrink-0 flex-col justify-between border-r border-line bg-white p-4">
+    <nav className="flex w-56 shrink-0 flex-col justify-between border-r border-line bg-bg p-4">
       <ul className="space-y-1">
         {NAV_ITEMS.map((item) => (
           <li key={item.to}>
