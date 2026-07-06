@@ -5,6 +5,7 @@ import LoginPage from './routes/LoginPage'
 import SignupPage from './routes/SignupPage'
 import ComingSoonPage from './routes/ComingSoonPage'
 import HomePage from './features/home/HomePage'
+import ArticleReaderPage from './features/reader/ArticleReaderPage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/article/:id" element={<ArticleReaderPage />} />
             <Route path="/news" element={<ComingSoonPage title="뉴스" />} />
             <Route path="/scrap" element={<ComingSoonPage title="스크랩" />} />
             <Route path="/vocab" element={<ComingSoonPage title="단어장" />} />
