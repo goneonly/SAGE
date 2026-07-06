@@ -27,4 +27,7 @@ __pycache__/
 
 # 로컬 캐시
 .cache/
+
+# 수동 업데이트
+PLAN.md
 tmp/
