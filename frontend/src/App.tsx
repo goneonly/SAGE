@@ -9,6 +9,9 @@ import ArticleReaderPage from './features/reader/ArticleReaderPage'
 import SettingsPage from './routes/SettingsPage'
 import VocabPage from './features/vocab/VocabPage'
 import ScrapPage from './features/scrap/ScrapPage'
+import PortfolioPage from './features/portfolio/PortfolioPage'
+import TopMoversPage from './features/topmovers/TopMoversPage'
+import InsightsPage from './features/insights/InsightsPage'
 
 function App() {
   return (
@@ -24,9 +27,9 @@ function App() {
             <Route path="/news" element={<ComingSoonPage title="뉴스" />} />
             <Route path="/scrap" element={<ScrapPage />} />
             <Route path="/vocab" element={<VocabPage />} />
-            <Route path="/top-movers" element={<ComingSoonPage title="급상승 종목" />} />
-            <Route path="/portfolio" element={<ComingSoonPage title="포트폴리오" />} />
-            <Route path="/insights" element={<ComingSoonPage title="AI 투자 인사이트" />} />
+            <Route path="/top-movers" element={<TopMoversPage />} />
+            <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="/insights" element={<InsightsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Route>
