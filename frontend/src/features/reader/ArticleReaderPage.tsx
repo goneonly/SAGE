@@ -5,6 +5,7 @@ import ParaphrasePanel from '../../components/ParaphrasePanel'
 import { getArticleById } from '../home/seedArticles'
 import { getParaphrase, peekParaphraseCache } from '../../lib/api/paraphrase'
 import { useAuthStore } from '../../lib/store/authStore'
+import { useScrapStore } from '../../lib/store/scrapStore'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString('ko-KR', {
@@ -22,6 +23,8 @@ function ArticleReaderPage() {
   const { id } = useParams<{ id: string }>()
   const article = id ? getArticleById(id) : undefined
   const level = useAuthStore((state) => state.user?.level ?? 'beginner')
+  const isScrapped = useScrapStore((state) => state.entries.some((entry) => entry.articleId === id))
+  const toggleScrap = useScrapStore((state) => state.toggleScrap)
 
   const [selectedTerm, setSelectedTerm] = useState<string | null>(null)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
@@ -37,6 +40,12 @@ function ArticleReaderPage() {
   }
 
   const articleId = article.id
+  const scrapPayload = {
+    id: article.id,
+    title: article.title,
+    source: article.source,
+    publishedAt: article.publishedAt,
+  }
 
   async function handleTermClick(term: string) {
     const requestId = requestIdRef.current + 1
@@ -61,6 +70,10 @@ function ArticleReaderPage() {
     }
   }
 
+  function handleToggleScrap() {
+    toggleScrap(scrapPayload)
+  }
+
   const paragraphs = article.body
     .split(/\n\s*\n/)
     .filter((paragraph) => paragraph.trim().length > 0)
@@ -71,13 +84,26 @@ function ArticleReaderPage() {
         ← 홈으로
       </Link>
 
-      <header className="mt-4 border-b border-line pb-4">
-        <h1 className="text-2xl font-bold text-ink">{article.title}</h1>
-        <div className="mt-2 flex items-center gap-2 text-sm text-muted">
-          <span>{article.source}</span>
-          <span>·</span>
-          <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+      <header className="mt-4 flex items-start justify-between gap-4 border-b border-line pb-4">
+        <div>
+          <h1 className="text-2xl font-bold text-ink">{article.title}</h1>
+          <div className="mt-2 flex items-center gap-2 text-sm text-muted">
+            <span>{article.source}</span>
+            <span>·</span>
+            <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={handleToggleScrap}
+          className={`shrink-0 rounded-md border px-3 py-1.5 text-sm font-medium transition ${
+            isScrapped
+              ? 'border-primary-600 bg-primary-50 text-primary-700'
+              : 'border-line text-muted hover:bg-primary-50 hover:text-ink'
+          }`}
+        >
+          {isScrapped ? '스크랩 완료' : '스크랩'}
+        </button>
       </header>
 
       <div className="mt-6 space-y-4 text-base leading-relaxed text-ink">
@@ -91,6 +117,7 @@ function ArticleReaderPage() {
       <ParaphrasePanel
         isOpen={isPanelOpen}
         term={selectedTerm}
+        level={level}
         isLoading={isLoading}
         explanation={explanation}
         onClose={() => setIsPanelOpen(false)}

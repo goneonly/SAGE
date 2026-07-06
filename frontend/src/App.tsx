@@ -7,6 +7,8 @@ import ComingSoonPage from './routes/ComingSoonPage'
 import HomePage from './features/home/HomePage'
 import ArticleReaderPage from './features/reader/ArticleReaderPage'
 import SettingsPage from './routes/SettingsPage'
+import VocabPage from './features/vocab/VocabPage'
+import ScrapPage from './features/scrap/ScrapPage'
 
 function App() {
   return (
@@ -20,8 +22,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/article/:id" element={<ArticleReaderPage />} />
             <Route path="/news" element={<ComingSoonPage title="뉴스" />} />
-            <Route path="/scrap" element={<ComingSoonPage title="스크랩" />} />
-            <Route path="/vocab" element={<ComingSoonPage title="단어장" />} />
+            <Route path="/scrap" element={<ScrapPage />} />
+            <Route path="/vocab" element={<VocabPage />} />
             <Route path="/top-movers" element={<ComingSoonPage title="급상승 종목" />} />
             <Route path="/portfolio" element={<ComingSoonPage title="포트폴리오" />} />
             <Route path="/insights" element={<ComingSoonPage title="AI 투자 인사이트" />} />
