@@ -1,6 +1,30 @@
-// Placeholder — 왼쪽 메뉴 바 (홈·뉴스·스크랩·단어장·급상승 종목·포트폴리오·AI 투자 인사이트·설정). Phase 1에서 구현.
+import { NavLink } from 'react-router-dom'
+import { NAV_ITEMS, SETTINGS_NAV_ITEM } from './navItems'
+
+function navLinkClassName({ isActive }: { isActive: boolean }): string {
+  return [
+    'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
+    isActive ? 'bg-primary-100 text-primary-700' : 'text-muted hover:bg-primary-50 hover:text-ink',
+  ].join(' ')
+}
+
 function Sidebar() {
-  return null
+  return (
+    <nav className="flex w-56 shrink-0 flex-col justify-between border-r border-line bg-white p-4">
+      <ul className="space-y-1">
+        {NAV_ITEMS.map((item) => (
+          <li key={item.to}>
+            <NavLink to={item.to} end={item.to === '/'} className={navLinkClassName}>
+              {item.label}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+      <NavLink to={SETTINGS_NAV_ITEM.to} className={navLinkClassName}>
+        {SETTINGS_NAV_ITEM.label}
+      </NavLink>
+    </nav>
+  )
 }
 
 export default Sidebar
