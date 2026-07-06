@@ -1,0 +1,86 @@
+import { useState } from 'react'
+import { useAuthStore } from '../lib/store/authStore'
+import type { Level } from '../types/auth'
+
+const LEVEL_OPTIONS: { value: Level; label: string; description: string }[] = [
+  {
+    value: 'beginner',
+    label: '입문 (주린이)',
+    description: '쉬운 비유와 일상적인 표현으로 설명해드려요.',
+  },
+  {
+    value: 'intermediate',
+    label: '중급',
+    description: '정확한 정의와 계산식 위주로 설명해드려요.',
+  },
+  {
+    value: 'advanced',
+    label: '고급',
+    description: '전문 용어와 실무 뉘앙스를 포함해 간결하게 설명해드려요.',
+  },
+]
+
+// 설정 화면 (Phase 0 ComingSoonPage 스텁을 대체) — 레벨 변경은 authStore.updateLevel 을
+// 통해 저장되고, persist 미들웨어가 localStorage 에도 반영한다. 리더 화면의 HighlightText/
+// ParaphrasePanel 은 이 store 값을 그대로 읽으므로 여기서 바꾸면 바로 반영된다.
+function SettingsPage() {
+  const user = useAuthStore((state) => state.user)
+  const updateLevel = useAuthStore((state) => state.updateLevel)
+  const [justSaved, setJustSaved] = useState(false)
+
+  if (!user) return null
+
+  function handleChange(level: Level) {
+    updateLevel(level)
+    setJustSaved(true)
+    window.setTimeout(() => setJustSaved(false), 1500)
+  }
+
+  return (
+    <div className="mx-auto max-w-lg">
+      <h1 className="text-xl font-bold text-ink">설정</h1>
+
+      <section className="mt-6">
+        <h2 className="text-sm font-semibold text-muted">내 정보</h2>
+        <p className="mt-1 text-sm text-ink">{user.email}</p>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-sm font-semibold text-muted">투자 레벨</h2>
+        <p className="mt-1 text-xs text-muted">
+          레벨에 따라 용어 설명의 난이도와 하이라이트되는 용어 범위가 달라져요.
+        </p>
+
+        <div className="mt-3 space-y-2">
+          {LEVEL_OPTIONS.map((option) => (
+            <label
+              key={option.value}
+              className={`flex cursor-pointer items-start gap-3 rounded-md border p-3 transition-colors ${
+                user.level === option.value
+                  ? 'border-primary-500 bg-primary-50'
+                  : 'border-line hover:bg-bg'
+              }`}
+            >
+              <input
+                type="radio"
+                name="level"
+                value={option.value}
+                checked={user.level === option.value}
+                onChange={() => handleChange(option.value)}
+                className="mt-1 accent-primary-600"
+              />
+              <span>
+                <span className="block text-sm font-medium text-ink">{option.label}</span>
+                <span className="block text-xs text-muted">{option.description}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+
+        {justSaved && <p className="mt-2 text-xs text-primary-600">저장되었습니다.</p>}
+      </section>
+    </div>
+  )
+}
+
+export default SettingsPage

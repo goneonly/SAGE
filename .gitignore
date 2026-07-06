@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# 환경 변수 (비밀값은 .env만 — 커밋 금지, PLAN.md §12)
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+dist/
+build/
+.vite/
+*.log
+
+# Python (backend 트랙용)
+__pycache__/
+.venv/
+*.pyc
+
+# 에디터
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# 로컬 캐시
+.cache/
+
+# 수동 업데이트
+PLAN.md
+Setup_Guide_Windows.md
+tmp/
