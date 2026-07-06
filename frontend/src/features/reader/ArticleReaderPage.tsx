@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import HighlightText from '../../components/HighlightText'
+import HighlightText, { computeFirstOccurrenceTerms } from '../../components/HighlightText'
 import ParaphrasePanel from '../../components/ParaphrasePanel'
 import { getArticleById } from '../home/seedArticles'
 import { getParaphrase, peekParaphraseCache } from '../../lib/api/paraphrase'
@@ -34,6 +34,18 @@ function ArticleReaderPage() {
   // 같은 용어를 연달아 빠르게 클릭했을 때 먼저 보낸 요청의 응답이 늦게 도착해
   // 나중 요청의 결과를 덮어쓰지 않도록 요청 순번을 추적한다.
   const requestIdRef = useRef(0)
+
+  const paragraphs = useMemo(
+    () => (article?.body ?? '').split(/\n\s*\n/).filter((paragraph) => paragraph.trim().length > 0),
+    [article?.body],
+  )
+
+  // 문단마다 HighlightText 가 독립 실행되므로, 기사 전체를 순서대로 훑어 각 용어의
+  // 첫 등장 문단만 하이라이트 대상으로 정해 문단별 허용 집합을 내려준다(PLAN.md §6 가독성).
+  const allowedTermsByParagraph = useMemo(
+    () => computeFirstOccurrenceTerms(paragraphs, level),
+    [paragraphs, level],
+  )
 
   if (!article) {
     return <Navigate to="/" replace />
@@ -74,10 +86,6 @@ function ArticleReaderPage() {
     toggleScrap(scrapPayload)
   }
 
-  const paragraphs = article.body
-    .split(/\n\s*\n/)
-    .filter((paragraph) => paragraph.trim().length > 0)
-
   return (
     <div className="mx-auto max-w-2xl">
       <Link to="/" className="text-sm text-primary-600 hover:underline">
@@ -109,9 +117,26 @@ function ArticleReaderPage() {
       <div className="mt-6 space-y-4 text-base leading-relaxed text-ink">
         {paragraphs.map((paragraph, index) => (
           <p key={index}>
-            <HighlightText text={paragraph} level={level} onTermClick={handleTermClick} />
+            <HighlightText
+              text={paragraph}
+              level={level}
+              onTermClick={handleTermClick}
+              allowedTerms={allowedTermsByParagraph[index]}
+            />
           </p>
         ))}
+      </div>
+
+      {/* AI 재구성 기사 아래로 구분선 + 원본 기사 링크(PLAN.md §5 출처 명시) */}
+      <div className="mt-8 border-t border-line pt-4">
+        <a
+          href={article.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-primary-600 hover:underline"
+        >
+          원본 기사 보기 ({article.source}) →
+        </a>
       </div>
 
       <ParaphrasePanel

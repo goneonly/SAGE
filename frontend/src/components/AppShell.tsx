@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
 import Sidebar from './Sidebar'
 import RightBar from './RightBar'
+import NotificationBell from './NotificationBell'
 
 function TopBar() {
   const user = useAuthStore((state) => state.user)
@@ -14,23 +15,20 @@ function TopBar() {
   }
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-line bg-white px-4">
-      <div className="flex items-center gap-4">
+    // 높이 h-14 → h-[84px] (1.5배). 로고는 사이드바 폭(w-56) 컬럼에 두고, 검색바의 왼쪽
+    // 끝을 사이드바가 끝나는 지점(x=224px)에 정확히 맞춘다 — 검색 input 이 로고 컬럼 바로
+    // 뒤 flex 형제로 오므로 왼쪽 끝이 사이드바 오른쪽 경계에서 시작한다.
+    <header className="flex h-[84px] shrink-0 items-center border-b border-line bg-white pr-4">
+      <div className="flex w-56 shrink-0 items-center px-4">
         <span className="text-lg font-bold text-primary-600">UFN</span>
-        <input
-          type="search"
-          placeholder="뉴스·종목 검색"
-          className="w-64 rounded-md border border-line bg-bg px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
-        />
       </div>
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          aria-label="알림"
-          className="rounded-full p-2 text-muted hover:bg-primary-50 hover:text-ink"
-        >
-          🔔
-        </button>
+      <input
+        type="search"
+        placeholder="뉴스·종목 검색"
+        className="w-72 rounded-md border border-line bg-bg px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
+      />
+      <div className="ml-auto flex items-center gap-4 pl-4">
+        <NotificationBell />
         {user && (
           <div className="flex items-center gap-2 text-sm">
             <span className="font-medium text-ink">{user.email}님</span>

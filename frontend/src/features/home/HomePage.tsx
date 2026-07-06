@@ -21,7 +21,7 @@ function HomePage() {
         <h2 className="mb-3 text-lg font-bold text-ink">추천 뉴스</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {recommended.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+            <ArticleCard key={article.id} article={article} uniform />
           ))}
         </div>
       </section>
