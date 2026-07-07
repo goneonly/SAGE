@@ -1,4 +1,5 @@
 import { mockInsights } from './mockInsights'
+import { AI_DISCLAIMER } from '../../lib/aiDisclaimer'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString('ko-KR', {
@@ -18,12 +19,14 @@ function InsightsPage() {
         지금은 mock 코멘트입니다. 실제 AI 생성 연동은 추후 지원됩니다.
       </p>
 
+      {/* AI 생성 콘텐츠 고지 — 인사이트는 전부 AI 생성이므로 목록 상단에 상시 노출 */}
+      <p className="mt-4 rounded-lg bg-primary-50 px-4 py-3 text-xs leading-relaxed text-primary-700">
+        {AI_DISCLAIMER}
+      </p>
+
       <div className="mt-6 space-y-4">
         {mockInsights.map((insight) => (
-          <article
-            key={insight.id}
-            className="rounded-lg border border-line bg-white p-4 shadow-sm"
-          >
+          <article key={insight.id} className="rounded-xl border border-line bg-white p-4">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <h2 className="font-semibold text-ink">{insight.theme}</h2>

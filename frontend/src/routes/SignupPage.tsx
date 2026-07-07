@@ -1,6 +1,8 @@
 import { type FormEvent, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
+import Logo from '../components/Logo'
+import SocialLoginButtons from '../components/SocialLoginButtons'
 import type { Level } from '../types/auth'
 
 const LEVEL_OPTIONS: { value: Level; label: string }[] = [
@@ -16,6 +18,8 @@ function SignupPage() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
   const [level, setLevel] = useState<Level>('beginner')
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -29,7 +33,7 @@ function SignupPage() {
     setError(null)
     setIsSubmitting(true)
     try {
-      await signup(email, password, level)
+      await signup(email, password, level, { name, phone })
       navigate('/', { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : '회원가입에 실패했습니다.')
@@ -42,18 +46,48 @@ function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-bg">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-lg border border-line bg-white p-8 shadow-sm"
+        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-white p-8 shadow-sm"
       >
-        <h1 className="text-center text-xl font-bold text-primary-600">UFN 회원가입</h1>
+        <div className="flex flex-col items-center gap-1">
+          <Logo size={40} wordmarkClassName="text-xl" />
+          <p className="text-xs italic text-muted">Be a smart investor with SAGE.</p>
+        </div>
+        <h1 className="text-center text-lg font-bold text-ink">회원가입</h1>
+
+        <label className="block text-sm">
+          <span className="mb-1 block text-muted">이름</span>
+          <input
+            type="text"
+            required
+            autoComplete="name"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </label>
+
+        <label className="block text-sm">
+          <span className="mb-1 block text-muted">전화번호</span>
+          <input
+            type="tel"
+            required
+            autoComplete="tel"
+            placeholder="010-1234-5678"
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+            className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </label>
 
         <label className="block text-sm">
           <span className="mb-1 block text-muted">이메일</span>
           <input
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-md border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </label>
 
@@ -64,7 +98,7 @@ function SignupPage() {
             required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-md border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </label>
 
@@ -73,7 +107,7 @@ function SignupPage() {
           <select
             value={level}
             onChange={(event) => setLevel(event.target.value as Level)}
-            className="w-full rounded-md border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             {LEVEL_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -88,10 +122,12 @@ function SignupPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-700 disabled:opacity-50"
+          className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-700 disabled:opacity-50"
         >
           {isSubmitting ? '가입 중...' : '회원가입'}
         </button>
+
+        <SocialLoginButtons />
 
         <p className="text-center text-sm text-muted">
           이미 계정이 있으신가요?{' '}

@@ -25,16 +25,22 @@ export default {
         'bg-dark': '#1B4332', // 다크 섹션 배경
       },
       fontFamily: {
-        // 데모와 동일 — 본문 DM Sans(한글은 시스템 폰트 폴백), 제목 Fraunces serif
         sans: [
-          '"DM Sans"',
+          'Pretendard',
           '-apple-system',
           'BlinkMacSystemFont',
           '"Apple SD Gothic Neo"',
           '"Malgun Gothic"',
           'sans-serif',
         ],
-        heading: ['Fraunces', '"Apple SD Gothic Neo"', '"Malgun Gothic"', 'serif'],
+        heading: [
+          'Pretendard',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Apple SD Gothic Neo"',
+          '"Malgun Gothic"',
+          'sans-serif',
+        ],
       },
       boxShadow: {
         // 데모 organic-card hover — 크고 부드러운 그린 섀도우

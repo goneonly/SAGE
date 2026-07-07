@@ -1,9 +1,10 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
 import Sidebar from './Sidebar'
 import RightBar from './RightBar'
 import NotificationBell from './NotificationBell'
 import Footer from './Footer'
+import Logo from './Logo'
 
 function TopBar() {
   const user = useAuthStore((state) => state.user)
@@ -21,22 +22,23 @@ function TopBar() {
     // 뒤 flex 형제로 오므로 왼쪽 끝이 사이드바 오른쪽 경계에서 시작한다.
     // 데모 navbar-eco — 반투명 배경(#FAFAF5 90%) + backdrop blur + 하단 보더
     <header className="flex h-[84px] shrink-0 items-center border-b border-line bg-bg/90 pr-4 backdrop-blur-[10px]">
-      <div className="flex w-56 shrink-0 items-center gap-2 px-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-nature text-sm font-bold text-white">
-          U
-        </div>
-        <span className="text-lg font-bold text-ink">UFN</span>
+      <div className="flex w-56 shrink-0 items-center px-4">
+        {/* -translate-y-1: 로고를 4px 위로 올려 시각적 중앙 보정 */}
+        <Link to="/" aria-label="홈으로 이동" className="-translate-y-1">
+          <Logo size={36} wordmarkClassName="text-2xl" />
+        </Link>
       </div>
       <input
         type="search"
         placeholder="뉴스·종목 검색"
-        className="w-72 rounded-xl border-2 border-line bg-bg px-4 py-2 text-sm text-ink placeholder:text-muted focus:border-primary-600 focus:outline-none focus:ring-4 focus:ring-primary-600/10"
+        className="w-72 rounded-lg border border-line bg-white px-4 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
       />
       <div className="ml-auto flex items-center gap-4 pl-4">
         <NotificationBell />
         {user && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-medium text-ink">{user.email}님</span>
+            {/* 이름이 있으면 이름으로, 없으면(기존 이메일 가입 mock) 이메일로 표시 */}
+            <span className="font-medium text-ink">{user.name ?? user.email}님</span>
             <button
               type="button"
               onClick={handleLogout}

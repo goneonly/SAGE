@@ -3,8 +3,10 @@ import { NAV_ITEMS, SETTINGS_NAV_ITEM } from './navItems'
 
 function navLinkClassName({ isActive }: { isActive: boolean }): string {
   return [
-    'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
-    isActive ? 'bg-primary-100 text-primary-700' : 'text-muted hover:bg-primary-50 hover:text-ink',
+    'block rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+    isActive
+      ? 'bg-primary-600 font-semibold text-white'
+      : 'text-muted hover:bg-primary-50 hover:text-ink',
   ].join(' ')
 }
 
