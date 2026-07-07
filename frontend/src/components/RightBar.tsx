@@ -23,7 +23,7 @@ function WatchlistWidget() {
   }
 
   return (
-    <section className="rounded-lg border border-line bg-white p-4">
+    <section className="rounded-xl border border-line bg-white p-4">
       <h3 className="text-sm font-semibold text-ink">내 관심 종목</h3>
 
       {items.length === 0 ? (
@@ -52,11 +52,11 @@ function WatchlistWidget() {
           value={input}
           onChange={(event) => setInput(event.target.value)}
           placeholder="종목코드 추가"
-          className="min-w-0 flex-1 rounded-md border border-line px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="min-w-0 flex-1 rounded-lg border border-line px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
         />
         <button
           type="submit"
-          className="shrink-0 rounded-md bg-primary-600 px-2 py-1 text-xs font-medium text-white hover:bg-primary-700"
+          className="shrink-0 rounded-lg bg-primary-600 px-2 py-1 text-xs font-medium text-white hover:bg-primary-700"
         >
           추가
         </button>
@@ -72,7 +72,7 @@ function DailyTermWidget() {
   const dailyTerm = getDailyTerm()
 
   return (
-    <section className="rounded-lg border border-line bg-white p-4">
+    <section className="rounded-xl border border-line bg-white p-4">
       <h3 className="text-sm font-semibold text-ink">오늘의 주식 단어</h3>
       <p className="mt-2 font-medium text-primary-700">{dailyTerm.term}</p>
       <p className="mt-1 text-xs leading-relaxed text-muted">{dailyTerm.explanations[level]}</p>
@@ -89,7 +89,7 @@ function RecentVocabWidget() {
     .slice(0, RECENT_VOCAB_LIMIT)
 
   return (
-    <section className="rounded-lg border border-line bg-white p-4">
+    <section className="rounded-xl border border-line bg-white p-4">
       <h3 className="text-sm font-semibold text-ink">내가 스크랩한 단어</h3>
       {recent.length === 0 ? (
         <p className="mt-2 text-xs text-muted">아직 저장한 단어가 없어요.</p>
@@ -112,7 +112,7 @@ function RecentVocabWidget() {
 // 어느 라우트에서 보일지는 AppShell 이 결정한다(현재는 홈에서만 렌더링).
 function RightBar() {
   return (
-    <aside className="hidden w-64 shrink-0 space-y-4 border-l border-line bg-white p-4 lg:block">
+    <aside className="hidden w-64 shrink-0 space-y-4 border-l border-line bg-bg p-4 lg:block">
       <WatchlistWidget />
       <DailyTermWidget />
       <RecentVocabWidget />

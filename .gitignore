@@ -25,8 +25,11 @@ __pycache__/
 !.vscode/extensions.json
 .idea/
 
-# Claude Code 로컬 툴링 (머신별 절대경로 포함 — 커밋 금지)
-.claude/launch.json
+# Claude Code 로컬 툴링 (개인 설정/스킬 — 전체 커밋 금지)
+.claude/
+
+# 외부 저장소 클론 (자체 .git 포함 — 커밋 금지)
+claude-code-action/
 
 # 로컬 캐시
 .cache/

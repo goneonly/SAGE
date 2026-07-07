@@ -32,7 +32,7 @@ function ScrapPage() {
             <div key={entry.id} className="relative">
               <Link
                 to={`/article/${entry.articleId}`}
-                className="block rounded-lg border border-line bg-white p-4 shadow-sm transition hover:shadow-md hover:border-primary-500"
+                className="block rounded-xl border border-line bg-white p-4 transition hover:shadow-md hover:border-primary-500"
               >
                 <div className="flex items-center gap-2 text-xs text-muted">
                   <span>{entry.source}</span>

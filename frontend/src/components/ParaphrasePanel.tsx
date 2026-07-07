@@ -61,7 +61,7 @@ function ParaphrasePanel({
               type="button"
               onClick={handleSave}
               disabled={isSaved}
-              className="mt-4 w-full rounded-md border border-primary-600 py-1.5 text-sm font-medium text-primary-600 transition hover:bg-primary-50 disabled:cursor-default disabled:border-line disabled:text-muted disabled:hover:bg-transparent"
+              className="mt-4 w-full rounded-lg border border-primary-600 py-1.5 text-sm font-medium text-primary-600 transition hover:bg-primary-50 disabled:cursor-default disabled:border-line disabled:text-muted disabled:hover:bg-transparent"
             >
               {isSaved ? '단어장에 저장됨' : '단어장 저장'}
             </button>

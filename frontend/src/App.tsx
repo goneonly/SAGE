@@ -3,8 +3,8 @@ import AppShell from './components/AppShell'
 import ProtectedRoute from './routes/ProtectedRoute'
 import LoginPage from './routes/LoginPage'
 import SignupPage from './routes/SignupPage'
-import ComingSoonPage from './routes/ComingSoonPage'
 import HomePage from './features/home/HomePage'
+import NewsPage from './features/news/NewsPage'
 import ArticleReaderPage from './features/reader/ArticleReaderPage'
 import SettingsPage from './routes/SettingsPage'
 import VocabPage from './features/vocab/VocabPage'
@@ -24,7 +24,7 @@ function App() {
           <Route element={<AppShell />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/article/:id" element={<ArticleReaderPage />} />
-            <Route path="/news" element={<ComingSoonPage title="뉴스" />} />
+            <Route path="/news" element={<NewsPage />} />
             <Route path="/scrap" element={<ScrapPage />} />
             <Route path="/vocab" element={<VocabPage />} />
             <Route path="/top-movers" element={<TopMoversPage />} />

@@ -1,13 +1,19 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { login as apiLogin, signup as apiSignup } from '../api/auth'
-import type { Level, User } from '../../types/auth'
+import {
+  login as apiLogin,
+  signup as apiSignup,
+  socialLogin as apiSocialLogin,
+  type SignupProfile,
+} from '../api/auth'
+import type { Level, SocialProvider, User } from '../../types/auth'
 
 interface AuthState {
   isAuthenticated: boolean
   user: User | null
   login: (email: string, password: string) => Promise<void>
-  signup: (email: string, password: string, level?: Level) => Promise<void>
+  signup: (email: string, password: string, level?: Level, profile?: SignupProfile) => Promise<void>
+  socialLogin: (provider: SocialProvider) => Promise<void>
   logout: () => void
   updateLevel: (level: Level) => void
 }
@@ -21,8 +27,13 @@ export const useAuthStore = create<AuthState>()(
         const user = await apiLogin(email, password)
         set({ isAuthenticated: true, user })
       },
-      signup: async (email, password, level = 'beginner') => {
-        const user = await apiSignup(email, password, level)
+      signup: async (email, password, level = 'beginner', profile) => {
+        const user = await apiSignup(email, password, level, profile)
+        set({ isAuthenticated: true, user })
+      },
+      // 카카오/구글 mock 로그인 — 로그인·회원가입 화면 공용
+      socialLogin: async (provider) => {
+        const user = await apiSocialLogin(provider)
         set({ isAuthenticated: true, user })
       },
       logout: () => set({ isAuthenticated: false, user: null }),

@@ -21,7 +21,7 @@ function TopMoversPage() {
         등락률 mock 데이터입니다. 실시간 시세 연동은 추후 지원됩니다.
       </p>
 
-      <ul className="mt-6 divide-y divide-line rounded-lg border border-line bg-white">
+      <ul className="mt-6 divide-y divide-line rounded-xl border border-line bg-white">
         {ranked.map((mover, index) => (
           <li key={mover.ticker} className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-3">

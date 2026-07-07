@@ -59,7 +59,8 @@ export const seedTerms: SeedTerm[] = [
   {
     term: '시가총액',
     explanations: {
-      beginner: '한 회사 주식을 전부 사려면 얼마가 필요한지 나타내는 숫자. 회사의 "몸값"이라고 생각하면 됨.',
+      beginner:
+        '한 회사 주식을 전부 사려면 얼마가 필요한지 나타내는 숫자. 회사의 "몸값"이라고 생각하면 됨.',
       intermediate:
         '시가총액 = 발행주식수 × 현재 주가. 기업 규모와 지수 내 비중(코스피 지수는 시가총액 가중 방식)을 가늠하는 핵심 지표.',
       advanced:
@@ -113,7 +114,8 @@ export const seedTerms: SeedTerm[] = [
   {
     term: '환율',
     explanations: {
-      beginner: '우리 돈(원)과 다른 나라 돈(달러 등)을 바꿀 때의 비율. 환율이 오르면 원화 가치는 떨어진 것.',
+      beginner:
+        '우리 돈(원)과 다른 나라 돈(달러 등)을 바꿀 때의 비율. 환율이 오르면 원화 가치는 떨어진 것.',
       intermediate:
         '원/달러 환율처럼 두 통화 간 교환 비율. 수출기업은 환율 상승(원화 약세) 때 가격 경쟁력이 높아지고, 수입 원가 부담이 있는 기업은 반대로 불리해짐.',
       advanced:

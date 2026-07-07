@@ -42,7 +42,21 @@ function SettingsPage() {
 
       <section className="mt-6">
         <h2 className="text-sm font-semibold text-muted">내 정보</h2>
-        <p className="mt-1 text-sm text-ink">{user.email}</p>
+        {/* 이름/전화번호는 이메일 가입(입력값) 또는 소셜 mock 프로필에서 오고, 없으면 '-' */}
+        <dl className="mt-2 space-y-1 text-sm">
+          <div className="flex gap-3">
+            <dt className="w-16 shrink-0 text-muted">이름</dt>
+            <dd className="text-ink">{user.name ?? '-'}</dd>
+          </div>
+          <div className="flex gap-3">
+            <dt className="w-16 shrink-0 text-muted">전화번호</dt>
+            <dd className="text-ink">{user.phone ?? '-'}</dd>
+          </div>
+          <div className="flex gap-3">
+            <dt className="w-16 shrink-0 text-muted">이메일</dt>
+            <dd className="text-ink">{user.email}</dd>
+          </div>
+        </dl>
       </section>
 
       <section className="mt-6">
@@ -55,7 +69,7 @@ function SettingsPage() {
           {LEVEL_OPTIONS.map((option) => (
             <label
               key={option.value}
-              className={`flex cursor-pointer items-start gap-3 rounded-md border p-3 transition-colors ${
+              className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
                 user.level === option.value
                   ? 'border-primary-500 bg-primary-50'
                   : 'border-line hover:bg-bg'
