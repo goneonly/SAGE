@@ -27,9 +27,7 @@ function NotificationBell() {
   }
 
   function toggleRead(id: string) {
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, read: !item.read } : item)),
-    )
+    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, read: !item.read } : item)))
   }
 
   return (
@@ -40,7 +38,21 @@ function NotificationBell() {
         onClick={() => setOpen((prev) => !prev)}
         className="relative rounded-full p-2 text-muted hover:bg-primary-50 hover:text-ink"
       >
-        🔔
+        {/* 벨 아이콘 — 이모지 대신 SVG(플랫폼별 렌더링 편차 방지, 색상 제어 가능) */}
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+        </svg>
         {unreadCount > 0 && (
           <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rise px-1 text-[10px] font-bold leading-none text-white">
             {unreadCount}
@@ -49,7 +61,7 @@ function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-20 mt-2 w-80 overflow-hidden rounded-lg border border-line bg-white shadow-lg">
+        <div className="absolute right-0 z-20 mt-2 w-80 overflow-hidden rounded-xl border border-line bg-surface shadow-lg">
           <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
             <span className="text-sm font-semibold text-ink">알림</span>
             {unreadCount > 0 && (
@@ -65,7 +77,7 @@ function NotificationBell() {
 
           <ul className="max-h-96 overflow-y-auto">
             {items.length === 0 ? (
-              <li className="px-4 py-8 text-center text-sm text-muted">새 알림이 없음</li>
+              <li className="px-4 py-8 text-center text-sm text-muted">새 알림이 없습니다.</li>
             ) : (
               items.map((item) => (
                 <li key={item.id}>

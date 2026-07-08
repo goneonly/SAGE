@@ -1,13 +1,36 @@
 import { type FormEvent, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
+import Logo from '../components/Logo'
+import SocialLoginButtons from '../components/SocialLoginButtons'
 import type { Level } from '../types/auth'
 
 const LEVEL_OPTIONS: { value: Level; label: string }[] = [
-  { value: 'beginner', label: '입문 (주린이)' },
+  { value: 'beginner', label: '초보' },
   { value: 'intermediate', label: '중급' },
   { value: 'advanced', label: '고급' },
 ]
+
+// 전화번호 입력 마스크 — 숫자 외 문자는 버리고 휴대폰 11자리까지만 받아
+// 010-0000-0000 형태로 하이픈을 자동으로 붙인다.
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+  if (digits.length <= 3) return digits
+  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`
+}
+
+const PHONE_PATTERN = /^010-\d{4}-\d{4}$/
+
+// 필수 입력 표시 — 라벨 텍스트 왼쪽 위에 붙는 빨간 별표.
+// 입력 요소의 required 속성이 접근성을 담당하므로 시각 장식으로만 취급한다.
+function RequiredMark() {
+  return (
+    <span aria-hidden="true" className="mr-0.5 align-top leading-none text-rise">
+      *
+    </span>
+  )
+}
 
 function SignupPage() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -16,6 +39,10 @@ function SignupPage() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  // 나이는 선택 입력 — 입력 단계에서 숫자만 남겨 정수만 들어오게 한다.
+  const [age, setAge] = useState('')
   const [level, setLevel] = useState<Level>('beginner')
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -27,9 +54,23 @@ function SignupPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
+
+    // 마스크가 형식을 강제하지만, 자릿수가 모자라거나(010-123) 010 번호가 아닌 경우를 걸러낸다.
+    if (!PHONE_PATTERN.test(phone)) {
+      setError('전화번호를 010-0000-0000 형식으로 입력해 주세요.')
+      return
+    }
+
+    // 나이는 선택 입력이지만, 입력했다면 상식적인 범위의 정수여야 한다.
+    const ageNumber = age === '' ? undefined : Number(age)
+    if (ageNumber !== undefined && (ageNumber < 1 || ageNumber > 120)) {
+      setError('나이는 1~120 사이의 숫자로 입력해 주세요.')
+      return
+    }
+
     setIsSubmitting(true)
     try {
-      await signup(email, password, level)
+      await signup(email, password, level, { name, phone, age: ageNumber })
       navigate('/', { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : '회원가입에 실패했습니다.')
@@ -42,38 +83,102 @@ function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-bg">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-lg border border-line bg-white p-8 shadow-sm"
+        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
       >
-        <h1 className="text-center text-xl font-bold text-primary-600">UFN 회원가입</h1>
+        <div className="flex flex-col items-center gap-1">
+          <Logo size={40} wordmarkClassName="text-xl" />
+          <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
+        </div>
+        <h1 className="text-center text-lg font-bold text-ink">회원가입</h1>
+        <p className="text-xs text-muted">
+          <span className="text-rise">*</span> 표시는 필수 입력 항목입니다.
+        </p>
 
         <label className="block text-sm">
-          <span className="mb-1 block text-muted">이메일</span>
+          <span className="mb-1 block text-muted">
+            <RequiredMark />
+            이름
+          </span>
           <input
-            type="email"
+            type="text"
             required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-md border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            autoComplete="name"
+            value={name}
+            // 이름에 숫자는 올 수 없으므로 입력 즉시 걸러낸다
+            onChange={(event) => setName(event.target.value.replace(/\d/g, ''))}
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </label>
 
         <label className="block text-sm">
-          <span className="mb-1 block text-muted">비밀번호</span>
+          <span className="mb-1 block text-muted">나이</span>
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={3}
+            placeholder="선택 입력"
+            value={age}
+            onChange={(event) => setAge(event.target.value.replace(/\D/g, ''))}
+            className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </label>
+
+        <label className="block text-sm">
+          <span className="mb-1 block text-muted">
+            <RequiredMark />
+            전화번호
+          </span>
+          <input
+            type="tel"
+            required
+            autoComplete="tel"
+            inputMode="numeric"
+            maxLength={13}
+            placeholder="010-0000-0000"
+            value={phone}
+            onChange={(event) => setPhone(formatPhone(event.target.value))}
+            className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </label>
+
+        <label className="block text-sm">
+          <span className="mb-1 block text-muted">
+            <RequiredMark />
+            이메일
+          </span>
+          <input
+            type="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </label>
+
+        <label className="block text-sm">
+          <span className="mb-1 block text-muted">
+            <RequiredMark />
+            비밀번호
+          </span>
           <input
             type="password"
             required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-md border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </label>
 
         <label className="block text-sm">
-          <span className="mb-1 block text-muted">투자 레벨</span>
+          <span className="mb-1 block text-muted">
+            <RequiredMark />
+            투자 레벨
+          </span>
           <select
             value={level}
             onChange={(event) => setLevel(event.target.value as Level)}
-            className="w-full rounded-md border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             {LEVEL_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -88,10 +193,12 @@ function SignupPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-700 disabled:opacity-50"
+          className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
         >
           {isSubmitting ? '가입 중...' : '회원가입'}
         </button>
+
+        <SocialLoginButtons />
 
         <p className="text-center text-sm text-muted">
           이미 계정이 있으신가요?{' '}

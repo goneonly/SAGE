@@ -43,6 +43,6 @@ export const useWatchlistStore = create<WatchlistState>()(
       removeTicker: (id) =>
         set((state) => ({ items: state.items.filter((item) => item.id !== id) })),
     }),
-    { name: 'ufn-watchlist' },
+    { name: 'sage-watchlist' },
   ),
 )

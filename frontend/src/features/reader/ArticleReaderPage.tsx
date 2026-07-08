@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import HighlightText, { computeFirstOccurrenceTerms } from '../../components/HighlightText'
 import ParaphrasePanel from '../../components/ParaphrasePanel'
 import { getArticleById } from '../home/seedArticles'
-import { getParaphrase, peekParaphraseCache } from '../../lib/api/paraphrase'
+import { getParaphrase, peekParaphraseCache, type TermParaphrase } from '../../lib/api/paraphrase'
 import { useAuthStore } from '../../lib/store/authStore'
 import { useScrapStore } from '../../lib/store/scrapStore'
 
@@ -29,7 +29,7 @@ function ArticleReaderPage() {
   const [selectedTerm, setSelectedTerm] = useState<string | null>(null)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [explanation, setExplanation] = useState<string | null>(null)
+  const [paraphrase, setParaphrase] = useState<TermParaphrase | null>(null)
 
   // 같은 용어를 연달아 빠르게 클릭했을 때 먼저 보낸 요청의 응답이 늦게 도착해
   // 나중 요청의 결과를 덮어쓰지 않도록 요청 순번을 추적한다.
@@ -68,16 +68,16 @@ function ArticleReaderPage() {
 
     const cached = peekParaphraseCache(term, level, articleId)
     if (cached) {
-      setExplanation(cached)
+      setParaphrase(cached)
       setIsLoading(false)
       return
     }
 
-    setExplanation(null)
+    setParaphrase(null)
     setIsLoading(true)
     const result = await getParaphrase(term, level, articleId)
     if (requestIdRef.current === requestId) {
-      setExplanation(result)
+      setParaphrase(result)
       setIsLoading(false)
     }
   }
@@ -104,7 +104,7 @@ function ArticleReaderPage() {
         <button
           type="button"
           onClick={handleToggleScrap}
-          className={`shrink-0 rounded-md border px-3 py-1.5 text-sm font-medium transition ${
+          className={`shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
             isScrapped
               ? 'border-primary-600 bg-primary-50 text-primary-700'
               : 'border-line text-muted hover:bg-primary-50 hover:text-ink'
@@ -144,7 +144,8 @@ function ArticleReaderPage() {
         term={selectedTerm}
         level={level}
         isLoading={isLoading}
-        explanation={explanation}
+        explanation={paraphrase?.explanation ?? null}
+        impact={paraphrase?.impact ?? null}
         onClose={() => setIsPanelOpen(false)}
       />
     </div>

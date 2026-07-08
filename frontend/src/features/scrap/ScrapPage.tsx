@@ -20,7 +20,7 @@ function ScrapPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-ink">스크랩</h1>
+      <h1 className="mx-auto max-w-1xl text-xl font-bold text-ink">스크랩</h1>
 
       {sorted.length === 0 ? (
         <p className="mt-8 text-center text-sm text-muted">
@@ -32,7 +32,7 @@ function ScrapPage() {
             <div key={entry.id} className="relative">
               <Link
                 to={`/article/${entry.articleId}`}
-                className="block rounded-lg border border-line bg-white p-4 shadow-sm transition hover:shadow-md hover:border-primary-500"
+                className="block rounded-xl border border-line bg-surface p-4 transition hover:shadow-md hover:border-primary-500"
               >
                 <div className="flex items-center gap-2 text-xs text-muted">
                   <span>{entry.source}</span>
@@ -45,7 +45,7 @@ function ScrapPage() {
                 type="button"
                 onClick={() => removeScrap(entry.articleId)}
                 aria-label={`${entry.title} 스크랩 삭제`}
-                className="absolute right-2 top-2 rounded-full bg-white p-1 text-xs text-muted shadow hover:bg-primary-50 hover:text-rise"
+                className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-surface text-xs leading-none text-muted shadow hover:bg-primary-50 hover:text-rise"
               >
                 ✕
               </button>

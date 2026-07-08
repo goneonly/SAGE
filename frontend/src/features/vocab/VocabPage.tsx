@@ -35,7 +35,7 @@ function VocabPage() {
       ) : (
         <ul className="mt-6 space-y-3">
           {sorted.map((entry) => (
-            <li key={entry.id} className="rounded-lg border border-line bg-white p-4 shadow-sm">
+            <li key={entry.id} className="rounded-xl border border-line bg-surface p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2">
@@ -44,7 +44,9 @@ function VocabPage() {
                       {LEVEL_LABEL[entry.level]}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">{entry.explanation}</p>
+                  <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-muted">
+                    {entry.explanation}
+                  </p>
                   <p className="mt-2 text-xs text-muted">{formatDate(entry.createdAt)} 저장</p>
                 </div>
                 <button

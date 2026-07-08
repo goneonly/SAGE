@@ -49,6 +49,6 @@ export const useScrapStore = create<ScrapState>()(
           return { entries: [...state.entries, buildEntry(article)] }
         }),
     }),
-    { name: 'ufn-scrap' },
+    { name: 'sage-scrap' },
   ),
 )

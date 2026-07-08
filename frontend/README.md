@@ -12,11 +12,10 @@
   <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white">
   <img src="https://img.shields.io/badge/Claude-D97757?style=for-the-badge&logo=claude&logoColor=white">
 </p>
-
-<br/>
-
 Vite + React + TypeScript + Tailwind CSS.
 제품/개발 플랜은 루트의 `PLAN.md` 참고.
+
+# Frontend
 
 ## 시작하기
 

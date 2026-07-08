@@ -1,10 +1,13 @@
 import { NavLink } from 'react-router-dom'
 import { NAV_ITEMS, SETTINGS_NAV_ITEM } from './navItems'
+import NavIcon from './NavIcon'
 
 function navLinkClassName({ isActive }: { isActive: boolean }): string {
   return [
-    'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
-    isActive ? 'bg-primary-100 text-primary-700' : 'text-muted hover:bg-primary-50 hover:text-ink',
+    'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+    isActive
+      ? 'bg-primary-600 font-semibold text-white'
+      : 'text-muted hover:bg-primary-50 hover:text-ink',
   ].join(' ')
 }
 
@@ -15,12 +18,14 @@ function Sidebar() {
         {NAV_ITEMS.map((item) => (
           <li key={item.to}>
             <NavLink to={item.to} end={item.to === '/'} className={navLinkClassName}>
+              <NavIcon name={item.icon} />
               {item.label}
             </NavLink>
           </li>
         ))}
       </ul>
       <NavLink to={SETTINGS_NAV_ITEM.to} className={navLinkClassName}>
+        <NavIcon name={SETTINGS_NAV_ITEM.icon} />
         {SETTINGS_NAV_ITEM.label}
       </NavLink>
     </nav>

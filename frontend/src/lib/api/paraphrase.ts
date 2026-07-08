@@ -8,11 +8,19 @@ import type { Level } from '../../types/auth'
 //   (b) 미스면 seed 사전에서 설명을 찾고(없으면 fallback 문구), 인위적 지연으로 비동기 호출 흉내
 //   (c) 결과를 캐시에 저장 — 재조회 시 즉시 반환(캐시 히트)
 
-const CACHE_STORAGE_KEY = 'ufn-term-cache'
+// 용어 설명 응답 — 레벨별 정의(explanation)에 더해 "시장에서 어떻게 작동하는지"(impact)를
+// 함께 내려준다. impact 는 사전에 없으면 null.
+export interface TermParaphrase {
+  explanation: string
+  impact: string | null
+}
+
+// v1 캐시는 explanation 문자열만 저장했음 — impact 도입으로 구조가 바뀌어 키를 올린다.
+const CACHE_STORAGE_KEY = 'sage-term-cache-v2'
 const MOCK_LATENCY_RANGE_MS = [300, 600] as const
 const FALLBACK_EXPLANATION = '설명을 생성하는 중...'
 
-type CacheMap = Record<string, string>
+type CacheMap = Record<string, TermParaphrase>
 
 function loadCache(): CacheMap {
   try {
@@ -49,7 +57,11 @@ function randomDelay(): number {
 }
 
 /** 캐시만 확인하고 즉시 반환(비동기 아님) — UI에서 로딩 스피너를 띄울지 미리 판단할 때 사용. */
-export function peekParaphraseCache(term: string, level: Level, articleId?: string): string | null {
+export function peekParaphraseCache(
+  term: string,
+  level: Level,
+  articleId?: string,
+): TermParaphrase | null {
   return cache[buildCacheKey(term, level, articleId)] ?? null
 }
 
@@ -57,7 +69,7 @@ export async function getParaphrase(
   term: string,
   level: Level,
   articleId?: string,
-): Promise<string> {
+): Promise<TermParaphrase> {
   const cacheKey = buildCacheKey(term, level, articleId)
 
   const cached = cache[cacheKey]
@@ -68,10 +80,12 @@ export async function getParaphrase(
   await new Promise((resolve) => setTimeout(resolve, randomDelay()))
 
   const seedMatch = findSeedTerm(term)
-  const explanation = seedMatch ? seedMatch.explanations[level] : FALLBACK_EXPLANATION
+  const result: TermParaphrase = seedMatch
+    ? { explanation: seedMatch.explanations[level], impact: seedMatch.impact ?? null }
+    : { explanation: FALLBACK_EXPLANATION, impact: null }
 
-  cache[cacheKey] = explanation
+  cache[cacheKey] = result
   persistCache(cache)
 
-  return explanation
+  return result
 }
