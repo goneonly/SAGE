@@ -56,7 +56,7 @@ function WatchlistWidget() {
         />
         <button
           type="submit"
-          className="shrink-0 rounded-lg bg-primary-600 px-2 py-1 text-xs font-medium text-white hover:bg-primary-700"
+          className="shrink-0 rounded-lg bg-primary-600 px-2 py-1 text-xs font-medium text-white hover:bg-primary-600/90"
         >
           추가
         </button>
@@ -76,6 +76,12 @@ function DailyTermWidget() {
       <h3 className="text-sm font-semibold text-ink">오늘의 주식 단어</h3>
       <p className="mt-2 font-medium text-primary-700">{dailyTerm.term}</p>
       <p className="mt-1 text-xs leading-relaxed text-muted">{dailyTerm.explanations[level]}</p>
+      {dailyTerm.impact && (
+        <p className="mt-2 border-t border-line pt-2 text-xs leading-relaxed text-muted">
+          <span className="font-semibold text-primary-700">👉 </span>
+          {dailyTerm.impact}
+        </p>
+      )}
     </section>
   )
 }

@@ -12,11 +12,14 @@ import ScrapPage from './features/scrap/ScrapPage'
 import PortfolioPage from './features/portfolio/PortfolioPage'
 import TopMoversPage from './features/topmovers/TopMoversPage'
 import InsightsPage from './features/insights/InsightsPage'
+import AboutPage from './features/about/AboutPage'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* 공개 라우트 — About 은 로그아웃 상태의 랜딩 페이지를 겸한다 */}
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 

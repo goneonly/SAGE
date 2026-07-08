@@ -19,8 +19,8 @@ function InsightsPage() {
         지금은 mock 코멘트입니다. 실제 AI 생성 연동은 추후 지원됩니다.
       </p>
 
-      {/* AI 생성 콘텐츠 고지 — 인사이트는 전부 AI 생성이므로 목록 상단에 상시 노출 */}
-      <p className="mt-4 rounded-lg bg-primary-50 px-4 py-3 text-xs leading-relaxed text-primary-700">
+      {/* AI 생성 콘텐츠 고지 — 경고 문구이므로 등락 색상(rise)과 같은 계열의 옅은 빨강 톤으로 노출 */}
+      <p className="mt-4 rounded-lg border border-rise/20 bg-rise/10 px-4 py-3 text-xs leading-relaxed text-rise">
         {AI_DISCLAIMER}
       </p>
 

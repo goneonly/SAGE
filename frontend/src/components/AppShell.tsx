@@ -1,3 +1,4 @@
+import { useState, type FormEvent } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
 import Sidebar from './Sidebar'
@@ -10,10 +11,19 @@ function TopBar() {
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
   const navigate = useNavigate()
+  const [query, setQuery] = useState('')
+
+  // 검색 제출 → 뉴스 페이지로 이동하며 ?q= 쿼리로 검색어를 넘긴다(NewsPage 가 필터링).
+  function handleSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const trimmed = query.trim()
+    navigate(trimmed ? `/news?q=${encodeURIComponent(trimmed)}` : '/news')
+  }
 
   function handleLogout() {
     logout()
-    navigate('/login', { replace: true })
+    // 로그아웃하면 서비스 소개 랜딩(About)으로 — 재로그인/가입 진입점이 그 안에 있다
+    navigate('/about', { replace: true })
   }
 
   return (
@@ -28,17 +38,40 @@ function TopBar() {
           <Logo size={36} wordmarkClassName="text-2xl" />
         </Link>
       </div>
-      <input
-        type="search"
-        placeholder="뉴스·종목 검색"
-        className="w-72 rounded-lg border border-line bg-surface px-4 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
-      />
+      <form onSubmit={handleSearch} className="relative ml-8 w-2/5">
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="뉴스 · 종목 검색"
+          className="w-full rounded-lg border border-line bg-surface py-3 pl-4 pr-11 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
+        />
+        {/* 돋보기 — 입력창 오른쪽 끝에 겹쳐 놓은 제출 버튼 */}
+        <button
+          type="submit"
+          aria-label="검색"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-muted transition-colors hover:text-primary-600"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            className="h-4 w-4"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-4.3-4.3" />
+          </svg>
+        </button>
+      </form>
       <div className="ml-auto flex items-center gap-4 pl-4">
         <NotificationBell />
         {user && (
           <div className="flex items-center gap-2 text-sm">
             {/* 이름이 있으면 이름으로, 없으면(기존 이메일 가입 mock) 이메일로 표시 */}
-            <span className="font-medium text-ink">{user.name ?? user.email}님</span>
+            <span className="font-medium text-ink">{user.name ?? user.email} 님</span>
             <button
               type="button"
               onClick={handleLogout}

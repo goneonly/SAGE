@@ -73,7 +73,7 @@ function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-700 disabled:opacity-50"
+          className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
         >
           {isSubmitting ? '로그인 중...' : '로그인'}
         </button>

@@ -5,7 +5,7 @@ import { AI_DISCLAIMER } from '../lib/aiDisclaimer'
 // href 가 정해진 항목만 <a>로 렌더링하고, 나머지는 주소가 정해질 때까지 텍스트로 둔다.
 const FOOTER_LINKS: { label: string; href?: string }[] = [
   { label: '회사' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/feed/' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jiwon-han-380b29274/' },
   { label: 'GitHub', href: 'https://github.com/goneonly/SAGE' },
 ]
 
@@ -14,7 +14,17 @@ function Footer() {
     <footer className="border-t border-line bg-bg py-5">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-4 sm:flex-row sm:justify-between sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3">
-          <Logo size={24} wordmarkClassName="text-base" />
+          <div
+            className="cursor-pointer"
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              })
+            }
+          >
+            <Logo size={24} wordmarkClassName="text-base" />
+          </div>
           <span className="text-xs italic text-muted">Be a smart investor with SAGE.</span>
         </div>
 

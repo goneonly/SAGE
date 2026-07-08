@@ -10,6 +10,8 @@ export interface User {
   level: Level
   name?: string
   phone?: string
+  /** 나이(만 나이 정수) — 회원가입 시 선택 입력이라 없을 수 있다 */
+  age?: number
   /** 가입 경로 — 이메일 가입이면 'email', 소셜이면 제공자명 */
   provider?: 'email' | SocialProvider
 }

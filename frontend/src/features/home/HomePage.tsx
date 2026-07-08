@@ -21,16 +21,17 @@ function HomePage() {
   const recommended = getRecommendedArticles(seedArticles, watchlistTickers)
 
   return (
-    <div className="space-y-8">
-      <section>
-        <h2 className="mb-3 text-lg font-bold text-ink">추천 뉴스</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {recommended.map((article) => (
-            <ArticleCard key={article.id} article={article} uniform />
-          ))}
-        </div>
-      </section>
-
+    <div>
+      <div className="mb-12 space-y-8">
+        <section>
+          <h2 className="mb-3 text-lg font-bold text-ink">추천 뉴스</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {recommended.map((article) => (
+              <ArticleCard key={article.id} article={article} uniform />
+            ))}
+          </div>
+        </section>
+      </div>
       <section>
         <h2 className="mb-3 text-lg font-bold text-ink">전체 뉴스</h2>
         <div className="space-y-3">

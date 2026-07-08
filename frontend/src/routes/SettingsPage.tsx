@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useAuthStore } from '../lib/store/authStore'
+import { useThemeStore, type Theme } from '../lib/store/themeStore'
 import type { Level } from '../types/auth'
 
 const LEVEL_OPTIONS: { value: Level; label: string; description: string }[] = [
   {
     value: 'beginner',
-    label: '입문 (주린이)',
+    label: '초보',
     description: '쉬운 비유와 일상적인 표현으로 설명해드려요.',
   },
   {
@@ -20,12 +21,19 @@ const LEVEL_OPTIONS: { value: Level; label: string; description: string }[] = [
   },
 ]
 
+const THEME_OPTIONS: { value: Theme; label: string; description: string }[] = [
+  { value: 'light', label: '라이트 모드', description: '밝은 배경의 기본 테마예요.' },
+  { value: 'dark', label: '다크 모드', description: '어두운 배경으로 눈의 부담을 줄여줘요.' },
+]
+
 // 설정 화면 (Phase 0 ComingSoonPage 스텁을 대체) — 레벨 변경은 authStore.updateLevel 을
 // 통해 저장되고, persist 미들웨어가 localStorage 에도 반영한다. 리더 화면의 HighlightText/
 // ParaphrasePanel 은 이 store 값을 그대로 읽으므로 여기서 바꾸면 바로 반영된다.
 function SettingsPage() {
   const user = useAuthStore((state) => state.user)
   const updateLevel = useAuthStore((state) => state.updateLevel)
+  const theme = useThemeStore((state) => state.theme)
+  const setTheme = useThemeStore((state) => state.setTheme)
   const [justSaved, setJustSaved] = useState(false)
 
   if (!user) return null
@@ -43,10 +51,14 @@ function SettingsPage() {
       <section className="mt-6">
         <h2 className="text-sm font-semibold text-muted">내 정보</h2>
         {/* 이름/전화번호는 이메일 가입(입력값) 또는 소셜 mock 프로필에서 오고, 없으면 '-' */}
-        <dl className="mt-2 space-y-1 text-sm">
+        <dl className="mt-2 space-y-2 text-sm">
           <div className="flex gap-3">
             <dt className="w-16 shrink-0 text-muted">이름</dt>
             <dd className="text-ink">{user.name ?? '-'}</dd>
+          </div>
+          <div className="flex gap-3">
+            <dt className="w-16 shrink-0 text-muted">나이</dt>
+            <dd className="text-ink">{user.age != null ? `${user.age}세` : '-'}</dd>
           </div>
           <div className="flex gap-3">
             <dt className="w-16 shrink-0 text-muted">전화번호</dt>
@@ -92,6 +104,37 @@ function SettingsPage() {
         </div>
 
         {justSaved && <p className="mt-2 text-xs text-primary-600">저장되었습니다.</p>}
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-sm font-semibold text-muted">화면 테마</h2>
+        <p className="mt-1 text-xs text-muted">선택 즉시 적용되고, 다음 접속 때도 유지돼요.</p>
+
+        <div className="mt-3 space-y-2">
+          {THEME_OPTIONS.map((option) => (
+            <label
+              key={option.value}
+              className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
+                theme === option.value
+                  ? 'border-primary-500 bg-primary-50'
+                  : 'border-line hover:bg-bg'
+              }`}
+            >
+              <input
+                type="radio"
+                name="theme"
+                value={option.value}
+                checked={theme === option.value}
+                onChange={() => setTheme(option.value)}
+                className="mt-1 accent-primary-600"
+              />
+              <span>
+                <span className="block text-sm font-medium text-ink">{option.label}</span>
+                <span className="block text-xs text-muted">{option.description}</span>
+              </span>
+            </label>
+          ))}
+        </div>
       </section>
     </div>
   )

@@ -15,6 +15,8 @@ const MOCK_SOCIAL_PROFILE: Record<SocialProvider, { email: string; name: string 
 export interface SignupProfile {
   name: string
   phone: string
+  /** 선택 입력 — 값이 있으면 정수 */
+  age?: number
 }
 
 function assertNonEmpty(email: string, password: string) {
@@ -47,7 +49,7 @@ export async function signup(
 ): Promise<User> {
   assertNonEmpty(email, password)
   await new Promise((resolve) => setTimeout(resolve, MOCK_LATENCY_MS))
-  return mockUser(email, level, { name: profile?.name, phone: profile?.phone })
+  return mockUser(email, level, { name: profile?.name, phone: profile?.phone, age: profile?.age })
 }
 
 // 카카오/구글 소셜 로그인 mock — 실제로는 OAuth 리디렉션 후 백엔드가 토큰을 교환한다.

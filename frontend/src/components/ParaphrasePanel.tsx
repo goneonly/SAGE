@@ -7,6 +7,8 @@ interface ParaphrasePanelProps {
   level: Level
   isLoading: boolean
   explanation: string | null
+  /** 이 용어가 시장·투자판단에 어떻게 작용하는지 — 정의와 분리된 실전 해설 블록 */
+  impact: string | null
   onClose: () => void
 }
 
@@ -18,6 +20,7 @@ function ParaphrasePanel({
   level,
   isLoading,
   explanation,
+  impact,
   onClose,
 }: ParaphrasePanelProps) {
   const saveTerm = useVocabStore((state) => state.saveTerm)
@@ -29,7 +32,8 @@ function ParaphrasePanel({
 
   function handleSave() {
     if (term && explanation) {
-      saveTerm(term, explanation, level)
+      // 영향 해설까지 함께 저장 — VocabPage 가 whitespace-pre-line 으로 줄바꿈을 살려 보여준다.
+      saveTerm(term, impact ? `${explanation}\n\n👉 ${impact}` : explanation, level)
     }
   }
 
@@ -57,6 +61,12 @@ function ParaphrasePanel({
         ) : (
           <>
             <p className="leading-relaxed text-ink">{explanation}</p>
+            {impact && (
+              <div className="mt-4 rounded-lg bg-primary-50 p-3">
+                <p className="text-xs font-bold text-primary-700">시장에선 이렇게 작동해요</p>
+                <p className="mt-1.5 text-xs leading-relaxed text-ink">{impact}</p>
+              </div>
+            )}
             <button
               type="button"
               onClick={handleSave}

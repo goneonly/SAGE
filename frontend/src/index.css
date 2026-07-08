@@ -2,10 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* sustainability-platform 데모 타이포그래피 — 본문 DM Sans, 제목(h1~h4) Fraunces serif */
+/* 색상 토큰 — tailwind.config.js 의 색상들이 이 CSS 변수를 참조한다(rgb 트리플렛).
+   테마 전환은 <html> 에 .dark 클래스를 붙이는 것만으로 전체에 적용된다(themeStore). */
 @layer base {
+  :root {
+    color-scheme: light;
+    --color-primary-50: 237 247 237;
+    --color-primary-100: 213 237 213;
+    --color-primary-500: 76 175 80;
+    --color-primary-600: 34 139 34;
+    --color-primary-700: 46 125 50;
+    --color-rise: 224 49 49;
+    --color-fall: 28 126 214;
+    --color-ink: 27 67 50;
+    --color-muted: 82 121 111;
+    --color-subtle: 132 169 140;
+    --color-line: 216 226 220;
+    --color-bg: 250 250 245;
+    --color-bg-alt: 245 245 232;
+    --color-surface: 253 253 249;
+  }
+
+  /* 다크 팔레트 — 그린 잉크 톤을 유지한 어두운 배경 + 살짝 밝힌 브랜드 그린(대비 확보) */
+  .dark {
+    color-scheme: dark;
+    --color-primary-50: 26 42 29;
+    --color-primary-100: 37 60 41;
+    --color-primary-500: 105 192 110;
+    --color-primary-600: 47 158 68;
+    --color-primary-700: 138 204 144;
+    --color-rise: 255 107 107;
+    --color-fall: 77 171 247;
+    --color-ink: 232 240 233;
+    --color-muted: 154 175 160;
+    --color-subtle: 109 130 115;
+    --color-line: 44 58 48;
+    --color-bg: 17 22 18;
+    --color-bg-alt: 22 29 23;
+    --color-surface: 27 34 28;
+  }
+
+  /* 타이포그래피 — 본문·제목 모두 Pretendard (main.tsx 에서 dynamic-subset 로드) */
   body {
-    @apply font-sans;
+    @apply bg-bg font-sans text-ink;
   }
   h1,
   h2,

@@ -44,7 +44,9 @@ function VocabPage() {
                       {LEVEL_LABEL[entry.level]}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">{entry.explanation}</p>
+                  <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-muted">
+                    {entry.explanation}
+                  </p>
                   <p className="mt-2 text-xs text-muted">{formatDate(entry.createdAt)} 저장</p>
                 </div>
                 <button

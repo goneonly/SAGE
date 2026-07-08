@@ -77,7 +77,7 @@ function NotificationBell() {
 
           <ul className="max-h-96 overflow-y-auto">
             {items.length === 0 ? (
-              <li className="px-4 py-8 text-center text-sm text-muted">새 알림이 없음</li>
+              <li className="px-4 py-8 text-center text-sm text-muted">새 알림이 없습니다.</li>
             ) : (
               items.map((item) => (
                 <li key={item.id}>
