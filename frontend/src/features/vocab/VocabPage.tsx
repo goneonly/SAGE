@@ -35,29 +35,28 @@ function VocabPage() {
       ) : (
         <ul className="mt-6 space-y-3">
           {sorted.map((entry) => (
-            <li key={entry.id} className="rounded-xl border border-line bg-surface p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-semibold text-ink">{entry.term}</h2>
-                    <span className="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
-                      {LEVEL_LABEL[entry.level]}
-                    </span>
-                  </div>
-                  <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-muted">
-                    {entry.explanation}
-                  </p>
-                  <p className="mt-2 text-xs text-muted">{formatDate(entry.createdAt)} 저장</p>
+            <li key={entry.id} className="relative rounded-xl border border-line bg-surface p-4">
+              <div className="pr-6">
+                <div className="flex items-center gap-2">
+                  <h2 className="font-semibold text-ink">{entry.term}</h2>
+                  <span className="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
+                    {LEVEL_LABEL[entry.level]}
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeEntry(entry.id)}
-                  aria-label={`${entry.term} 삭제`}
-                  className="shrink-0 rounded px-2 py-1 text-xs text-muted hover:bg-primary-50 hover:text-rise"
-                >
-                  삭제
-                </button>
+                <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-muted">
+                  {entry.explanation}
+                </p>
+                <p className="mt-2 text-xs text-muted">{formatDate(entry.createdAt)} 저장</p>
               </div>
+              {/* 삭제 버튼은 스크랩 카드와 동일한 원형 ✕ — 카드 우상단에 겹쳐 배치 */}
+              <button
+                type="button"
+                onClick={() => removeEntry(entry.id)}
+                aria-label={`${entry.term} 삭제`}
+                className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-surface text-xs leading-none text-muted shadow hover:bg-primary-50 hover:text-rise"
+              >
+                ✕
+              </button>
             </li>
           ))}
         </ul>

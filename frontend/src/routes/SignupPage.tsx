@@ -80,13 +80,23 @@ function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg">
+    <div className="relative flex min-h-screen items-center justify-center bg-bg">
+      {/* 왼쪽 상단 — 서비스 소개(About) 랜딩으로 돌아가기 */}
+      <Link
+        to="/about"
+        className="absolute left-6 top-6 text-sm font-medium text-muted transition-colors hover:text-primary-600"
+      >
+        ← 홈으로
+      </Link>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
       >
         <div className="flex flex-col items-center gap-1">
-          <Logo size={40} wordmarkClassName="text-xl" />
+          {/* 로고·워드마크 클릭 시에도 About 랜딩으로 */}
+          <Link to="/about" aria-label="서비스 소개로 이동">
+            <Logo size={40} wordmarkClassName="text-xl" />
+          </Link>
           <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
         </div>
         <h1 className="text-center text-lg font-bold text-ink">회원가입</h1>
