@@ -68,7 +68,8 @@ const LEVEL_PREVIEWS = [
 const LEARNING_STEPS = [
   {
     title: '읽으면서 바로 이해',
-    description: '기사 속 어려운 용어를 AI가 짚어주고, 클릭하면 그 자리에서 내 레벨에 맞게 설명해줘요.',
+    description:
+      '기사 속 어려운 용어를 AI가 짚어주고, 클릭하면 그 자리에서 내 레벨에 맞게 설명해줘요.',
   },
   {
     title: '모아서 내 것으로',
@@ -255,13 +256,13 @@ function AboutPage() {
         </Reveal>
         <Reveal delay={150}>
           <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-muted">
-            SAGE의 설명과 인사이트는 AI가 생성해요. 투자 결정은 반드시 본인의 판단과 책임하에
-            진행해 주세요.
+            SAGE의 설명과 인사이트는 AI가 생성해요. 투자 결정은 반드시 본인의 판단과 책임하에 진행해
+            주세요.
           </p>
         </Reveal>
         <Reveal delay={300}>
           <Link
-            to={isAuthenticated ? '/' : '/signup'}
+            to={isAuthenticated ? '/' : '/login'}
             className="mt-10 inline-block rounded-full bg-primary-600 px-8 py-3 text-base font-semibold text-white shadow-eco-btn transition hover:bg-primary-600/90"
           >
             지금 시작하기
