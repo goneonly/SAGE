@@ -30,17 +30,17 @@ function PortfolioPage() {
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-line bg-white p-4">
+        <div className="rounded-xl border border-line bg-surface p-4">
           <p className="text-xs text-muted">총 자산</p>
           <p className="mt-1 text-lg font-bold text-ink">{formatCurrency(summary.totalAsset)}</p>
         </div>
-        <div className="rounded-xl border border-line bg-white p-4">
+        <div className="rounded-xl border border-line bg-surface p-4">
           <p className="text-xs text-muted">총 수익률</p>
           <p className={`mt-1 text-lg font-bold ${changeColorClass(summary.totalReturnPercent)}`}>
             {formatPercent(summary.totalReturnPercent)}
           </p>
         </div>
-        <div className="rounded-xl border border-line bg-white p-4">
+        <div className="rounded-xl border border-line bg-surface p-4">
           <p className="text-xs text-muted">오늘 변동률</p>
           <p className={`mt-1 text-lg font-bold ${changeColorClass(summary.dailyChangePercent)}`}>
             {formatPercent(summary.dailyChangePercent)}
@@ -48,12 +48,12 @@ function PortfolioPage() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-line bg-white p-4">
+      <div className="mt-6 rounded-xl border border-line bg-surface p-4">
         <p className="mb-2 text-xs text-muted">최근 거래일 총 평가액 추이</p>
         <PortfolioChart points={summary.valueHistory} />
       </div>
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-white">
+      <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-surface">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-line text-xs text-muted">

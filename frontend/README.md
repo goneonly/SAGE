@@ -1,7 +1,13 @@
 # SAGE (Smart AI Guidance for Economics)
+
 > Be A Smart Investor with SAGE!
 
 사용자 맞춤형 AI 금융 뉴스 학습 플랫폼
+=======
+
+사용자 맞춤형 AI 금융 뉴스 학습 플랫폼 SAGE(Smart AI Guidance for Economics)의 프론트엔드. Vite + React + TypeScript + Tailwind CSS.
+
+슬로건: **Be A Smart Investor with SAGE!**
 
 <br/>
 
@@ -14,9 +20,10 @@
 </p>
 
 <br/>
-
 Vite + React + TypeScript + Tailwind CSS.
 제품/개발 플랜은 루트의 `PLAN.md` 참고.
+
+# Frontend
 
 ## 시작하기
 

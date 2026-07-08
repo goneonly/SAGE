@@ -4,16 +4,33 @@ import type { Level } from '../../types/auth'
 // Phase 3 — 레벨별로 실제로 다르게 읽히는 설명 3종(beginner/intermediate/advanced)을 둔다.
 // beginner = 쉬운 비유, intermediate = 정확한 정의·계산식, advanced = 실무 뉘앙스·주의점 위주 요약.
 // 말투는 챗봇 같은 "~예요/해요"체 대신 담백한 평서형(음슴체)으로 통일한다.
-// HighlightText 가 이 목록으로 기사 본문을 스캔하고, lib/api/paraphrase.ts 가 캐시 미스 시
-// 사용자의 현재 레벨에 맞는 설명을 반환한다.
+// termMatcher.ts(판단 근거 엔진)가 이 사전의 규칙으로 기사 본문을 스캔하고,
+// lib/api/paraphrase.ts 가 캐시 미스 시 사용자의 현재 레벨에 맞는 설명을 반환한다.
+
+// 용어 난이도 — "이 단어에 설명이 필요한가"를 판단하는 1차 근거.
+//   everyday: 금융 문맥 밖에서도 누구나 아는 일상 어휘(예: 반도체) — 어떤 레벨에서도 하이라이트하지 않음
+//   basic:    기초 금융 용어 — advanced 레벨에서는 화면 노이즈만 되므로 제외(PLAN.md §4 "레벨 필터로 1차 결정")
+//   standard: 설명이 필요한 일반 금융 용어 — 모든 레벨에서 하이라이트
+export type TermDifficulty = 'everyday' | 'basic' | 'standard'
+
 export interface SeedTerm {
   term: string
+  /** 생략 시 'standard' */
+  difficulty?: TermDifficulty
+  /** 본문에서 이 표기로 등장해도 같은 용어로 인식하는 표기 변형(예: 'ETF' ↔ '상장지수펀드') */
+  aliases?: string[]
+  /**
+   * 다의어 문맥 제외 — 매칭 지점 바로 앞 어절이 이 단어로 끝나면 금융 용어가 아닌
+   * 다른 의미로 판단해 하이라이트하지 않는다(예: '상향'+'조정' = 목표주가 수정이지 주가 조정이 아님).
+   */
+  blockedPrefixes?: string[]
   explanations: Record<Level, string>
 }
 
 export const seedTerms: SeedTerm[] = [
   {
     term: '코스피',
+    difficulty: 'basic',
     explanations: {
       beginner:
         '우리나라 주식시장의 "건강 점수판" 같은 것. 코스피에 상장된 주요 기업들의 주가를 모아 평균 낸 지수라서, 이 숫자가 오르면 대체로 시장 전체가 좋아졌다는 뜻.',
@@ -25,6 +42,7 @@ export const seedTerms: SeedTerm[] = [
   },
   {
     term: '코스닥',
+    difficulty: 'basic',
     explanations: {
       beginner:
         '중소기업이나 스타트업처럼 상대적으로 작은 회사들이 많이 모여 있는 시장의 지수. 코스피보다 변동성이 크고 성장주가 많음.',
@@ -113,6 +131,7 @@ export const seedTerms: SeedTerm[] = [
   },
   {
     term: '환율',
+    difficulty: 'basic',
     explanations: {
       beginner:
         '우리 돈(원)과 다른 나라 돈(달러 등)을 바꿀 때의 비율. 환율이 오르면 원화 가치는 떨어진 것.',
@@ -144,6 +163,55 @@ export const seedTerms: SeedTerm[] = [
     },
   },
   {
+    // '외국인 순매수'보다 짧은 단독 표기 — '기관 순매수', '순매수세'처럼 주체가 다르거나
+    // 접미가 붙은 형태도 이 항목으로 매칭된다(더 긴 '외국인 순매수'가 항상 먼저 매칭).
+    term: '순매수',
+    explanations: {
+      beginner:
+        '일정 기간 동안 산 금액이 판 금액보다 많다는 뜻. 외국인·기관·개인처럼 "누가 사고 있는지"를 보여주는 수급 지표로 쓰임.',
+      intermediate:
+        '순매수 = 매수금액 − 매도금액(양수). 투자 주체(외국인·기관·개인)별로 집계해 어느 쪽이 시장을 사들이고 있는지 가늠하는 대표적인 수급 지표.',
+      advanced:
+        '금액만으로는 방향성 판단이 어렵고 주체별 자금 성격(외국인 패시브, 기관 프로그램 매매, 개인 신용융자)을 함께 봐야 함. 공매도 상환 매수나 선물·현물 연계 물량이 섞이면 실제 수급과 다르게 읽힐 수 있음.',
+    },
+  },
+  {
+    term: '순매도',
+    explanations: {
+      beginner: '일정 기간 동안 판 금액이 산 금액보다 많다는 뜻. 순매수의 반대.',
+      intermediate:
+        '순매도 = 매도금액 − 매수금액(양수). 특정 주체의 순매도가 이어지면 그 주체가 시장 비중을 줄이고 있다는 신호로 해석함.',
+      advanced:
+        '물량의 성격 구분이 핵심 — 펀드 환매에 따른 기계적 매도인지 차익실현·리스크 축소 같은 판단성 매도인지에 따라 지속성이 다름. 신용 반대매매 물량이 섞이면 단기 낙폭이 과장될 수 있음.',
+    },
+  },
+  {
+    term: 'ETF',
+    aliases: ['상장지수펀드'],
+    explanations: {
+      beginner:
+        '여러 종목을 한 바구니에 담아 주식처럼 사고팔 수 있게 만든 펀드. 한 주만 사도 바구니 속 여러 종목에 나눠 투자한 효과가 남.',
+      intermediate:
+        '상장지수펀드(Exchange Traded Fund) — 특정 지수나 테마의 종목 묶음을 추종하도록 설계돼 거래소에 상장된 펀드. 일반 펀드와 달리 장중 실시간 매매가 가능하고 보수가 낮은 편.',
+      advanced:
+        '기초지수 대비 추적오차와 괴리율(시장가 대 순자산가치)이 상품 품질의 핵심 지표. LP 호가 스프레드, 합성형 여부(스왑 거래상대방 리스크), 분배금·과세 체계까지 따져야 실질 수익률을 비교할 수 있음.',
+    },
+  },
+  {
+    // 다의어 — '상향/하향 조정'(목표주가 수정), '미세 조정'(당국 개입), '구조 조정'(사업 재편)은
+    // 주가 조정(일시적 하락)이 아니므로 blockedPrefixes 로 제외한다.
+    term: '조정',
+    blockedPrefixes: ['상향', '하향', '미세', '구조', '재'],
+    explanations: {
+      beginner:
+        '오르던 주가가 잠시 쉬어가듯 내려가는 것. 크게 무너지는 폭락과 달리, 상승 과정에서 자연스럽게 나타나는 일시적 하락을 말함.',
+      intermediate:
+        '상승 추세 중 단기 과열을 식히며 나타나는 일시적 하락 국면. 통상 고점 대비 10% 안팎 하락을 조정, 20% 이상을 약세장 진입으로 구분함.',
+      advanced:
+        '가격 조정(하락)과 기간 조정(횡보)을 구분해야 하고, 성격은 거래량·수급 변화로 판단함 — 거래량이 줄며 완만히 밀리면 건전한 조정, 거래량이 늘며 급락하면 추세 전환 가능성을 의심해야 함.',
+    },
+  },
+  {
     term: '2차전지',
     explanations: {
       beginner:
@@ -155,7 +223,10 @@ export const seedTerms: SeedTerm[] = [
     },
   },
   {
+    // 산업명이지 금융 용어가 아니고 누구나 아는 어휘라 하이라이트 대상에서 제외.
+    // 설명은 남겨둬 단어장·오늘의 용어 외 다른 경로(직접 검색 등)에서 재사용할 수 있게 한다.
     term: '반도체',
+    difficulty: 'everyday',
     explanations: {
       beginner: '컴퓨터나 스마트폰의 "두뇌"나 "기억 장치" 역할을 하는 전자부품.',
       intermediate:
@@ -208,21 +279,37 @@ export const seedTerms: SeedTerm[] = [
   },
 ]
 
-// HighlightText 의 스캔 대상 — 길이 내림차순으로 정렬해 긴 용어가 먼저 매칭되도록 한다.
-export const SEED_TERM_LIST: string[] = seedTerms
-  .map((entry) => entry.term)
-  .sort((a, b) => b.length - a.length)
+// termMatcher(판단 근거 엔진)가 본문을 스캔할 때 쓰는 규칙 하나 — 표기(surface)별로
+// 대표 용어와 문맥 제외 조건을 함께 들고 다닌다.
+export interface HighlightRule {
+  /** 본문에서 실제로 찾는 표기(대표 용어 또는 별칭) */
+  surface: string
+  /** 사전의 대표 용어 — 설명 조회(findSeedTerm)와 단어장 저장의 키 */
+  term: string
+  blockedPrefixes: string[]
+}
 
-// 레벨이 'advanced'일 때는 이미 상식 수준으로 잘 알려진 아주 기초적인 용어까지
-// 하이라이트하면 화면 노이즈만 늘어나므로(PLAN.md §4 "레벨 필터로 1차 결정"),
-// 이 목록에 해당하는 용어는 advanced 레벨에서만 하이라이트 대상에서 제외한다.
-export const BASIC_TERMS_HIDDEN_FOR_ADVANCED: string[] = ['코스피', '코스닥', '환율', '반도체']
-
-export function getHighlightTermList(level: Level): string[] {
-  if (level !== 'advanced') return SEED_TERM_LIST
-  return SEED_TERM_LIST.filter((term) => !BASIC_TERMS_HIDDEN_FOR_ADVANCED.includes(term))
+// 레벨별 하이라이트 규칙 — 난이도 필터(everyday 는 항상 제외, basic 은 advanced 에서 제외)를
+// 거친 뒤 별칭을 표기 단위로 펼치고, 긴 표기가 먼저 매칭되도록 길이 내림차순 정렬한다
+// (예: '외국인 순매수'가 '순매수'보다 먼저).
+export function getHighlightRules(level: Level): HighlightRule[] {
+  return seedTerms
+    .filter((entry) => {
+      const difficulty = entry.difficulty ?? 'standard'
+      if (difficulty === 'everyday') return false
+      if (difficulty === 'basic' && level === 'advanced') return false
+      return true
+    })
+    .flatMap((entry) =>
+      [entry.term, ...(entry.aliases ?? [])].map((surface) => ({
+        surface,
+        term: entry.term,
+        blockedPrefixes: entry.blockedPrefixes ?? [],
+      })),
+    )
+    .sort((a, b) => b.surface.length - a.surface.length)
 }
 
 export function findSeedTerm(term: string): SeedTerm | undefined {
-  return seedTerms.find((entry) => entry.term === term)
+  return seedTerms.find((entry) => entry.term === term || entry.aliases?.includes(term))
 }

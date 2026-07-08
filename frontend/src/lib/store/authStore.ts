@@ -41,6 +41,6 @@ export const useAuthStore = create<AuthState>()(
       updateLevel: (level) =>
         set((state) => (state.user ? { user: { ...state.user, level } } : state)),
     }),
-    { name: 'ufn-auth' },
+    { name: 'sage-auth' },
   ),
 )

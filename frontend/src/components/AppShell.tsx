@@ -31,7 +31,7 @@ function TopBar() {
       <input
         type="search"
         placeholder="뉴스·종목 검색"
-        className="w-72 rounded-lg border border-line bg-white px-4 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
+        className="w-72 rounded-lg border border-line bg-surface px-4 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
       />
       <div className="ml-auto flex items-center gap-4 pl-4">
         <NotificationBell />

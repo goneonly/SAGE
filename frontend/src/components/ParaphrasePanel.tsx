@@ -37,7 +37,7 @@ function ParaphrasePanel({
     <div
       role="dialog"
       aria-label={`${term} 설명`}
-      className="fixed inset-y-0 right-0 z-50 w-80 max-w-full overflow-y-auto border-l border-line bg-white p-5 shadow-lg"
+      className="fixed inset-y-0 right-0 z-50 w-80 max-w-full overflow-y-auto border-l border-line bg-surface p-5 shadow-lg"
     >
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-base font-bold text-ink">{term}</h3>

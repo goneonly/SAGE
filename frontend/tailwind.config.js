@@ -21,6 +21,7 @@ export default {
         subtle: '#84A98C', // 옅은 텍스트
         line: '#D8E2DC', // 보더
         bg: '#FAFAF5', // 앱 배경 (warm off-white)
+        surface: '#FDFDF9', // 카드/박스 배경 — 앱 배경과 톤온톤, 배경보다 한 단계 밝음
         'bg-alt': '#F5F5E8', // 대체 배경
         'bg-dark': '#1B4332', // 다크 섹션 배경
       },

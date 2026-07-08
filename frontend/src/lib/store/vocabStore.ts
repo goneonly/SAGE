@@ -40,6 +40,6 @@ export const useVocabStore = create<VocabState>()(
       removeEntry: (id) =>
         set((state) => ({ entries: state.entries.filter((entry) => entry.id !== id) })),
     }),
-    { name: 'ufn-vocab' },
+    { name: 'sage-vocab' },
   ),
 )

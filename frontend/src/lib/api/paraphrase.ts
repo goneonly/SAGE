@@ -8,7 +8,7 @@ import type { Level } from '../../types/auth'
 //   (b) 미스면 seed 사전에서 설명을 찾고(없으면 fallback 문구), 인위적 지연으로 비동기 호출 흉내
 //   (c) 결과를 캐시에 저장 — 재조회 시 즉시 반환(캐시 히트)
 
-const CACHE_STORAGE_KEY = 'ufn-term-cache'
+const CACHE_STORAGE_KEY = 'sage-term-cache'
 const MOCK_LATENCY_RANGE_MS = [300, 600] as const
 const FALLBACK_EXPLANATION = '설명을 생성하는 중...'
 

@@ -78,7 +78,7 @@ function SocialLoginButtons() {
         type="button"
         onClick={() => handleSocialLogin('google')}
         disabled={pending !== null}
-        className="flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-white py-2 text-sm font-medium text-ink transition hover:bg-bg disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-surface py-2 text-sm font-medium text-ink transition hover:bg-bg disabled:opacity-50"
       >
         <GoogleIcon />
         {pending === 'google' ? '구글로 로그인 중...' : '구글로 시작하기'}

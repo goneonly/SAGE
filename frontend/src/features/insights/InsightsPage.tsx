@@ -26,7 +26,7 @@ function InsightsPage() {
 
       <div className="mt-6 space-y-4">
         {mockInsights.map((insight) => (
-          <article key={insight.id} className="rounded-xl border border-line bg-white p-4">
+          <article key={insight.id} className="rounded-xl border border-line bg-surface p-4">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <h2 className="font-semibold text-ink">{insight.theme}</h2>

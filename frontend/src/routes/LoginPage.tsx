@@ -38,11 +38,11 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-bg">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-white p-8 shadow-sm"
+        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
       >
         <div className="flex flex-col items-center gap-1">
           <Logo size={40} wordmarkClassName="text-xl" />
-          <p className="text-xs italic text-muted">Be a smart investor with SAGE.</p>
+          <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
         </div>
         <h1 className="text-center text-lg font-bold text-ink">로그인</h1>
 

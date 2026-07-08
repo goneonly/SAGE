@@ -11,6 +11,17 @@ const LEVEL_OPTIONS: { value: Level; label: string }[] = [
   { value: 'advanced', label: '고급' },
 ]
 
+// 전화번호 입력 마스크 — 숫자 외 문자는 버리고 휴대폰 11자리까지만 받아
+// 010-0000-0000 형태로 하이픈을 자동으로 붙인다.
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+  if (digits.length <= 3) return digits
+  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`
+}
+
+const PHONE_PATTERN = /^010-\d{4}-\d{4}$/
+
 function SignupPage() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const signup = useAuthStore((state) => state.signup)
@@ -31,6 +42,13 @@ function SignupPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
+
+    // 마스크가 형식을 강제하지만, 자릿수가 모자라거나(010-123) 010 번호가 아닌 경우를 걸러낸다.
+    if (!PHONE_PATTERN.test(phone)) {
+      setError('전화번호를 010-0000-0000 형식으로 입력해 주세요.')
+      return
+    }
+
     setIsSubmitting(true)
     try {
       await signup(email, password, level, { name, phone })
@@ -46,11 +64,11 @@ function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-bg">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-white p-8 shadow-sm"
+        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
       >
         <div className="flex flex-col items-center gap-1">
           <Logo size={40} wordmarkClassName="text-xl" />
-          <p className="text-xs italic text-muted">Be a smart investor with SAGE.</p>
+          <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
         </div>
         <h1 className="text-center text-lg font-bold text-ink">회원가입</h1>
 
@@ -72,9 +90,11 @@ function SignupPage() {
             type="tel"
             required
             autoComplete="tel"
-            placeholder="010-1234-5678"
+            inputMode="numeric"
+            maxLength={13}
+            placeholder="010-0000-0000"
             value={phone}
-            onChange={(event) => setPhone(event.target.value)}
+            onChange={(event) => setPhone(formatPhone(event.target.value))}
             className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </label>

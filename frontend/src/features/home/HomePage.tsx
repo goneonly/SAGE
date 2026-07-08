@@ -43,7 +43,7 @@ function HomePage() {
         </div>
         <Link
           to="/news"
-          className="mt-4 block w-full rounded-lg border border-line bg-white py-2.5 text-center text-sm font-medium text-muted transition-colors hover:border-primary-600 hover:text-primary-600"
+          className="mt-4 block w-full rounded-lg border border-line bg-surface py-2.5 text-center text-sm font-medium text-muted transition-colors hover:border-primary-600 hover:text-primary-600"
         >
           전체 더보기
         </Link>

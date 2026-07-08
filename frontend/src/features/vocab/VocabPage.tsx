@@ -35,7 +35,7 @@ function VocabPage() {
       ) : (
         <ul className="mt-6 space-y-3">
           {sorted.map((entry) => (
-            <li key={entry.id} className="rounded-xl border border-line bg-white p-4">
+            <li key={entry.id} className="rounded-xl border border-line bg-surface p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2">

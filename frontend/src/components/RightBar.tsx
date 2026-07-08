@@ -23,7 +23,7 @@ function WatchlistWidget() {
   }
 
   return (
-    <section className="rounded-xl border border-line bg-white p-4">
+    <section className="rounded-xl border border-line bg-surface p-4">
       <h3 className="text-sm font-semibold text-ink">내 관심 종목</h3>
 
       {items.length === 0 ? (
@@ -72,7 +72,7 @@ function DailyTermWidget() {
   const dailyTerm = getDailyTerm()
 
   return (
-    <section className="rounded-xl border border-line bg-white p-4">
+    <section className="rounded-xl border border-line bg-surface p-4">
       <h3 className="text-sm font-semibold text-ink">오늘의 주식 단어</h3>
       <p className="mt-2 font-medium text-primary-700">{dailyTerm.term}</p>
       <p className="mt-1 text-xs leading-relaxed text-muted">{dailyTerm.explanations[level]}</p>
@@ -89,7 +89,7 @@ function RecentVocabWidget() {
     .slice(0, RECENT_VOCAB_LIMIT)
 
   return (
-    <section className="rounded-xl border border-line bg-white p-4">
+    <section className="rounded-xl border border-line bg-surface p-4">
       <h3 className="text-sm font-semibold text-ink">내가 스크랩한 단어</h3>
       {recent.length === 0 ? (
         <p className="mt-2 text-xs text-muted">아직 저장한 단어가 없어요.</p>
