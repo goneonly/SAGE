@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuthStore } from '../../lib/store/authStore'
-import Logo from '../../components/Logo'
+import PublicHeader from '../../components/PublicHeader'
 import Footer from '../../components/Footer'
 
 // About — SAGE 서비스 소개이자 로그아웃 상태의 랜딩 페이지(공개 라우트).
@@ -86,35 +86,8 @@ function AboutPage() {
 
   return (
     <div className="min-h-screen bg-bg text-ink">
-      {/* 상단 바 — 로고 + (로그아웃 상태) 로그인/회원가입, (로그인 상태) 홈으로 */}
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-line bg-bg/90 px-6 backdrop-blur-[10px]">
-        <Logo size={32} wordmarkClassName="text-xl" />
-        <div className="flex items-center gap-2">
-          {isAuthenticated ? (
-            <Link
-              to="/"
-              className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90"
-            >
-              홈으로 가기
-            </Link>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="rounded-full px-4 py-2 text-sm font-semibold text-ink transition hover:bg-primary-50"
-              >
-                로그인
-              </Link>
-              <Link
-                to="/signup"
-                className="rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90"
-              >
-                회원가입 하기
-              </Link>
-            </>
-          )}
-        </div>
-      </header>
+      {/* 상단 바 — 로고(→About) + 공지사항, (로그아웃) 로그인/회원가입 · (로그인) 홈으로 */}
+      <PublicHeader />
 
       {/* 1. 히어로 — 큰 타이포 + 슬로건 */}
       <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 py-24 text-center">
@@ -245,8 +218,8 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* 5. 신뢰 고지 + CTA */}
-      <section className="px-6 py-28 text-center">
+      {/* 5. 신뢰 고지 + CTA — 뷰포트를 가득 채워 맨 아래 스크롤 시 위 다크 밴드가 화면 밖으로 밀려나게 */}
+      <section className="flex min-h-[90vh] flex-col items-center justify-center px-6 py-28 text-center">
         <Reveal>
           <h2 className="text-3xl font-bold leading-snug text-ink md:text-5xl">
             Be A Smart Investor
@@ -256,8 +229,9 @@ function AboutPage() {
         </Reveal>
         <Reveal delay={150}>
           <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-muted">
-            SAGE의 설명과 인사이트는 AI가 생성해요. 투자 결정은 반드시 본인의 판단과 책임하에 진행해
-            주세요.
+            SAGE의 설명과 인사이트는 AI가 생성해요.
+            <br />
+            투자 결정은 반드시 본인의 판단과 책임하에 진행해주세요.
           </p>
         </Reveal>
         <Reveal delay={300}>

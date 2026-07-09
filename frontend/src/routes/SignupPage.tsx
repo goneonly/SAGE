@@ -6,9 +6,9 @@ import SocialLoginButtons from '../components/SocialLoginButtons'
 import type { Level } from '../types/auth'
 
 const LEVEL_OPTIONS: { value: Level; label: string }[] = [
-  { value: 'beginner', label: '초보' },
-  { value: 'intermediate', label: '중급' },
-  { value: 'advanced', label: '고급' },
+  { value: 'beginner', label: '기초' },
+  { value: 'intermediate', label: '성장' },
+  { value: 'advanced', label: '심화' },
 ]
 
 // 전화번호 입력 마스크 — 숫자 외 문자는 버리고 휴대폰 11자리까지만 받아
@@ -80,143 +80,145 @@ function SignupPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-bg">
-      {/* 왼쪽 상단 — 서비스 소개(About) 랜딩으로 돌아가기 */}
-      <Link
-        to="/about"
-        className="absolute left-6 top-6 text-sm font-medium text-muted transition-colors hover:text-primary-600"
-      >
-        ← 홈으로
-      </Link>
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
-      >
-        <div className="flex flex-col items-center gap-1">
-          {/* 로고·워드마크 클릭 시에도 About 랜딩으로 */}
-          <Link to="/about" aria-label="서비스 소개로 이동">
-            <Logo size={40} wordmarkClassName="text-xl" />
-          </Link>
-          <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
-        </div>
-        <h1 className="text-center text-lg font-bold text-ink">회원가입</h1>
-        <p className="text-xs text-muted">
-          <span className="text-rise">*</span> 표시는 필수 입력 항목입니다.
-        </p>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">
-            <RequiredMark />
-            이름
-          </span>
-          <input
-            type="text"
-            required
-            autoComplete="name"
-            value={name}
-            // 이름에 숫자는 올 수 없으므로 입력 즉시 걸러낸다
-            onChange={(event) => setName(event.target.value.replace(/\d/g, ''))}
-            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">나이</span>
-          <input
-            type="text"
-            inputMode="numeric"
-            maxLength={3}
-            placeholder="선택 입력"
-            value={age}
-            onChange={(event) => setAge(event.target.value.replace(/\D/g, ''))}
-            className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">
-            <RequiredMark />
-            전화번호
-          </span>
-          <input
-            type="tel"
-            required
-            autoComplete="tel"
-            inputMode="numeric"
-            maxLength={13}
-            placeholder="010-0000-0000"
-            value={phone}
-            onChange={(event) => setPhone(formatPhone(event.target.value))}
-            className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">
-            <RequiredMark />
-            이메일
-          </span>
-          <input
-            type="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">
-            <RequiredMark />
-            비밀번호
-          </span>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">
-            <RequiredMark />
-            투자 레벨
-          </span>
-          <select
-            value={level}
-            onChange={(event) => setLevel(event.target.value as Level)}
-            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            {LEVEL_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        {error && <p className="text-sm text-rise">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
+    <div className="flex min-h-screen items-center justify-center bg-bg p-6">
+      <div className="w-full max-w-sm">
+        {/* 카드 왼쪽 상단 위 — 서비스 소개(About) 랜딩으로 돌아가기 */}
+        <Link
+          to="/about"
+          className="mb-3 inline-flex items-center text-sm font-medium text-muted transition-colors hover:text-primary-600"
         >
-          {isSubmitting ? '가입 중...' : '회원가입'}
-        </button>
+          ← 홈으로
+        </Link>
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
+        >
+          <div className="flex flex-col items-center gap-1">
+            {/* 로고·워드마크 클릭 시에도 About 랜딩으로 */}
+            <Link to="/about" aria-label="서비스 소개로 이동">
+              <Logo size={40} wordmarkClassName="text-xl" />
+            </Link>
+            <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
+          </div>
+          <h1 className="text-center text-lg font-bold text-ink">회원가입</h1>
+          <p className="text-xs text-muted">
+            <span className="text-rise">*</span> 표시는 필수 입력 항목입니다.
+          </p>
 
-        <SocialLoginButtons />
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">
+              <RequiredMark />
+              이름
+            </span>
+            <input
+              type="text"
+              required
+              autoComplete="name"
+              value={name}
+              // 이름에 숫자는 올 수 없으므로 입력 즉시 걸러낸다
+              onChange={(event) => setName(event.target.value.replace(/\d/g, ''))}
+              className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
 
-        <p className="text-center text-sm text-muted">
-          이미 계정이 있으신가요?{' '}
-          <Link to="/login" className="text-primary-600 hover:underline">
-            로그인
-          </Link>
-        </p>
-      </form>
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">나이</span>
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength={3}
+              placeholder="선택 입력"
+              value={age}
+              onChange={(event) => setAge(event.target.value.replace(/\D/g, ''))}
+              className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
+
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">
+              <RequiredMark />
+              전화번호
+            </span>
+            <input
+              type="tel"
+              required
+              autoComplete="tel"
+              inputMode="numeric"
+              maxLength={13}
+              placeholder="010-0000-0000"
+              value={phone}
+              onChange={(event) => setPhone(formatPhone(event.target.value))}
+              className="w-full rounded-lg border border-line px-3 py-2 placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
+
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">
+              <RequiredMark />
+              이메일
+            </span>
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
+
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">
+              <RequiredMark />
+              비밀번호
+            </span>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
+
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">
+              <RequiredMark />
+              투자 이해도
+            </span>
+            <select
+              value={level}
+              onChange={(event) => setLevel(event.target.value as Level)}
+              className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              {LEVEL_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {error && <p className="text-sm text-rise">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
+          >
+            {isSubmitting ? '가입 중...' : '회원가입'}
+          </button>
+
+          <SocialLoginButtons />
+
+          <p className="text-center text-sm text-muted">
+            이미 계정이 있으신가요?{' '}
+            <Link to="/login" className="text-primary-600 hover:underline">
+              로그인
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   )
 }

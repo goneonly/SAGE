@@ -35,68 +35,70 @@ function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-bg">
-      {/* 왼쪽 상단 — 서비스 소개(About) 랜딩으로 돌아가기 */}
-      <Link
-        to="/about"
-        className="absolute left-6 top-6 text-sm font-medium text-muted transition-colors hover:text-primary-600"
-      >
-        ← 홈으로
-      </Link>
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
-      >
-        <div className="flex flex-col items-center gap-1">
-          {/* 로고·워드마크 클릭 시에도 About 랜딩으로 */}
-          <Link to="/about" aria-label="서비스 소개로 이동">
-            <Logo size={40} wordmarkClassName="text-xl" />
-          </Link>
-          <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
-        </div>
-        <h1 className="text-center text-lg font-bold text-ink">로그인</h1>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">이메일</span>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">비밀번호</span>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </label>
-
-        {error && <p className="text-sm text-rise">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
+    <div className="flex min-h-screen items-center justify-center bg-bg p-6">
+      <div className="w-full max-w-sm">
+        {/* 카드 왼쪽 상단 위 — 서비스 소개(About) 랜딩으로 돌아가기 */}
+        <Link
+          to="/about"
+          className="mb-3 inline-flex items-center text-sm font-medium text-muted transition-colors hover:text-primary-600"
         >
-          {isSubmitting ? '로그인 중...' : '로그인'}
-        </button>
+          ← 홈으로
+        </Link>
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-4 rounded-xl border border-line bg-surface p-8 shadow-sm"
+        >
+          <div className="flex flex-col items-center gap-1">
+            {/* 로고·워드마크 클릭 시에도 About 랜딩으로 */}
+            <Link to="/about" aria-label="서비스 소개로 이동">
+              <Logo size={40} wordmarkClassName="text-xl" />
+            </Link>
+            <p className="text-sm italic text-muted">Be a smart investor with SAGE.</p>
+          </div>
+          <h1 className="text-center text-lg font-bold text-ink">로그인</h1>
 
-        <SocialLoginButtons />
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">이메일</span>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
 
-        <p className="text-center text-sm text-muted">
-          계정이 없으신가요?{' '}
-          <Link to="/signup" className="text-primary-600 hover:underline">
-            회원가입
-          </Link>
-        </p>
-      </form>
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">비밀번호</span>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
+
+          {error && <p className="text-sm text-rise">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
+          >
+            {isSubmitting ? '로그인 중...' : '로그인'}
+          </button>
+
+          <SocialLoginButtons />
+
+          <p className="text-center text-sm text-muted">
+            계정이 없으신가요?{' '}
+            <Link to="/signup" className="text-primary-600 hover:underline">
+              회원가입
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   )
 }
