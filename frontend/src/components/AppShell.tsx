@@ -7,7 +7,11 @@ import NotificationBell from './NotificationBell'
 import Footer from './Footer'
 import Logo from './Logo'
 
-function TopBar({ onMenuOpen }: { onMenuOpen: () => void }) {
+interface TopBarProps {
+  onMenuOpen: () => void
+}
+
+function TopBar({ onMenuOpen }: TopBarProps) {
   const user = useAuthStore((state) => state.user)
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
@@ -29,25 +33,6 @@ function TopBar({ onMenuOpen }: { onMenuOpen: () => void }) {
     // 데모 navbar-eco — 반투명 배경(#FAFAF5 90%) + backdrop blur + 하단 보더
     <header className="shrink-0 border-b border-line bg-bg/90 backdrop-blur-[10px]">
       <div className="flex h-16 items-center pr-4 md:h-[76px]">
-        {/* 모바일 — 사이드바 드로어를 여는 햄버거 */}
-        <button
-          type="button"
-          aria-label="메뉴 열기"
-          onClick={onMenuOpen}
-          className="ml-2 rounded p-2 text-muted transition-colors hover:text-primary-600 md:hidden"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            className="h-5 w-5"
-            aria-hidden="true"
-          >
-            <path d="M4 7h16M4 12h16M4 17h16" />
-          </svg>
-        </button>
         <div className="flex items-center px-2 md:w-56 md:shrink-0 md:px-4">
           {/* md:-translate-y-1: 로고를 4px 위로 올려 시각적 중앙 보정(데스크톱) */}
           <Link to="/" aria-label="홈으로 이동" className="md:-translate-y-1">
@@ -107,7 +92,7 @@ function TopBar({ onMenuOpen }: { onMenuOpen: () => void }) {
             </svg>
           </button>
           <NotificationBell />
-          {/* 사용자명 — 모바일에서는 omit. 로그아웃은 설정 화면(계정 섹션)과 모바일 드로어에서 제공 */}
+          {/* 사용자명 — 모바일에서는 omit. 로그아웃은 설정 화면(계정 섹션)에서 제공 */}
           {user && (
             <div className="hidden items-center gap-2 text-sm md:flex">
               {/* 이름이 있으면 이름으로, 없으면(기존 이메일 가입 mock) 이메일로 표시.
@@ -121,6 +106,25 @@ function TopBar({ onMenuOpen }: { onMenuOpen: () => void }) {
               </Link>
             </div>
           )}
+          {/* 모바일 — 사이드바 드로어를 여는 햄버거. PublicHeader 와 동일하게 우측 끝에 배치 */}
+          <button
+            type="button"
+            aria-label="메뉴 열기"
+            onClick={onMenuOpen}
+            className="rounded p-1.5 text-muted transition-colors hover:text-primary-600 md:hidden"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              className="h-5 w-5"
+              aria-hidden="true"
+            >
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
         </div>
       </div>
       {/* 모바일 — 돋보기 탭 시 펼쳐지는 검색바 */}
@@ -166,16 +170,8 @@ function TopBar({ onMenuOpen }: { onMenuOpen: () => void }) {
 // 모바일(<md): 사이드바는 고정 컬럼 대신 햄버거로 여는 오프캔버스 드로어로 전환.
 function AppShell() {
   const location = useLocation()
-  const navigate = useNavigate()
-  const logout = useAuthStore((state) => state.logout)
   const showRightBar = location.pathname === '/'
   const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  // 모바일 드로어 하단 로그아웃 — TopBar 의 로그아웃이 모바일에서 omit 되므로 여기서 제공
-  function handleDrawerLogout() {
-    logout()
-    navigate('/about', { replace: true })
-  }
 
   return (
     <div className="flex min-h-screen flex-col bg-bg text-ink">
@@ -200,7 +196,8 @@ function AppShell() {
             onClick={() => setSidebarOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute inset-y-0 left-0 flex w-56 flex-col bg-bg shadow-xl">
+          {/* 햄버거 버튼이 우측에 있으므로 드로어도 오른쪽에서 슬라이드 */}
+          <div className="absolute inset-y-0 right-0 flex w-56 flex-col bg-bg shadow-xl">
             {/* 드로어 안에서 메뉴(링크)를 누르면 드로어를 닫는다 — 이벤트 위임 */}
             <div
               className="flex min-h-0 flex-1 overflow-y-auto"
@@ -210,13 +207,6 @@ function AppShell() {
             >
               <Sidebar />
             </div>
-            <button
-              type="button"
-              onClick={handleDrawerLogout}
-              className="m-4 rounded-full border-2 border-primary-600 px-4 py-1.5 text-xs font-semibold text-primary-600 transition-all hover:bg-primary-600 hover:text-white"
-            >
-              로그아웃
-            </button>
           </div>
         </div>
       )}
