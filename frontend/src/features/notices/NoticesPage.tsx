@@ -30,8 +30,8 @@ function NoticesPage() {
     <div className="min-h-screen bg-bg text-ink">
       <PublicHeader />
 
-      <main className="max-w-3xl px-6 py-16">
-        <h1 className="mx-auto text-3xl font-bold text-ink md:text-4xl">공지사항</h1>
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <h1 className="text-3xl font-bold text-ink md:text-4xl">공지사항</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted">
           SAGE의 새로운 소식과 서비스 안내를 확인하세요.
         </p>
