@@ -95,7 +95,8 @@ function PortfolioChart({ points }: PortfolioChartProps) {
     setHoverIndex(Math.min(Math.max(index, 0), points.length - 1))
   }
 
-  const hovered = hoverIndex != null ? { point: points[hoverIndex], coord: coords[hoverIndex] } : null
+  const hovered =
+    hoverIndex != null ? { point: points[hoverIndex], coord: coords[hoverIndex] } : null
   // 툴팁이 오른쪽 밖으로 나가지 않게 뒤쪽 절반에서는 왼쪽으로 펼친다
   const tooltipFlip = hovered != null && hovered.coord.x > WIDTH * 0.62
 

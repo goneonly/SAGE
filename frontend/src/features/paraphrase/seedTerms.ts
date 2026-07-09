@@ -253,8 +253,7 @@ export const seedTerms: SeedTerm[] = [
     difficulty: 'basic',
     explanations: {
       beginner: '주식을 팔려는 힘. 팔려는 사람이 많으면 주가가 내려가기 쉬움.',
-      intermediate:
-        '매도 주문의 강도. 악재·차익실현·손절이 겹치면 매도세가 커지고 하락이 가속됨.',
+      intermediate: '매도 주문의 강도. 악재·차익실현·손절이 겹치면 매도세가 커지고 하락이 가속됨.',
       advanced:
         '매도세 출회의 원인 구분이 핵심 — 펀더멘털 훼손에 따른 이탈인지, 수급성(리밸런싱·반대매매) 물량인지에 따라 이후 반등 탄력이 다름.',
     },
@@ -621,8 +620,7 @@ export const seedTerms: SeedTerm[] = [
   {
     term: '성장주',
     explanations: {
-      beginner:
-        '지금 버는 돈보다 앞으로 커질 가능성을 보고 사는 주식. 기술·바이오 기업이 많음.',
+      beginner: '지금 버는 돈보다 앞으로 커질 가능성을 보고 사는 주식. 기술·바이오 기업이 많음.',
       intermediate:
         '매출·이익 성장률이 시장 평균을 크게 웃도는 종목군. 현재 이익 대비 PER이 높게 거래되는 것이 특징.',
       advanced:
@@ -674,8 +672,7 @@ export const seedTerms: SeedTerm[] = [
   {
     term: '순자산',
     explanations: {
-      beginner:
-        '가진 재산에서 빚을 뺀 진짜 내 몫. 회사로 치면 자본, 펀드로 치면 굴리는 돈의 규모.',
+      beginner: '가진 재산에서 빚을 뺀 진짜 내 몫. 회사로 치면 자본, 펀드로 치면 굴리는 돈의 규모.',
       intermediate:
         '총자산 − 총부채. 기업 분석에선 자기자본(PBR의 분모)으로, 펀드·ETF에선 순자산총액(AUM)으로 규모를 나타냄.',
       advanced:
