@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuthStore } from '../lib/store/authStore'
 import Logo from './Logo'
 
-// 로그아웃 상태의 공개 화면(About·공지사항)이 공유하는 상단 바.
-// 좌측: 로고(→ About) + 공지사항(→ 공지사항 페이지), 우측: 로그인/회원가입 (로그인 시 홈으로).
+// 공개 화면(About·공지사항)이 공유하는 상단 바.
+// 좌측: 로고(→ About) + 공지사항(→ 공지사항 페이지), 우측: 로그인/회원가입.
 // 모바일(<sm): 좌우 10%/5% 여백 제거, 공지사항은 더보기(햄버거) 메뉴로 수납,
 // 로고 + 회원가입 CTA 를 최우선으로 남긴다.
 function PublicHeader() {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -28,31 +26,20 @@ function PublicHeader() {
           </Link>
         </div>
         <div className="flex items-center gap-1 sm:mr-[5%] sm:gap-2">
-          {isAuthenticated ? (
-            <Link
-              to="/"
-              className="whitespace-nowrap rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90 sm:px-5"
-            >
-              홈으로 가기
-            </Link>
-          ) : (
-            <>
-              {/* 로그인 — 모바일에서는 여백을 줄인 텍스트 버튼으로 collapse */}
-              <Link
-                to="/login"
-                className="whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold text-ink transition hover:bg-primary-50 sm:px-4"
-              >
-                로그인
-              </Link>
-              {/* 회원가입 — 핵심 CTA, 최저 폭에서도 유지 */}
-              <Link
-                to="/signup"
-                className="whitespace-nowrap rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90 sm:px-5"
-              >
-                회원가입 하기
-              </Link>
-            </>
-          )}
+          {/* 로그인 — 모바일에서는 여백을 줄인 텍스트 버튼으로 collapse */}
+          <Link
+            to="/login"
+            className="whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold text-ink transition hover:bg-primary-50 sm:px-4"
+          >
+            로그인
+          </Link>
+          {/* 회원가입 — 핵심 CTA, 최저 폭에서도 유지 */}
+          <Link
+            to="/signup"
+            className="whitespace-nowrap rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90 sm:px-5"
+          >
+            회원가입 하기
+          </Link>
           {/* 모바일 전용 더보기 — 공지사항 등 부가 메뉴 진입점 */}
           <button
             type="button"
