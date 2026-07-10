@@ -1,4 +1,7 @@
 import { mockTopMovers } from './mockTopMovers'
+import { usePageTitle } from '../../lib/usePageTitle'
+import Container from '../../components/ui/Container'
+import PageTitle from '../../components/ui/PageTitle'
 
 function formatPrice(value: number): string {
   return `${value.toLocaleString('ko-KR')}원`
@@ -12,14 +15,15 @@ function formatPercent(value: number): string {
 // 급상승 종목 — 등락률 내림차순 랭킹. 등락 색은 브랜드 그린과 분리(PLAN.md §6):
 // 상승 = rise(빨강), 하락 = fall(파랑), 한국 증시 관례를 그대로 따른다.
 function TopMoversPage() {
+  usePageTitle('급상승 종목')
   const ranked = [...mockTopMovers].sort((a, b) => b.changePercent - a.changePercent)
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-bold text-ink">급상승 종목</h1>
-      <p className="mt-1 text-xs text-muted">
-        등락률 mock 데이터입니다. 실시간 시세 연동은 추후 지원됩니다.
-      </p>
+    <Container size="md">
+      <PageTitle
+        title="급상승 종목"
+        description="등락률 mock 데이터입니다. 실시간 시세 연동은 추후 지원됩니다."
+      />
 
       <ul className="mt-6 divide-y divide-line rounded-xl border border-line bg-surface">
         {ranked.map((mover, index) => (
@@ -42,7 +46,7 @@ function TopMoversPage() {
           </li>
         ))}
       </ul>
-    </div>
+    </Container>
   )
 }
 

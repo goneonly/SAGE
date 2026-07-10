@@ -192,12 +192,12 @@ function AppShell() {
       {sidebarOpen && (
         <div className="fixed inset-0 z-30 md:hidden">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/40 motion-safe:animate-fade-in"
             onClick={() => setSidebarOpen(false)}
             aria-hidden="true"
           />
           {/* 햄버거 버튼이 우측에 있으므로 드로어도 오른쪽에서 슬라이드 */}
-          <div className="absolute inset-y-0 right-0 flex w-56 flex-col bg-bg shadow-xl">
+          <div className="absolute inset-y-0 right-0 flex w-56 flex-col bg-bg shadow-xl motion-safe:animate-slide-in-right">
             {/* 드로어 안에서 메뉴(링크)를 누르면 드로어를 닫는다 — 이벤트 위임 */}
             <div
               className="flex min-h-0 flex-1 overflow-y-auto"

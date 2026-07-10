@@ -1,5 +1,6 @@
 import PublicHeader from '../../components/PublicHeader'
 import Footer from '../../components/Footer'
+import { usePageTitle } from '../../lib/usePageTitle'
 
 // 공지사항 — 공개 라우트. About 상단 바의 "공지사항"에서 진입한다.
 // 아직 백엔드 연동 전이라 mock 공지 목록을 노출한다.
@@ -26,6 +27,7 @@ const NOTICES: Notice[] = [
 ]
 
 function NoticesPage() {
+  usePageTitle('공지사항')
   return (
     <div className="min-h-screen bg-bg text-ink">
       <PublicHeader />

@@ -1,5 +1,6 @@
 import { useVocabStore } from '../lib/store/vocabStore'
 import type { Level } from '../types/auth'
+import Skeleton from './ui/Skeleton'
 
 interface ParaphrasePanelProps {
   isOpen: boolean
@@ -12,7 +13,8 @@ interface ParaphrasePanelProps {
   onClose: () => void
 }
 
-// 클릭 시 뜨는 in-place 사이드 패널 — 절대 페이지 이동 없이(PLAN.md §1 원칙 1) 설명을 보여준다.
+// 클릭 시 뜨는 in-place 설명 뷰 — 절대 페이지 이동 없이(PLAN.md §1 원칙 1) 설명을 보여준다.
+// 데스크톱(md+): 우측 사이드 패널 / 모바일(<md): 백드롭 딸린 중앙 모달로 전환.
 // "단어장 저장" 버튼은 term+level 조합으로 중복 저장을 막는다(vocabStore.saveTerm 이 upsert).
 function ParaphrasePanel({
   isOpen,
@@ -38,47 +40,62 @@ function ParaphrasePanel({
   }
 
   return (
-    <div
-      role="dialog"
-      aria-label={`${term} 설명`}
-      className="fixed inset-y-0 right-0 z-50 w-80 max-w-full overflow-y-auto border-l border-line bg-surface p-5 shadow-lg"
-    >
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-base font-bold text-ink">{term}</h3>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="닫기"
-          className="rounded p-1 text-muted hover:bg-primary-50 hover:text-ink"
-        >
-          ✕
-        </button>
-      </div>
+    <>
+      {/* 모바일 전용 백드롭 — 탭하면 모달 닫힘. 데스크톱 사이드 패널에서는 본문을 계속 읽을 수 있어야 하므로 없다 */}
+      <div
+        className="fixed inset-0 z-40 bg-black/40 motion-safe:animate-fade-in md:hidden"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${term} 설명`}
+        className="fixed inset-x-4 top-1/2 z-50 max-h-[80vh] -translate-y-1/2 overflow-y-auto rounded-2xl border border-line bg-surface p-5 shadow-lg motion-safe:animate-modal-in md:inset-y-0 md:left-auto md:right-0 md:max-h-none md:w-80 md:max-w-full md:translate-y-0 md:rounded-none md:border-0 md:border-l md:motion-safe:animate-slide-in-right"
+      >
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-base font-bold text-ink">{term}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="닫기"
+            className="rounded p-1 text-muted hover:bg-primary-50 hover:text-ink"
+          >
+            ✕
+          </button>
+        </div>
 
-      <div className="mt-4 text-sm">
-        {isLoading ? (
-          <p className="text-muted">설명을 불러오는 중...</p>
-        ) : (
-          <>
-            <p className="leading-relaxed text-ink">{explanation}</p>
-            {impact && (
-              <div className="mt-4 rounded-lg bg-primary-50 p-3">
-                <p className="text-xs font-bold text-primary-700">시장에선 이렇게 작동해요</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-ink">{impact}</p>
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={isSaved}
-              className="mt-4 w-full rounded-lg border border-primary-600 py-1.5 text-sm font-medium text-primary-600 transition hover:bg-primary-50 disabled:cursor-default disabled:border-line disabled:text-muted disabled:hover:bg-transparent"
-            >
-              {isSaved ? '단어장에 저장됨' : '단어장 저장'}
-            </button>
-          </>
-        )}
+        <div className="mt-4 text-sm" aria-busy={isLoading}>
+          {isLoading ? (
+            // 스켈레톤 — 설명 2~3줄 + 저장 버튼 자리를 미리 그려 로딩 중 레이아웃 점프를 막는다
+            <div className="space-y-2.5">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-11/12" />
+              <Skeleton className="h-4 w-3/5" />
+              <Skeleton className="mt-4 h-9 w-full rounded-lg" />
+            </div>
+          ) : (
+            <>
+              <p className="leading-relaxed text-ink">{explanation}</p>
+              {impact && (
+                <div className="mt-4 rounded-lg bg-primary-50 p-3">
+                  <p className="text-xs font-bold text-primary-700">시장에선 이렇게 작동해요</p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-ink">{impact}</p>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={isSaved}
+                className="mt-4 w-full rounded-lg border border-primary-600 py-1.5 text-sm font-medium text-primary-600 transition hover:bg-primary-50 disabled:cursor-default disabled:border-line disabled:text-muted disabled:hover:bg-transparent"
+              >
+                {isSaved ? '단어장에 저장됨' : '단어장 저장'}
+              </button>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -1,5 +1,12 @@
+import { Link } from 'react-router-dom'
 import { useVocabStore } from '../../lib/store/vocabStore'
+import { usePageTitle } from '../../lib/usePageTitle'
 import type { Level } from '../../types/auth'
+import Container from '../../components/ui/Container'
+import PageTitle from '../../components/ui/PageTitle'
+import EmptyState from '../../components/ui/EmptyState'
+import Badge from '../../components/ui/Badge'
+import Card from '../../components/ui/Card'
 
 const LEVEL_LABEL: Record<Level, string> = {
   beginner: '입문',
@@ -18,30 +25,39 @@ function formatDate(iso: string): string {
 // 단어장 화면 — ParaphrasePanel의 "단어장 저장"으로 생긴 항목을 읽고 삭제하는
 // 기본 CRUD 뷰(Create는 파라프레이즈 패널에서, 여기서는 조회/삭제).
 function VocabPage() {
+  usePageTitle('단어장')
   const entries = useVocabStore((state) => state.entries)
   const removeEntry = useVocabStore((state) => state.removeEntry)
 
   const sorted = [...entries].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-bold text-ink">단어장</h1>
+    <Container size="md">
+      <PageTitle title="단어장" />
 
       {sorted.length === 0 ? (
-        <p className="mt-8 text-center text-sm text-muted">
-          아직 저장한 단어가 없어요. 기사 안에서 하이라이트된 용어를 클릭하고 "단어장 저장"을
-          눌러보세요.
-        </p>
+        <EmptyState
+          className="mt-6"
+          icon="📖"
+          title="아직 저장한 단어가 없어요"
+          description='기사 안에서 하이라이트된 용어를 클릭하고 "단어장 저장"을 누르면 여기에 쌓여요.'
+          action={
+            <Link
+              to="/news"
+              className="inline-block rounded-full bg-primary-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90"
+            >
+              기사 읽으러 가기
+            </Link>
+          }
+        />
       ) : (
         <ul className="mt-6 space-y-3">
           {sorted.map((entry) => (
-            <li key={entry.id} className="relative rounded-xl border border-line bg-surface p-4">
+            <Card as="li" key={entry.id} className="relative p-4">
               <div className="pr-6">
                 <div className="flex items-center gap-2">
-                  <h2 className="font-semibold text-ink">{entry.term}</h2>
-                  <span className="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
-                    {LEVEL_LABEL[entry.level]}
-                  </span>
+                  <h2 className="text-base font-semibold text-ink">{entry.term}</h2>
+                  <Badge>{LEVEL_LABEL[entry.level]}</Badge>
                 </div>
                 <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-muted">
                   {entry.explanation}
@@ -57,11 +73,11 @@ function VocabPage() {
               >
                 ✕
               </button>
-            </li>
+            </Card>
           ))}
         </ul>
       )}
-    </div>
+    </Container>
   )
 }
 

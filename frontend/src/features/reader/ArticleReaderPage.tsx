@@ -1,11 +1,14 @@
 import { useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import HighlightText, { computeFirstOccurrenceTerms } from '../../components/HighlightText'
+import HighlightText from '../../components/HighlightText'
+import { computeFirstOccurrenceTerms } from '../paraphrase/firstOccurrence'
 import ParaphrasePanel from '../../components/ParaphrasePanel'
 import { getArticleById } from '../home/seedArticles'
 import { getParaphrase, peekParaphraseCache, type TermParaphrase } from '../../lib/api/paraphrase'
 import { useAuthStore } from '../../lib/store/authStore'
 import { useScrapStore } from '../../lib/store/scrapStore'
+import { usePageTitle } from '../../lib/usePageTitle'
+import Container from '../../components/ui/Container'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString('ko-KR', {
@@ -22,6 +25,7 @@ function formatDate(iso: string): string {
 function ArticleReaderPage() {
   const { id } = useParams<{ id: string }>()
   const article = id ? getArticleById(id) : undefined
+  usePageTitle(article?.title)
   const level = useAuthStore((state) => state.user?.level ?? 'beginner')
   const isScrapped = useScrapStore((state) => state.entries.some((entry) => entry.articleId === id))
   const toggleScrap = useScrapStore((state) => state.toggleScrap)
@@ -75,10 +79,21 @@ function ArticleReaderPage() {
 
     setParaphrase(null)
     setIsLoading(true)
-    const result = await getParaphrase(term, level, articleId)
-    if (requestIdRef.current === requestId) {
-      setParaphrase(result)
-      setIsLoading(false)
+    try {
+      const result = await getParaphrase(term, level, articleId)
+      if (requestIdRef.current === requestId) {
+        setParaphrase(result)
+        setIsLoading(false)
+      }
+    } catch {
+      // 실패해도 패널을 죽이지 않고 안내 문구로 대체 — 용어를 다시 클릭하면 재시도된다
+      if (requestIdRef.current === requestId) {
+        setParaphrase({
+          explanation: '설명을 불러오지 못했어요. 용어를 다시 클릭해 재시도해 주세요.',
+          impact: null,
+        })
+        setIsLoading(false)
+      }
     }
   }
 
@@ -87,7 +102,7 @@ function ArticleReaderPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <Container size="md">
       <Link to="/" className="text-sm text-primary-600 hover:underline">
         ← 홈으로
       </Link>
@@ -148,7 +163,7 @@ function ArticleReaderPage() {
         impact={paraphrase?.impact ?? null}
         onClose={() => setIsPanelOpen(false)}
       />
-    </div>
+    </Container>
   )
 }
 

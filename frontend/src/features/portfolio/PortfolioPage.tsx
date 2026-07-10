@@ -1,6 +1,10 @@
 import { mockHoldings } from './mockHoldings'
 import { computePortfolioSummary } from './portfolioMetrics'
 import PortfolioChart from './PortfolioChart'
+import { usePageTitle } from '../../lib/usePageTitle'
+import Container from '../../components/ui/Container'
+import PageTitle from '../../components/ui/PageTitle'
+import Card from '../../components/ui/Card'
 
 function formatCurrency(value: number): string {
   return `${Math.round(value).toLocaleString('ko-KR')}원`
@@ -20,40 +24,41 @@ function changeColorClass(value: number): string {
 // 포트폴리오 화면 — PLAN.md §5: 총 자산 / 총 수익률 / 오늘 변동률 + 그래프 + 보유 종목.
 // mockHoldings + mockPrices 로부터 computePortfolioSummary 가 지표를 계산한다(§11 mock 방침).
 function PortfolioPage() {
+  usePageTitle('포트폴리오')
   const summary = computePortfolioSummary(mockHoldings)
 
   return (
-    <div className="mx-auto max-w-3xl">
-      <h1 className="text-xl font-bold text-ink">포트폴리오</h1>
-      <p className="mt-1 text-xs text-muted">
-        보유 종목·시세는 mock 데이터입니다. 실 계좌·시세 연동은 추후 지원됩니다.
-      </p>
+    <Container size="lg">
+      <PageTitle
+        title="포트폴리오"
+        description="보유 종목·시세는 mock 데이터입니다. 실 계좌·시세 연동은 추후 지원됩니다."
+      />
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-line bg-surface p-4">
+        <Card className="p-4">
           <p className="text-xs text-muted">총 자산</p>
           <p className="mt-1 text-lg font-bold text-ink">{formatCurrency(summary.totalAsset)}</p>
-        </div>
-        <div className="rounded-xl border border-line bg-surface p-4">
+        </Card>
+        <Card className="p-4">
           <p className="text-xs text-muted">총 수익률</p>
           <p className={`mt-1 text-lg font-bold ${changeColorClass(summary.totalReturnPercent)}`}>
             {formatPercent(summary.totalReturnPercent)}
           </p>
-        </div>
-        <div className="rounded-xl border border-line bg-surface p-4">
+        </Card>
+        <Card className="p-4">
           <p className="text-xs text-muted">오늘 변동률</p>
           <p className={`mt-1 text-lg font-bold ${changeColorClass(summary.dailyChangePercent)}`}>
             {formatPercent(summary.dailyChangePercent)}
           </p>
-        </div>
+        </Card>
       </div>
 
-      <div className="mt-6 rounded-xl border border-line bg-surface p-4">
+      <Card className="mt-6 p-4">
         <p className="mb-2 text-xs text-muted">최근 거래일 총 평가액 추이</p>
         <PortfolioChart points={summary.valueHistory} />
-      </div>
+      </Card>
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-surface">
+      <Card className="mt-6 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-line text-xs text-muted">
@@ -80,8 +85,8 @@ function PortfolioPage() {
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
+      </Card>
+    </Container>
   )
 }
 

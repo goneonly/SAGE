@@ -85,7 +85,9 @@ function PortfolioChart({ points }: PortfolioChartProps) {
   // x축 날짜 라벨 — 처음·중간·끝 3개만 담백하게
   const xLabelIndices = [0, Math.floor((points.length - 1) / 2), points.length - 1]
 
-  function handlePointerMove(event: React.PointerEvent<SVGSVGElement>) {
+  // 마우스 이동·클릭·모바일 탭 공용 — 포인터 위치에서 가장 가까운 데이터 포인트를 고른다.
+  // 기존엔 pointermove 에만 걸려 있어 클릭/탭으로는 툴팁이 뜨지 않는 버그가 있었다.
+  function handlePointerLocate(event: React.PointerEvent<SVGSVGElement>) {
     const svg = svgRef.current
     if (!svg) return
     const rect = svg.getBoundingClientRect()
@@ -93,6 +95,12 @@ function PortfolioChart({ points }: PortfolioChartProps) {
     const x = ((event.clientX - rect.left) / rect.width) * WIDTH
     const index = Math.round((x - PAD.left) / stepX)
     setHoverIndex(Math.min(Math.max(index, 0), points.length - 1))
+  }
+
+  // 터치는 손을 떼는 순간 pointerleave 가 따라오므로 마우스일 때만 툴팁을 지운다 —
+  // 안 그러면 모바일에서 탭하자마자 툴팁이 사라진다.
+  function handlePointerLeave(event: React.PointerEvent<SVGSVGElement>) {
+    if (event.pointerType === 'mouse') setHoverIndex(null)
   }
 
   const hovered =
@@ -104,11 +112,12 @@ function PortfolioChart({ points }: PortfolioChartProps) {
     <svg
       ref={svgRef}
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      className={`h-40 w-full ${isUp ? 'text-rise' : 'text-fall'}`}
+      className={`h-40 w-full touch-none ${isUp ? 'text-rise' : 'text-fall'}`}
       role="img"
       aria-label="최근 거래일 총 평가액 추이 그래프"
-      onPointerMove={handlePointerMove}
-      onPointerLeave={() => setHoverIndex(null)}
+      onPointerDown={handlePointerLocate}
+      onPointerMove={handlePointerLocate}
+      onPointerLeave={handlePointerLeave}
     >
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">

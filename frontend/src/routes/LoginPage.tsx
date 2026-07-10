@@ -1,10 +1,12 @@
 import { type FormEvent, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate, type Location } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
+import { usePageTitle } from '../lib/usePageTitle'
 import Logo from '../components/Logo'
 import SocialLoginButtons from '../components/SocialLoginButtons'
 
 function LoginPage() {
+  usePageTitle('로그인')
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const login = useAuthStore((state) => state.login)
   const navigate = useNavigate()

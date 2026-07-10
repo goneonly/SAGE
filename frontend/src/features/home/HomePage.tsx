@@ -4,12 +4,14 @@ import ArticleCard from './ArticleCard'
 import { seedArticles } from './seedArticles'
 import { getRecommendedArticles } from './recommend'
 import { useWatchlistStore } from '../../lib/store/watchlistStore'
+import { usePageTitle } from '../../lib/usePageTitle'
 
 // 홈의 "전체 뉴스"는 최신 몇 건만 미리보기로 보여주고,
 // 나머지는 "전체 더보기" 버튼으로 뉴스 화면(/news, 페이지네이션)에서 이어 본다.
 const HOME_NEWS_PREVIEW_COUNT = 5
 
 function HomePage() {
+  usePageTitle('홈')
   const watchlistItems = useWatchlistStore((state) => state.items)
   const watchlistTickers = useMemo(
     () => watchlistItems.map((item) => item.ticker),
@@ -22,6 +24,8 @@ function HomePage() {
 
   return (
     <div>
+      {/* 시각적으로는 상단바 로고가 h1 역할이지만, 스크린리더용 heading 계층을 위해 숨긴 h1 을 둔다 */}
+      <h1 className="sr-only">홈</h1>
       <div className="mb-12 space-y-8">
         <section>
           <h2 className="mb-3 text-lg font-bold text-ink">추천 뉴스</h2>

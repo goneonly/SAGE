@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
+import { usePageTitle } from '../lib/usePageTitle'
 import Logo from '../components/Logo'
 import SocialLoginButtons from '../components/SocialLoginButtons'
 import type { Level } from '../types/auth'
@@ -33,6 +34,7 @@ function RequiredMark() {
 }
 
 function SignupPage() {
+  usePageTitle('회원가입')
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const signup = useAuthStore((state) => state.signup)
   const navigate = useNavigate()
