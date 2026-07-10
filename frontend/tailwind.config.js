@@ -59,6 +59,28 @@ export default {
         // --gradient-nature
         'gradient-nature': 'linear-gradient(135deg, #228B22 0%, #4CAF50 100%)',
       },
+      // 진입 모션 — 모달/패널/드로어가 뚝 나타나지 않게 하는 은은한 등장 애니메이션.
+      // 사용처에서는 motion-safe: 접두사로 감싸 prefers-reduced-motion 사용자를 배려한다.
+      keyframes: {
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        // 모바일 중앙 모달용 — 최종 상태가 -translate-y-1/2(세로 중앙)라 keyframe 안에서 보정
+        'modal-in': {
+          from: { opacity: '0', transform: 'translateY(calc(-50% + 16px))' },
+          to: { opacity: '1', transform: 'translateY(-50%)' },
+        },
+        'slide-in-right': {
+          from: { transform: 'translateX(100%)' },
+          to: { transform: 'translateX(0)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 200ms ease-out',
+        'modal-in': 'modal-in 250ms ease-out',
+        'slide-in-right': 'slide-in-right 250ms ease-out',
+      },
     },
   },
   plugins: [],

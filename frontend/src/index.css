@@ -52,4 +52,11 @@
   h4 {
     @apply font-heading font-semibold;
   }
+
+  /* 키보드 포커스 가시화 — 마우스 클릭에는 안 뜨고(:focus-visible) Tab 이동에만 표시.
+     개별 컴포넌트의 focus:ring 과 겹쳐도 같은 브랜드 색이라 어색하지 않다. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-primary-500));
+    outline-offset: 2px;
+  }
 }

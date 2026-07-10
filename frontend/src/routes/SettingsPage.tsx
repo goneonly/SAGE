@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
 import { useThemeStore, type Theme } from '../lib/store/themeStore'
+import { usePageTitle } from '../lib/usePageTitle'
 import type { Level } from '../types/auth'
+import Container from '../components/ui/Container'
+import PageTitle from '../components/ui/PageTitle'
 
 const LEVEL_OPTIONS: { value: Level; label: string; description: string }[] = [
   {
@@ -31,6 +34,7 @@ const THEME_OPTIONS: { value: Theme; label: string; description: string }[] = [
 // 통해 저장되고, persist 미들웨어가 localStorage 에도 반영한다. 리더 화면의 HighlightText/
 // ParaphrasePanel 은 이 store 값을 그대로 읽으므로 여기서 바꾸면 바로 반영된다.
 function SettingsPage() {
+  usePageTitle('설정')
   const user = useAuthStore((state) => state.user)
   const updateLevel = useAuthStore((state) => state.updateLevel)
   const logout = useAuthStore((state) => state.logout)
@@ -54,8 +58,8 @@ function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg">
-      <h1 className="text-xl font-bold text-ink">설정</h1>
+    <Container size="sm">
+      <PageTitle title="설정" />
 
       <section className="mt-6">
         <h2 className="text-sm font-semibold text-muted">내 정보</h2>
@@ -158,7 +162,7 @@ function SettingsPage() {
           로그아웃
         </button>
       </section>
-    </div>
+    </Container>
   )
 }
 

@@ -38,7 +38,7 @@ function PublicHeader() {
             to="/signup"
             className="whitespace-nowrap rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90 sm:px-5"
           >
-            회원가입 하기
+            회원가입
           </Link>
           {/* 모바일 전용 더보기 — 공지사항 등 부가 메뉴 진입점 */}
           <button

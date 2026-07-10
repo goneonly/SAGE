@@ -57,32 +57,34 @@ function SocialLoginButtons() {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <div className="flex items-center gap-3" aria-hidden="true">
         <span className="h-px flex-1 bg-line" />
         <span className="text-xs text-muted">또는</span>
         <span className="h-px flex-1 bg-line" />
       </div>
 
-      <button
-        type="button"
-        onClick={() => handleSocialLogin('kakao')}
-        disabled={pending !== null}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] py-2 text-sm font-medium text-[#191919] transition hover:brightness-95 disabled:opacity-50"
-      >
-        <KakaoIcon />
-        {pending === 'kakao' ? '카카오로 로그인 중...' : '카카오로 시작하기'}
-      </button>
+      <div className="space-y-3">
+        <button
+          type="button"
+          onClick={() => handleSocialLogin('kakao')}
+          disabled={pending !== null}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] py-2 text-sm font-medium text-[#191919] transition hover:brightness-95 disabled:opacity-50"
+        >
+          <KakaoIcon />
+          {pending === 'kakao' ? '카카오로 로그인 중...' : '카카오로 시작하기'}
+        </button>
 
-      <button
-        type="button"
-        onClick={() => handleSocialLogin('google')}
-        disabled={pending !== null}
-        className="flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-surface py-2 text-sm font-medium text-ink transition hover:bg-bg disabled:opacity-50"
-      >
-        <GoogleIcon />
-        {pending === 'google' ? '구글로 로그인 중...' : '구글로 시작하기'}
-      </button>
+        <button
+          type="button"
+          onClick={() => handleSocialLogin('google')}
+          disabled={pending !== null}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-surface py-2 text-sm font-medium text-ink transition hover:bg-bg disabled:opacity-50"
+        >
+          <GoogleIcon />
+          {pending === 'google' ? '구글로 로그인 중...' : '구글로 시작하기'}
+        </button>
+      </div>
     </div>
   )
 }
