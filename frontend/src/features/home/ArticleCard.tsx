@@ -22,7 +22,7 @@ function ArticleCard({ article, uniform = false }: { article: Article; uniform?:
   return (
     <Link to={`/article/${article.id}`} className="block h-full">
       <article
-        className={`rounded-xl border border-line bg-surface p-5 transition-all duration-300 hover:border-primary-600 hover:shadow-eco-hover ${
+        className={`rounded-xl border border-line bg-surface p-5 transition-all duration-300 hover:border-primary-600 hover:shadow-eco-hover-soft ${
           uniform ? 'flex h-44 flex-col' : ''
         }`}
       >

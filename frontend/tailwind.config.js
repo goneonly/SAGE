@@ -52,6 +52,8 @@ export default {
       boxShadow: {
         // 데모 organic-card hover — 크고 부드러운 그린 섀도우
         'eco-hover': '0 20px 40px rgba(34, 139, 34, 0.10)',
+        // eco-hover에서 한 단계 낮춘 버전 — 뉴스 카드 hover용 (더 작고 옅은 그린 섀도우)
+        'eco-hover-soft': '0 15px 30px rgba(34, 139, 34, 0.08)',
         'eco-lift': '0 15px 30px rgba(34, 139, 34, 0.12)',
         'eco-btn': '0 10px 30px rgba(34, 139, 34, 0.30)',
       },
