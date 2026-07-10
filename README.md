@@ -16,3 +16,8 @@
 </p>
 
 <br/>
+<img width="1817" height="837" alt="SAGE_notice_page" src="https://github.com/user-attachments/assets/30441c6c-08d6-458f-85af-665720d1dca1" />
+<br />
+<img width="1892" height="865" alt="SAGE_web_main" src="https://github.com/user-attachments/assets/910b1a46-3399-4541-b458-38d93cbc9291" />
+<br />
+<img width="1910" height="857" alt="SAGE_news_words" src="https://github.com/user-attachments/assets/401fe8ff-43d8-4eb1-8196-641b783ba4c1" />
