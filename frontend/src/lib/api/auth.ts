@@ -25,9 +25,13 @@ function assertNonEmpty(email: string, password: string) {
   }
 }
 
-// 운영자 이메일 — 이 이메일로 가입/로그인하면 자동으로 admin 권한이 부여된다.
+// 운영자 이메일 — VITE_ADMIN_EMAILS(쉼표 구분)로 주입한다. 소스에 실제 이메일을 커밋하지 않기 위함.
+// 주의: Vite env 는 빌드 시 번들에 그대로 포함되므로 이는 "소스에서 PII 제거"일 뿐 실제 권한 보안이 아니다.
 // TODO(backend): 실제 백엔드 연동 시 서버(DB)에서 role 을 내려주는 방식으로 교체.
-const ADMIN_EMAILS = ['4onlygone@gmail.com']
+const ADMIN_EMAILS = (import.meta.env.VITE_ADMIN_EMAILS ?? '')
+  .split(',')
+  .map((entry) => entry.trim().toLowerCase())
+  .filter(Boolean)
 
 function roleForEmail(email: string): User['role'] {
   return ADMIN_EMAILS.includes(email.trim().toLowerCase()) ? 'admin' : 'user'

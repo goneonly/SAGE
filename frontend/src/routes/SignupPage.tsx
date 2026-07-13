@@ -25,6 +25,10 @@ function formatPhone(value: string): string {
 
 const PHONE_PATTERN = /^010-\d{4}-\d{4}$/
 
+// 비밀번호 최소 길이 — mock 단계지만 최소한의 정책을 프론트에서 강제한다.
+// TODO(backend): 실제 연동 시 서버에서도 동일/더 강한 정책을 검증할 것(프론트 검증만 신뢰 금지).
+const MIN_PASSWORD_LENGTH = 8
+
 // 필수 입력 표시 — 라벨 텍스트 왼쪽 위에 붙는 빨간 별표.
 // 입력 요소의 required 속성이 접근성을 담당하므로 시각 장식으로만 취급한다.
 function RequiredMark() {
@@ -43,6 +47,7 @@ function SignupPage() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   // 나이는 선택 입력 — 입력 단계에서 숫자만 남겨 정수만 들어오게 한다.
@@ -72,6 +77,16 @@ function SignupPage() {
     const ageNumber = age === '' ? undefined : Number(age)
     if (ageNumber !== undefined && (ageNumber < 1 || ageNumber > 120)) {
       setError('나이는 1~120 사이의 숫자로 입력해 주세요.')
+      return
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(`비밀번호는 최소 ${MIN_PASSWORD_LENGTH}자 이상이어야 합니다.`)
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError('비밀번호가 일치하지 않습니다.')
       return
     }
 
@@ -191,8 +206,25 @@ function SignupPage() {
             <input
               type="password"
               required
+              minLength={MIN_PASSWORD_LENGTH}
+              autoComplete="new-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </label>
+
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted">
+              <RequiredMark />
+              비밀번호 확인
+            </span>
+            <input
+              type="password"
+              required
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
               className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
