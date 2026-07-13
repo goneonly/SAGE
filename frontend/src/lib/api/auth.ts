@@ -25,12 +25,21 @@ function assertNonEmpty(email: string, password: string) {
   }
 }
 
+// 운영자 이메일 — 이 이메일로 가입/로그인하면 자동으로 admin 권한이 부여된다.
+// TODO(backend): 실제 백엔드 연동 시 서버(DB)에서 role 을 내려주는 방식으로 교체.
+const ADMIN_EMAILS = ['4onlygone@gmail.com']
+
+function roleForEmail(email: string): User['role'] {
+  return ADMIN_EMAILS.includes(email.trim().toLowerCase()) ? 'admin' : 'user'
+}
+
 function mockUser(email: string, level: Level = 'beginner', extra: Partial<User> = {}): User {
   return {
     id: crypto.randomUUID(),
     email,
     level,
     provider: 'email',
+    role: roleForEmail(email),
     ...extra,
   }
 }

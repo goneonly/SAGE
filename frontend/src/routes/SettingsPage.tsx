@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
 import { useThemeStore, type Theme } from '../lib/store/themeStore'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -150,6 +150,20 @@ function SettingsPage() {
         </div>
       </section>
 
+      {/* 운영자 메뉴 — admin 계정에만 노출. 일반 회원에게는 섹션 자체가 보이지 않는다 */}
+      {user.role === 'admin' && (
+        <section className="mt-6">
+          <h2 className="text-sm font-semibold text-muted">운영자</h2>
+          <p className="mt-1 text-xs text-muted">운영자 계정에만 보이는 메뉴예요.</p>
+          <Link
+            to="/admin"
+            className="mt-3 inline-block rounded-full border-2 border-primary-600 px-4 py-1.5 text-xs font-semibold text-primary-600 transition-all hover:bg-primary-600 hover:text-white"
+          >
+            운영자 페이지 열기
+          </Link>
+        </section>
+      )}
+
       {/* 계정 — 다른 섹션과 같은 h2 + 설명 + 컨트롤 패턴. 파괴적 동작이라 맨 아래 배치 */}
       <section className="mt-6">
         <h2 className="text-sm font-semibold text-muted">계정</h2>
@@ -162,6 +176,9 @@ function SettingsPage() {
           로그아웃
         </button>
       </section>
+
+      {/* 앱 버전 — npm version patch|minor 로 올린 package.json 버전이 빌드 시 주입된다 */}
+      <p className="mt-8 text-center text-xs text-subtle">SAGE v{__APP_VERSION__}</p>
     </Container>
   )
 }
