@@ -3,6 +3,8 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
 import Sidebar from './Sidebar'
 import RightBar from './RightBar'
+import OnboardingModal from './OnboardingModal'
+import { isOnboardingPending } from '../lib/onboarding'
 import NotificationBell from './NotificationBell'
 import Footer from './Footer'
 import Logo from './Logo'
@@ -172,6 +174,8 @@ function AppShell() {
   const location = useLocation()
   const showRightBar = location.pathname === '/'
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  // 회원가입 직후 1회 뜨는 온보딩 팝업 — SignupPage 가 심어둔 플래그로 판단한다.
+  const [showOnboarding, setShowOnboarding] = useState(() => isOnboardingPending())
 
   return (
     <div className="flex min-h-screen flex-col bg-bg text-ink">
@@ -187,6 +191,9 @@ function AppShell() {
         {showRightBar && <RightBar />}
       </div>
       <Footer />
+
+      {/* 회원가입 완료 온보딩 팝업 (1회성) */}
+      {showOnboarding && <OnboardingModal onClose={() => setShowOnboarding(false)} />}
 
       {/* 모바일 — 오프캔버스 드로어 + 백드롭 */}
       {sidebarOpen && (

@@ -15,6 +15,7 @@ const HomePage = lazy(() => import('./features/home/HomePage'))
 const NewsPage = lazy(() => import('./features/news/NewsPage'))
 const ArticleReaderPage = lazy(() => import('./features/reader/ArticleReaderPage'))
 const SettingsPage = lazy(() => import('./routes/SettingsPage'))
+const AdminPage = lazy(() => import('./routes/AdminPage'))
 const VocabPage = lazy(() => import('./features/vocab/VocabPage'))
 const ScrapPage = lazy(() => import('./features/scrap/ScrapPage'))
 const PortfolioPage = lazy(() => import('./features/portfolio/PortfolioPage'))
@@ -57,6 +58,8 @@ function App() {
                 <Route path="/portfolio" element={<PortfolioPage />} />
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
+                {/* 운영자 전용 — AdminPage 내부에서 role 검사 후 비운영자는 홈으로 돌려보낸다 */}
+                <Route path="/admin" element={<AdminPage />} />
               </Route>
             </Route>
 

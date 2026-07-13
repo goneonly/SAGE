@@ -4,10 +4,15 @@ export type Level = 'beginner' | 'intermediate' | 'advanced'
 // 소셜 로그인 제공자 — 백엔드 OAuth 연동 전까지는 mock 으로만 동작한다.
 export type SocialProvider = 'kakao' | 'google'
 
+// 운영자 권한 — 지정된 운영자 이메일로 가입하면 'admin' 이 부여된다.
+export type Role = 'user' | 'admin'
+
 export interface User {
   id: string
   email: string
   level: Level
+  /** 운영자 여부 — 없으면 'user' 로 취급 */
+  role?: Role
   name?: string
   phone?: string
   /** 나이(만 나이 정수) — 회원가입 시 선택 입력이라 없을 수 있다 */

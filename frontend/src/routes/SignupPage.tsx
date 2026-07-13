@@ -4,6 +4,8 @@ import { useAuthStore } from '../lib/store/authStore'
 import { usePageTitle } from '../lib/usePageTitle'
 import Logo from '../components/Logo'
 import SocialLoginButtons from '../components/SocialLoginButtons'
+import PrivacyConsentModal from '../components/PrivacyConsentModal'
+import { clearOnboardingPending, markOnboardingPending } from '../lib/onboarding'
 import type { Level } from '../types/auth'
 
 const LEVEL_OPTIONS: { value: Level; label: string }[] = [
@@ -46,6 +48,9 @@ function SignupPage() {
   // 나이는 선택 입력 — 입력 단계에서 숫자만 남겨 정수만 들어오게 한다.
   const [age, setAge] = useState('')
   const [level, setLevel] = useState<Level>('beginner')
+  // 개인정보 수집·이용 동의(필수) — 미동의 시 가입을 차단한다.
+  const [agreed, setAgreed] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -70,11 +75,20 @@ function SignupPage() {
       return
     }
 
+    if (!agreed) {
+      setError('개인정보 수집 및 이용에 동의해 주세요.')
+      return
+    }
+
     setIsSubmitting(true)
+    // 가입 완료 후 홈에서 온보딩 팝업을 띄우기 위한 플래그.
+    // 인증 상태가 바뀌는 순간 리다이렉트가 일어날 수 있으므로 요청 "전"에 저장하고, 실패하면 되돌린다.
+    markOnboardingPending()
     try {
       await signup(email, password, level, { name, phone, age: ageNumber })
       navigate('/', { replace: true })
     } catch (err) {
+      clearOnboardingPending()
       setError(err instanceof Error ? err.message : '회원가입에 실패했습니다.')
     } finally {
       setIsSubmitting(false)
@@ -201,6 +215,29 @@ function SignupPage() {
             </select>
           </label>
 
+          {/* 개인정보 수집·이용 동의 (필수) */}
+          <div className="text-sm">
+            <label className="flex cursor-pointer items-start gap-2">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(event) => setAgreed(event.target.checked)}
+                className="mt-0.5 accent-primary-600"
+              />
+              <span className="text-muted">
+                <RequiredMark />
+                개인정보 수집 및 이용에 동의합니다.
+              </span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowPrivacy(true)}
+              className="ml-6 mt-1 text-xs text-primary-600 underline hover:text-primary-600/80"
+            >
+              자세히 보기
+            </button>
+          </div>
+
           {error && <p className="text-sm text-rise">{error}</p>}
 
           <button
@@ -221,6 +258,7 @@ function SignupPage() {
           </p>
         </form>
       </div>
+      {showPrivacy && <PrivacyConsentModal onClose={() => setShowPrivacy(false)} />}
     </div>
   )
 }
