@@ -6,6 +6,7 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+.env.example
 
 # Node
 node_modules/
@@ -38,3 +39,6 @@ claude-code-action/
 PLAN.md
 Setup_Guide_Windows.md
 tmp/
+
+# 로컬 학습 가이드 (커밋 안 함)
+docs/

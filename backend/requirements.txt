@@ -1,2 +1,26 @@
-fastapi
-uvicorn[standard]
+# SAGE 백엔드 의존성 (PLAN.md §3 기술 스택 기준)
+# 설치: pip install -r requirements.txt
+
+# --- 웹 프레임워크 (Phase 0) ---
+fastapi                  # REST API 프레임워크
+uvicorn[standard]        # ASGI 서버 (개발: uvicorn app.main:app --reload)
+
+# --- DB / ORM (Phase 0~) ---
+sqlalchemy>=2.0          # ORM (2.0 스타일 문법 사용)
+alembic                  # DB 마이그레이션 관리
+psycopg[binary]          # PostgreSQL 드라이버 (DATABASE_URL의 +psycopg)
+
+# --- 설정 / 환경변수 ---
+pydantic-settings        # .env 로드 → 타입 검증된 Settings 클래스
+
+# --- 인증 (Phase 1) ---
+pyjwt                    # JWT 발급/검증
+passlib[bcrypt]          # 비밀번호 해싱
+python-multipart         # OAuth2 password flow의 form 데이터 파싱
+
+# --- LLM (Phase 2) ---
+anthropic                # Claude API — paraphrase 핵심 기능
+
+# --- 개발/테스트 도구 ---
+pytest                   # 테스트
+httpx                    # FastAPI TestClient + 외부 API 호출
