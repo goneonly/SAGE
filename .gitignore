@@ -6,7 +6,6 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
-.env.example
 
 # Node
 node_modules/
