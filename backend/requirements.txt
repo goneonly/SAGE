@@ -15,7 +15,7 @@ pydantic-settings        # .env 로드 → 타입 검증된 Settings 클래스
 
 # --- 인증 (Phase 1) ---
 pyjwt                    # JWT 발급/검증
-passlib[bcrypt]          # 비밀번호 해싱
+bcrypt                   # 비밀번호 해싱
 python-multipart         # OAuth2 password flow의 form 데이터 파싱
 
 # --- LLM (Phase 2) ---
