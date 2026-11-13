@@ -36,5 +36,7 @@ claude-code-action/
 
 # 수동 업데이트
 PLAN.md
+# 내부 문서(스프린트 백로그·백엔드 가이드) — 로컬 전용, 올리지 않는다
+docs/
 Setup_Guide_Windows.md
 tmp/

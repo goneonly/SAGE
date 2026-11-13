@@ -26,7 +26,7 @@ function CtaSection() {
       <Reveal delay={300}>
         <Link
           to={isAuthenticated ? '/' : '/login'}
-          className="mt-10 inline-block rounded-full bg-primary-600 px-8 py-3 text-base font-semibold text-white shadow-eco-btn transition hover:bg-primary-600/90"
+          className="mt-10 inline-block rounded-full bg-primary-600 px-8 py-3 text-base font-semibold text-on-primary shadow-eco-btn transition hover:bg-primary-600/90"
         >
           지금 시작하기
         </Link>

@@ -1,5 +1,6 @@
 import { useState, type ReactElement } from 'react'
 import { markOnboardingDone } from '../lib/onboarding'
+import { useDialog } from '../lib/useDialog'
 
 // 회원가입 완료 후 홈 화면 위에 1회 뜨는 온보딩 팝업.
 // 3개 슬라이드(하이라이트 → 레벨별 설명 → 단어장·포트폴리오)를 "다음" 버튼으로 넘기고,
@@ -147,9 +148,14 @@ function OnboardingModal({ onClose }: { onClose: () => void }) {
     onClose()
   }
 
+  // Esc 는 "건너뛰기"와 같다 — 다시 뜨지 않도록 완료 처리한다
+  const dialogRef = useDialog<HTMLDivElement>(handleDone)
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label="SAGE 시작 안내"
@@ -173,24 +179,35 @@ function OnboardingModal({ onClose }: { onClose: () => void }) {
               />
             ))}
           </div>
-          {/* 오른쪽 하단 — 다음 / 마지막 슬라이드에선 확인 */}
-          {isLast ? (
-            <button
-              type="button"
-              onClick={handleDone}
-              className="rounded-lg bg-primary-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90"
-            >
-              확인
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIndex((i) => i + 1)}
-              className="rounded-lg border border-line px-5 py-2 text-sm font-medium text-ink transition-colors hover:bg-bg"
-            >
-              다음
-            </button>
-          )}
+          {/* 오른쪽 하단 — 건너뛰기 + 다음 / 마지막 슬라이드에선 확인 */}
+          <div className="flex items-center gap-2">
+            {!isLast && (
+              <button
+                type="button"
+                onClick={handleDone}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-ink"
+              >
+                건너뛰기
+              </button>
+            )}
+            {isLast ? (
+              <button
+                type="button"
+                onClick={handleDone}
+                className="rounded-lg bg-primary-600 px-5 py-2 text-sm font-semibold text-on-primary transition hover:bg-primary-600/90"
+              >
+                확인
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIndex((i) => i + 1)}
+                className="rounded-lg border border-line px-5 py-2 text-sm font-medium text-ink transition-colors hover:bg-bg"
+              >
+                다음
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

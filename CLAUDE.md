@@ -8,6 +8,8 @@
 - Frontend: `frontend/` — React + Vite + TypeScript + Tailwind CSS, 상태관리 Zustand(+TanStack Query 예정).
 - Backend: FastAPI + SQLAlchemy + Alembic + PostgreSQL (PLAN.md §3, §4 참고). 아직 미착수 시 최신 상태는 실제 디렉토리로 확인.
 - UI 문구는 전부 한국어. 컴포넌트/변수명은 영어.
+- 글꼴은 전부 Pretendard(`font-sans`). 명조·모노 등 다른 글꼴 클래스(`font-serif`, `font-mono`)를 쓰지 않는다.
+- 아이콘은 `frontend/src/components/Icon.tsx`의 채움형(filled) 세트만 쓴다 — 이모지나 선형 아이콘을 섞지 않는다. 필요한 아이콘이 없으면 같은 스타일로 거기에 추가한다.
 - 디자인 토큰(PLAN.md §6): 브랜드 그린 `primary`와 증시 등락색 `rise`(상승/빨강)·`fall`(하락/파랑)은 반드시 분리 — 브랜드 색을 등락 의미로 쓰지 않는다.
 
 ## 명령어
@@ -25,6 +27,7 @@ npm run format          # prettier --write
 
 - 브랜치: `feat/`, `fix/`, `chore/` 접두사. `main` 직접 커밋 금지.
 - 커밋 메시지: `feat: …` / `fix: …` / `chore: …`.
+- 커밋마다 루트 `CHANGELOG.md` 맨 위에 항목을 추가한다 — 추가/변경/수정으로 나눠 무엇이 바뀌었는지와 관련 파일을 적고, 같은 커밋에 포함한다.
 - 흐름: `git pull` → 브랜치 생성 → 구현 → `commit` → `push` → PR.
 - 반응형 기준: Tailwind `md:`(768px) 분기점으로 데스크톱/모바일을 나눈다. 모바일 전용 UI(햄버거, 검색 아이콘 토글 등)는 `md:hidden`으로, 데스크톱 전용은 `hidden md:*`로 짝을 맞춘다.
 - Tailwind 임의값(`ml-[10%]`, `mr-[82px]` 등)은 실험적 여백 조정에 한해 허용하되, 값을 확정하면 가능한 스케일 클래스(`ml-3` 등)로 정리한다.

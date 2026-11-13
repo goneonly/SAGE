@@ -52,7 +52,7 @@ function Footer() {
       </div>
 
       {/* AI 생성 콘텐츠 고지 — 서비스 전 화면 공통이므로 하단 바에 상시 노출 */}
-      <div className="mx-auto mt-3 flex max-w-7xl flex-col gap-1 px-4 text-center text-[11px] leading-relaxed text-subtle sm:flex-row sm:items-baseline sm:justify-between sm:gap-4 sm:px-6 sm:text-left lg:px-8">
+      <div className="mx-auto mt-3 flex max-w-7xl flex-col gap-1 px-4 text-center text-xs leading-relaxed text-subtle sm:flex-row sm:items-baseline sm:justify-between sm:gap-4 sm:px-6 sm:text-left lg:px-8">
         <p>{AI_DISCLAIMER}</p>
         <p className="shrink-0">© 2026 SAGE. All rights reserved.</p>
       </div>
