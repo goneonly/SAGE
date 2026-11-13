@@ -6,10 +6,22 @@
    테마는 3종: 매거진(기본, .magazine) · 라이트(:root) · 다크(.dark).
    <html> 에 클래스를 붙이는 것만으로 전체에 적용된다(themeStore). */
 @layer base {
+  /* 고정 상단바 높이(보더 1px 포함) — sticky 위치·화면 높이 계산이 전부 이 값을 쓴다 */
   :root {
-    color-scheme: light;
-    /* 고정 상단바 높이(보더 1px 포함) — sticky 위치·화면 높이 계산이 전부 이 값을 쓴다 */
     --header-h: 65px;
+  }
+  @media (min-width: 768px) {
+    :root {
+      --header-h: 77px;
+    }
+  }
+
+  /* 라이트(브랜드 그린) 팔레트 — 테마 클래스가 없을 때의 기본값.
+     .theme-light 를 붙인 요소 안에서는 사용자가 고른 테마와 상관없이 이 팔레트로 고정된다
+     (서비스 소개 /about 은 항상 브랜드 그린으로 보여준다 — AboutPage). */
+  :root,
+  .theme-light {
+    color-scheme: light;
     --color-primary-50: 237 247 237;
     --color-primary-100: 213 237 213;
     --color-primary-200: 198 230 198;
@@ -53,12 +65,6 @@
     --color-bg-alt: 22 29 23;
     --color-surface: 27 34 28;
     --color-on-primary: 17 22 18;
-  }
-
-  @media (min-width: 768px) {
-    :root {
-      --header-h: 77px;
-    }
   }
 
   /* 매거진 팔레트(기본 테마) — 오래된 신문지 같은 종이색 배경 + 에스프레소 잉크.

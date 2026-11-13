@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import AppShell from './components/AppShell'
 import ErrorBoundary from './components/ErrorBoundary'
+import ScrollToTop from './components/ScrollToTop'
 import ProtectedRoute from './routes/ProtectedRoute'
 
 // 페이지 코드 스플리팅 — 라우트 진입 시점에 해당 청크만 내려받는다.
@@ -37,6 +38,7 @@ function RouteFallback() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       {/* 렌더링 예외 최후 방어선 — 어떤 화면에서 터져도 재시도 UI 를 보여준다 */}
       <ErrorBoundary>
         <Suspense fallback={<RouteFallback />}>
