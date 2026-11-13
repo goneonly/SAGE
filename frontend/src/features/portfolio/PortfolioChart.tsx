@@ -1,4 +1,5 @@
 import { useId, useRef, useState } from 'react'
+import { formatWon } from '../../lib/format'
 
 interface ChartPoint {
   date: string // YYYY-MM-DD
@@ -19,10 +20,6 @@ const PLOT_HEIGHT = HEIGHT - PAD.top - PAD.bottom
 function formatMoneyShort(value: number): string {
   // 축 라벨용 축약 표기 — 1,234만원 단위면 충분히 구분된다
   return `${Math.round(value / 10_000).toLocaleString('ko-KR')}만`
-}
-
-function formatMoneyFull(value: number): string {
-  return `${Math.round(value).toLocaleString('ko-KR')}원`
 }
 
 function formatDateShort(iso: string): string {
@@ -205,7 +202,7 @@ function PortfolioChart({ points }: PortfolioChartProps) {
               {formatDateShort(hovered.point.date)}
             </text>
             <text x={10} y={28} className="fill-bg text-[10px] font-semibold">
-              {formatMoneyFull(hovered.point.value)}
+              {formatWon(hovered.point.value)}
             </text>
           </g>
         </g>

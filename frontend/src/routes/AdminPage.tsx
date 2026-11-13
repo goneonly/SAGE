@@ -128,7 +128,7 @@ function AdminPage() {
           <div className="flex items-center gap-2">
             <button
               type="submit"
-              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-600/90"
+              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-on-primary transition hover:bg-primary-600/90"
             >
               {editingId ? '수정 완료' : '공지 등록'}
             </button>
@@ -158,7 +158,7 @@ function AdminPage() {
               <div className="min-w-0">
                 <div className="flex items-baseline gap-2">
                   <p className="truncate text-sm font-medium text-ink">{notice.title}</p>
-                  <time className="shrink-0 text-[10px] text-subtle">{notice.date}</time>
+                  <time className="shrink-0 text-xs text-subtle">{notice.date}</time>
                 </div>
                 <p className="mt-1 line-clamp-2 text-xs text-muted">{notice.body}</p>
               </div>
@@ -173,7 +173,7 @@ function AdminPage() {
                 <button
                   type="button"
                   onClick={() => handleRemove(notice.id)}
-                  className="rounded-md border border-line px-2 py-1 text-xs text-rise transition hover:bg-bg"
+                  className="rounded-md border border-line px-2 py-1 text-xs text-danger transition hover:bg-bg"
                 >
                   삭제
                 </button>
@@ -195,7 +195,7 @@ function AdminPage() {
                 <p className="text-sm font-medium text-ink">{menu.title}</p>
                 <p className="text-xs text-muted">{menu.description}</p>
               </div>
-              <span className="rounded-full bg-bg px-2 py-0.5 text-[10px] font-medium text-subtle">
+              <span className="rounded-full bg-bg px-2 py-0.5 text-xs font-medium text-subtle">
                 준비 중
               </span>
             </div>

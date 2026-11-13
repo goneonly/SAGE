@@ -6,27 +6,33 @@ import { usePageTitle } from '../lib/usePageTitle'
 import type { Level } from '../types/auth'
 import Container from '../components/ui/Container'
 import PageTitle from '../components/ui/PageTitle'
+import { LEVEL_NAME } from '../lib/levels'
 
 const LEVEL_OPTIONS: { value: Level; label: string; description: string }[] = [
   {
     value: 'beginner',
-    label: '기초',
+    label: LEVEL_NAME.beginner,
     description: '쉬운 비유와 일상적인 표현으로 설명해드려요.',
   },
   {
     value: 'intermediate',
-    label: '성장',
+    label: LEVEL_NAME.intermediate,
     description: '정확한 정의와 계산식 위주로 설명해드려요.',
   },
   {
     value: 'advanced',
-    label: '심화',
+    label: LEVEL_NAME.advanced,
     description: '전문 용어와 실무 뉘앙스를 포함해 간결하게 설명해드려요.',
   },
 ]
 
 const THEME_OPTIONS: { value: Theme; label: string; description: string }[] = [
-  { value: 'light', label: '라이트 모드', description: '밝은 배경의 기본 테마예요.' },
+  {
+    value: 'magazine',
+    label: '매거진 모드',
+    description: '신문지 같은 종이색 배경의 기본 테마예요.',
+  },
+  { value: 'light', label: '라이트 모드', description: '밝은 배경에 그린 포인트를 쓴 테마예요.' },
   { value: 'dark', label: '다크 모드', description: '어두운 배경으로 눈의 부담을 줄여줘요.' },
 ]
 
@@ -157,7 +163,7 @@ function SettingsPage() {
           <p className="mt-1 text-xs text-muted">운영자 계정에만 보이는 메뉴예요.</p>
           <Link
             to="/admin"
-            className="mt-3 inline-block rounded-full border-2 border-primary-600 px-4 py-1.5 text-xs font-semibold text-primary-600 transition-all hover:bg-primary-600 hover:text-white"
+            className="mt-3 inline-block rounded-full border-2 border-primary-600 px-4 py-1.5 text-xs font-semibold text-primary-600 transition-all hover:bg-primary-600 hover:text-on-primary"
           >
             운영자 페이지 열기
           </Link>
@@ -171,7 +177,7 @@ function SettingsPage() {
         <button
           type="button"
           onClick={handleLogout}
-          className="mt-3 rounded-full border-2 border-primary-600 px-4 py-1.5 text-xs font-semibold text-primary-600 transition-all hover:bg-primary-600 hover:text-white"
+          className="mt-3 rounded-full border-2 border-primary-600 px-4 py-1.5 text-xs font-semibold text-primary-600 transition-all hover:bg-primary-600 hover:text-on-primary"
         >
           로그아웃
         </button>

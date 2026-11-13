@@ -14,6 +14,7 @@ export default {
         primary: {
           50: token('primary-50'), // badge/hover 배경 틴트
           100: token('primary-100'),
+          200: token('primary-200'), // 하이라이트 용어 hover
           500: token('primary-500'), // leaf
           600: token('primary-600'), // 메인 액션/브랜드 기준색 (forest green)
           700: token('primary-700'), // secondary (다크 모드에서는 틴트 배경 위 텍스트용 라이트 그린)
@@ -21,6 +22,8 @@ export default {
         // 한국 증시 등락 — 브랜드 그린과 반드시 분리 (상승=빨강, 하락=파랑)
         rise: token('rise'),
         fall: token('fall'),
+        // 오류·삭제·경고 — 등락색(rise)을 이 용도로 쓰지 않는다
+        danger: token('danger'),
         // 뉴트럴/배경 — 웜 오프화이트(라이트) / 그린 블랙(다크) + 그린 잉크
         ink: token('ink'), // 본문 텍스트
         muted: token('muted'), // 보조 텍스트
@@ -29,6 +32,8 @@ export default {
         bg: token('bg'), // 앱 배경
         surface: token('surface'), // 카드/박스 배경 — 배경과 톤온톤, 한 단계 밝음
         'bg-alt': token('bg-alt'), // 대체 배경
+        // primary-600 배경 위 글자색 — 라이트는 흰색, 다크는 어두운 잉크(밝은 그린 위 흰 글자는 4.5:1 미달)
+        'on-primary': token('on-primary'),
         'bg-dark': '#1B4332', // 브랜드 다크 섹션 배경 — 양 테마 공통 고정
       },
       fontFamily: {

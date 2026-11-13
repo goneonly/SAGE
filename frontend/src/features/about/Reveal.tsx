@@ -35,7 +35,7 @@ function Reveal({ children, delay = 0, className }: RevealProps) {
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
-        'transition-all duration-700 ease-out',
+        'transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none',
         visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
         className,
       )}

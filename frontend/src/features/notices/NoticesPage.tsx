@@ -11,7 +11,7 @@ function NoticesPage() {
   const notices = useNoticeStore((state) => state.notices)
 
   return (
-    <div className="min-h-screen bg-bg text-ink">
+    <div className="min-h-dvh bg-bg text-ink">
       <PublicHeader />
 
       <main className="mx-auto max-w-3xl px-6 py-16">

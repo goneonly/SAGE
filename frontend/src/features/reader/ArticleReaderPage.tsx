@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import HighlightText from '../../components/HighlightText'
 import { computeFirstOccurrenceTerms } from '../paraphrase/firstOccurrence'
@@ -7,18 +7,10 @@ import { getArticleById } from '../home/seedArticles'
 import { getParaphrase, peekParaphraseCache, type TermParaphrase } from '../../lib/api/paraphrase'
 import { useAuthStore } from '../../lib/store/authStore'
 import { useScrapStore } from '../../lib/store/scrapStore'
+import { useLearningStore } from '../../lib/store/learningStore'
 import { usePageTitle } from '../../lib/usePageTitle'
 import Container from '../../components/ui/Container'
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
+import { formatDateTimeLong } from '../../lib/format'
 
 // 기사 상세 리더 — 이 제품의 심장(PLAN.md §5). 스마트 하이라이트된 용어를 클릭하면
 // 페이지 이동 없이 ParaphrasePanel 이 열려 설명을 보여준다(PLAN.md §1 원칙 1).
@@ -29,6 +21,12 @@ function ArticleReaderPage() {
   const level = useAuthStore((state) => state.user?.level ?? 'beginner')
   const isScrapped = useScrapStore((state) => state.entries.some((entry) => entry.articleId === id))
   const toggleScrap = useScrapStore((state) => state.toggleScrap)
+
+  const recordTermView = useLearningStore((state) => state.recordTermView)
+  const recordArticleRead = useLearningStore((state) => state.recordArticleRead)
+  const isReadToday = useLearningStore(
+    (state) => id !== undefined && state.today.articleIds.includes(id),
+  )
 
   const [selectedTerm, setSelectedTerm] = useState<string | null>(null)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
@@ -51,6 +49,23 @@ function ArticleReaderPage() {
     [paragraphs, level],
   )
 
+  // 읽기 완료 판정 — 본문 끝(원본 기사 링크 영역)이 화면에 들어오면 오늘의 목표에 반영한다.
+  // 짧은 기사는 열자마자 끝이 보이므로 바로 읽은 것으로 친다.
+  const articleEndRef = useRef<HTMLDivElement>(null)
+  const readArticleId = article?.id
+  useEffect(() => {
+    const target = articleEndRef.current
+    if (!target || !readArticleId) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        recordArticleRead(readArticleId)
+        observer.disconnect()
+      }
+    })
+    observer.observe(target)
+    return () => observer.disconnect()
+  }, [readArticleId, recordArticleRead])
+
   if (!article) {
     return <Navigate to="/" replace />
   }
@@ -69,6 +84,7 @@ function ArticleReaderPage() {
 
     setSelectedTerm(term)
     setIsPanelOpen(true)
+    recordTermView(term, articleId)
 
     const cached = peekParaphraseCache(term, level, articleId)
     if (cached) {
@@ -102,68 +118,78 @@ function ArticleReaderPage() {
   }
 
   return (
-    <Container size="md">
-      <Link to="/" className="text-sm text-primary-600 hover:underline">
-        ← 홈으로
-      </Link>
+    // lg+ 에서 설명 패널(w-96, 화면 우측 고정)이 열리면 우측 바(w-64)를 덮고도 본문 쪽으로
+    // 8rem(= 24rem − 16rem) 더 들어오므로, 그만큼 오른쪽 여백을 비워
+    // 본문이 패널 밑으로 들어가지 않게 한다 — "읽는 흐름 유지"(PLAN.md §1 원칙 1)
+    <div className={isPanelOpen ? 'lg:pr-32' : undefined}>
+      <Container size="md">
+        <Link to="/" className="text-sm text-primary-600 hover:underline">
+          ← 홈으로
+        </Link>
 
-      <header className="mt-4 flex items-start justify-between gap-4 border-b border-line pb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-ink">{article.title}</h1>
-          <div className="mt-2 flex items-center gap-2 text-sm text-muted">
-            <span>{article.source}</span>
-            <span>·</span>
-            <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+        <header className="mt-4 flex items-start justify-between gap-4 border-b border-line pb-4">
+          <div>
+            <h1 className="text-2xl font-bold text-ink">{article.title}</h1>
+            <div className="mt-2 flex items-center gap-2 text-sm text-muted">
+              <span>{article.source}</span>
+              <span>·</span>
+              <time dateTime={article.publishedAt}>{formatDateTimeLong(article.publishedAt)}</time>
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={handleToggleScrap}
+            className={`shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
+              isScrapped
+                ? 'border-primary-600 bg-primary-50 text-primary-700'
+                : 'border-line text-muted hover:bg-primary-50 hover:text-ink'
+            }`}
+          >
+            {isScrapped ? '스크랩 완료' : '스크랩'}
+          </button>
+        </header>
+
+        <div className="mt-6 space-y-4 text-base leading-relaxed text-ink">
+          {paragraphs.map((paragraph, index) => (
+            <p key={index}>
+              <HighlightText
+                text={paragraph}
+                level={level}
+                onTermClick={handleTermClick}
+                allowedTerms={allowedTermsByParagraph[index]}
+              />
+            </p>
+          ))}
         </div>
-        <button
-          type="button"
-          onClick={handleToggleScrap}
-          className={`shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
-            isScrapped
-              ? 'border-primary-600 bg-primary-50 text-primary-700'
-              : 'border-line text-muted hover:bg-primary-50 hover:text-ink'
-          }`}
-        >
-          {isScrapped ? '스크랩 완료' : '스크랩'}
-        </button>
-      </header>
 
-      <div className="mt-6 space-y-4 text-base leading-relaxed text-ink">
-        {paragraphs.map((paragraph, index) => (
-          <p key={index}>
-            <HighlightText
-              text={paragraph}
-              level={level}
-              onTermClick={handleTermClick}
-              allowedTerms={allowedTermsByParagraph[index]}
-            />
-          </p>
-        ))}
-      </div>
+        {/* AI 재구성 기사 아래로 구분선 + 원본 기사 링크(PLAN.md §5 출처 명시) */}
+        <div ref={articleEndRef} className="mt-8 border-t border-line pt-4">
+          <a
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary-600 hover:underline"
+          >
+            원본 기사 보기 ({article.source}) →
+          </a>
+          {isReadToday && (
+            <p className="mt-2 text-xs text-muted" role="status">
+              읽기 완료 — 오늘의 목표에 반영됐어요.
+            </p>
+          )}
+        </div>
 
-      {/* AI 재구성 기사 아래로 구분선 + 원본 기사 링크(PLAN.md §5 출처 명시) */}
-      <div className="mt-8 border-t border-line pt-4">
-        <a
-          href={article.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-primary-600 hover:underline"
-        >
-          원본 기사 보기 ({article.source}) →
-        </a>
-      </div>
-
-      <ParaphrasePanel
-        isOpen={isPanelOpen}
-        term={selectedTerm}
-        level={level}
-        isLoading={isLoading}
-        explanation={paraphrase?.explanation ?? null}
-        impact={paraphrase?.impact ?? null}
-        onClose={() => setIsPanelOpen(false)}
-      />
-    </Container>
+        <ParaphrasePanel
+          isOpen={isPanelOpen}
+          term={selectedTerm}
+          level={level}
+          isLoading={isLoading}
+          explanation={paraphrase?.explanation ?? null}
+          impact={paraphrase?.impact ?? null}
+          onClose={() => setIsPanelOpen(false)}
+        />
+      </Container>
+    </div>
   )
 }
 

@@ -1,12 +1,11 @@
 // PLAN.md §5 — 왼쪽 메뉴: 홈·뉴스·스크랩·단어장·급상승 종목·포트폴리오·AI 투자 인사이트, 하단 설정
-// icon 은 NavIcon.tsx 의 아이콘 이름과 1:1 대응한다.
-export type NavIconName =
-  'home' | 'news' | 'scrap' | 'vocab' | 'trending' | 'portfolio' | 'insights' | 'settings'
+// icon 은 Icon.tsx 의 아이콘 이름이다.
+import type { IconName } from './Icon'
 
 export interface NavItem {
   to: string
   label: string
-  icon: NavIconName
+  icon: IconName
 }
 
 export const NAV_ITEMS: NavItem[] = [

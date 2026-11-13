@@ -14,7 +14,7 @@ function AboutPage() {
   usePageTitle()
 
   return (
-    <div className="min-h-screen bg-bg text-ink">
+    <div className="min-h-dvh bg-bg text-ink">
       <PublicHeader />
       <HeroSection />
       <HighlightDemoSection />

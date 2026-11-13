@@ -7,12 +7,7 @@ import SocialLoginButtons from '../components/SocialLoginButtons'
 import PrivacyConsentModal from '../components/PrivacyConsentModal'
 import { clearOnboardingPending, markOnboardingPending } from '../lib/onboarding'
 import type { Level } from '../types/auth'
-
-const LEVEL_OPTIONS: { value: Level; label: string }[] = [
-  { value: 'beginner', label: '기초' },
-  { value: 'intermediate', label: '성장' },
-  { value: 'advanced', label: '심화' },
-]
+import { LEVEL_NAME, LEVELS } from '../lib/levels'
 
 // 전화번호 입력 마스크 — 숫자 외 문자는 버리고 휴대폰 11자리까지만 받아
 // 010-0000-0000 형태로 하이픈을 자동으로 붙인다.
@@ -33,7 +28,7 @@ const MIN_PASSWORD_LENGTH = 8
 // 입력 요소의 required 속성이 접근성을 담당하므로 시각 장식으로만 취급한다.
 function RequiredMark() {
   return (
-    <span aria-hidden="true" className="mr-0.5 align-top leading-none text-rise">
+    <span aria-hidden="true" className="mr-0.5 align-top leading-none text-danger">
       *
     </span>
   )
@@ -111,7 +106,7 @@ function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg p-6">
+    <div className="flex min-h-dvh items-center justify-center bg-bg p-6">
       <div className="w-full max-w-sm">
         {/* 카드 왼쪽 상단 위 — 서비스 소개(About) 랜딩으로 돌아가기 */}
         <Link
@@ -133,7 +128,7 @@ function SignupPage() {
           </div>
           <h1 className="text-center text-lg font-bold text-ink">회원가입</h1>
           <p className="text-xs text-muted">
-            <span className="text-rise">*</span> 표시는 필수 입력 항목입니다.
+            <span className="text-danger">*</span> 표시는 필수 입력 항목입니다.
           </p>
 
           <label className="block text-sm">
@@ -239,9 +234,9 @@ function SignupPage() {
               onChange={(event) => setLevel(event.target.value as Level)}
               className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              {LEVEL_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+              {LEVELS.map((value) => (
+                <option key={value} value={value}>
+                  {LEVEL_NAME[value]}
                 </option>
               ))}
             </select>
@@ -270,12 +265,16 @@ function SignupPage() {
             </button>
           </div>
 
-          {error && <p className="text-sm text-rise">{error}</p>}
+          {error && (
+            <p role="alert" className="text-sm text-danger">
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
+            className="w-full rounded-lg bg-primary-600 py-2 font-medium text-on-primary transition hover:bg-primary-600/90 disabled:opacity-50"
           >
             {isSubmitting ? '가입 중...' : '회원가입'}
           </button>

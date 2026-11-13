@@ -5,15 +5,7 @@ import { usePageTitle } from '../../lib/usePageTitle'
 import Container from '../../components/ui/Container'
 import PageTitle from '../../components/ui/PageTitle'
 import Card from '../../components/ui/Card'
-
-function formatCurrency(value: number): string {
-  return `${Math.round(value).toLocaleString('ko-KR')}원`
-}
-
-function formatPercent(value: number): string {
-  const sign = value > 0 ? '+' : ''
-  return `${sign}${value.toFixed(2)}%`
-}
+import { formatSignedPercent, formatWon } from '../../lib/format'
 
 function changeColorClass(value: number): string {
   if (value > 0) return 'text-rise'
@@ -37,18 +29,18 @@ function PortfolioPage() {
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <Card className="p-4">
           <p className="text-xs text-muted">총 자산</p>
-          <p className="mt-1 text-lg font-bold text-ink">{formatCurrency(summary.totalAsset)}</p>
+          <p className="mt-1 text-lg font-bold text-ink">{formatWon(summary.totalAsset)}</p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-muted">총 수익률</p>
           <p className={`mt-1 text-lg font-bold ${changeColorClass(summary.totalReturnPercent)}`}>
-            {formatPercent(summary.totalReturnPercent)}
+            {formatSignedPercent(summary.totalReturnPercent)}
           </p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-muted">오늘 변동률</p>
           <p className={`mt-1 text-lg font-bold ${changeColorClass(summary.dailyChangePercent)}`}>
-            {formatPercent(summary.dailyChangePercent)}
+            {formatSignedPercent(summary.dailyChangePercent)}
           </p>
         </Card>
       </div>
@@ -58,8 +50,43 @@ function PortfolioPage() {
         <PortfolioChart points={summary.valueHistory} />
       </Card>
 
-      <Card className="mt-6 overflow-x-auto">
-        <table className="w-full text-left text-sm">
+      {/* 보유 종목 — <lg: 종목별 카드 / lg+: 표. 6열 표는 좁은 폭에서 종목명이 글자 단위로 꺾이고
+          오른쪽 열이 잘린다. md~lg 는 사이드바(w-56) 때문에 본문이 ~500px 라 표가 넘치므로 lg 에서 전환한다. */}
+      <ul className="mt-6 space-y-3 lg:hidden">
+        {summary.holdings.map((holding) => (
+          <Card as="li" key={holding.ticker} className="p-4">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="font-semibold text-ink">{holding.name}</span>
+              <span
+                className={`shrink-0 font-semibold tabular-nums ${changeColorClass(holding.returnPercent)}`}
+              >
+                {formatSignedPercent(holding.returnPercent)}
+              </span>
+            </div>
+            <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <div>
+                <dt className="text-xs text-muted">평가금액</dt>
+                <dd className="tabular-nums text-ink">{formatWon(holding.marketValue)}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted">수량</dt>
+                <dd className="tabular-nums text-ink">{holding.qty}주</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted">평균단가</dt>
+                <dd className="tabular-nums text-ink">{formatWon(holding.avgPrice)}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted">현재가</dt>
+                <dd className="tabular-nums text-ink">{formatWon(holding.currentPrice)}</dd>
+              </div>
+            </dl>
+          </Card>
+        ))}
+      </ul>
+
+      <Card className="mt-6 hidden overflow-x-auto lg:block">
+        <table className="w-full whitespace-nowrap text-left text-sm tabular-nums">
           <thead>
             <tr className="border-b border-line text-xs text-muted">
               <th className="px-4 py-2 font-medium">종목명</th>
@@ -75,11 +102,11 @@ function PortfolioPage() {
               <tr key={holding.ticker} className="border-b border-line last:border-0">
                 <td className="px-4 py-2 text-ink">{holding.name}</td>
                 <td className="px-4 py-2 text-ink">{holding.qty}</td>
-                <td className="px-4 py-2 text-ink">{formatCurrency(holding.avgPrice)}</td>
-                <td className="px-4 py-2 text-ink">{formatCurrency(holding.currentPrice)}</td>
-                <td className="px-4 py-2 text-ink">{formatCurrency(holding.marketValue)}</td>
+                <td className="px-4 py-2 text-ink">{formatWon(holding.avgPrice)}</td>
+                <td className="px-4 py-2 text-ink">{formatWon(holding.currentPrice)}</td>
+                <td className="px-4 py-2 text-ink">{formatWon(holding.marketValue)}</td>
                 <td className={`px-4 py-2 font-medium ${changeColorClass(holding.returnPercent)}`}>
-                  {formatPercent(holding.returnPercent)}
+                  {formatSignedPercent(holding.returnPercent)}
                 </td>
               </tr>
             ))}
