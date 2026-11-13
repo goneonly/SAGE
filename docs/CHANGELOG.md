@@ -1,6 +1,12 @@
 # CHANGELOG
 
-커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](CLAUDE.md) "규칙" 참고.
+커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
+
+## chore: CHANGELOG 를 docs/ 로 이동, docs 는 CHANGELOG 만 공개 (2026-11-13)
+
+### 변경
+- `CHANGELOG.md` 를 루트에서 `docs/CHANGELOG.md` 로 이동 (`CLAUDE.md` 규칙의 경로도 갱신)
+- `.gitignore` — `docs/` 전체 무시 → `docs/*` + `!docs/CHANGELOG.md` 로 바꿔 `docs/` 안에서는 CHANGELOG 만 GitHub 에 올린다. PLAN·스프린트 백로그·백엔드 가이드는 계속 로컬 전용
 
 ## feat: 홈 매거진 개편, 학습 루프, UI 접근성·반응형 정리 (2026-11-13)
 
