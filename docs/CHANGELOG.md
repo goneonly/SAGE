@@ -2,9 +2,25 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
-## 미커밋 (2026-11-13)
+## 미커밋 — `chore/remove-portfolio` (2026-11-14)
 
 커밋할 때 이 제목을 커밋 메시지로 바꾼다.
+
+### 추가
+- 왼쪽 사이드바 메뉴 hover·키보드 포커스 시 배경이 왼쪽에서 차오르는 애니메이션 (`Sidebar.tsx`)
+
+### 변경
+- 그라데이션 전면 제거 — 로고 마크·favicon 단색, 추천 뉴스 하단 조작부의 페이드 제거(조작부를 지면 아래로 분리), 미사용 `gradient-nature` 삭제 (`Logo.tsx`, `public/favicon.svg`, `NewspaperCarousel.tsx`, `tailwind.config.js`, `index.css` 의 `--color-logo`)
+
+### 삭제
+- **포트폴리오 기능 전체** — 사이드바 메뉴, `/portfolio` 라우트, `features/portfolio/`(페이지·차트·mock 보유 종목·시세·지표 계산), `types/portfolio.ts`, `Icon` 의 `portfolio` 아이콘
+- 온보딩 3번째 슬라이드·알림 mock 문구에서 포트폴리오 언급 제거(→ 관심 종목)
+
+### 수정
+- 앱 버전 표기 0.1.0 → 0.4.0 — `npm version` 을 루트에서만 올려 `frontend/package.json` 이 그대로였음
+- macOS 동기화가 만든 `* 2.ts(x)` 중복 파일 16개 삭제(커밋된 적 없음)
+
+## fix: 소개 페이지 UI 수정 (2026-11-13, `668f337`)
 
 ### 추가
 - 화면 이동 시 맨 위에서 시작 — `components/ScrollToTop.tsx`(뒤로/앞으로 가기는 이전 위치 유지)

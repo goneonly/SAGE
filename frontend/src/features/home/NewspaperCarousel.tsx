@@ -252,13 +252,12 @@ function NewspaperCarousel({ articles, footer }: NewspaperCarouselProps) {
         </button>
       </div>
 
-      {/* 하단 조작부 — 잘린 지면 위에 배경색 그라데이션을 깔고 그 위에 올린다.
-          그라데이션은 클릭을 통과시켜(pointer-events-none) 아래 카드 클릭·드래그를 막지 않는다 */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center bg-gradient-to-t from-bg from-55% to-transparent pb-1 pt-16">
+      {/* 하단 조작부 — 무대 아래에 따로 둔다. 지면은 무대 아래 경계에서 그대로 잘린다(그라데이션 없음) */}
+      <div className="flex shrink-0 flex-col items-center border-t border-line bg-bg pb-1 pt-2">
         <span className="text-sm tabular-nums text-muted" aria-hidden="true">
           {activeIndex + 1} / {count}
         </span>
-        {footer && <div className="pointer-events-auto">{footer}</div>}
+        {footer}
       </div>
       {/* 스크린리더용 — 카드가 바뀔 때 현재 기사를 알려 준다 */}
       <p className="sr-only" aria-live="polite">

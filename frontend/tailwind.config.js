@@ -62,10 +62,6 @@ export default {
         'eco-lift': '0 15px 30px rgba(34, 139, 34, 0.12)',
         'eco-btn': '0 10px 30px rgba(34, 139, 34, 0.30)',
       },
-      backgroundImage: {
-        // --gradient-nature
-        'gradient-nature': 'linear-gradient(135deg, #228B22 0%, #4CAF50 100%)',
-      },
       // 진입 모션 — 모달/패널/드로어가 뚝 나타나지 않게 하는 은은한 등장 애니메이션.
       // 사용처에서는 motion-safe: 접두사로 감싸 prefers-reduced-motion 사용자를 배려한다.
       keyframes: {

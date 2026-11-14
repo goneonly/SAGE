@@ -40,9 +40,8 @@
     --color-bg-alt: 245 245 232;
     --color-surface: 253 253 249;
     --color-on-primary: 255 255 255;
-    /* 로고 마크 그라디언트 — 라이트·다크는 브랜드 그린, 매거진은 잉크 브라운 */
-    --color-logo-from: 34 139 34;
-    --color-logo-to: 76 175 80;
+    /* 로고 마크 색 — 라이트·다크는 브랜드 그린, 매거진은 잉크 브라운(단색, 그라디언트 없음) */
+    --color-logo: 34 139 34;
   }
 
   /* 다크 팔레트 — 그린 잉크 톤을 유지한 어두운 배경 + 살짝 밝힌 브랜드 그린(대비 확보) */
@@ -89,8 +88,7 @@
     --color-bg-alt: 230 220 204;
     --color-surface: 246 239 228;
     --color-on-primary: 246 239 228;
-    --color-logo-from: 58 47 44;
-    --color-logo-to: 122 98 82;
+    --color-logo: 58 47 44;
   }
 
   /* 타이포그래피 — 본문·제목 모두 Pretendard (main.tsx 에서 dynamic-subset 로드) */
