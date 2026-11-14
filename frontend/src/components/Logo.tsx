@@ -1,4 +1,4 @@
-// SAGE(Smart AI Guidance for Economics) 공용 로고 — 그라디언트 스쿼클 + "S" 모노그램.
+// SAGE(Smart AI Guidance for Economics) 공용 로고 — 단색 스쿼클 + "S" 모노그램.
 // 슬로건: "Be a smart investor with SAGE." 워드마크는 본문과 같은 Pretendard 다.
 // favicon.svg 도 같은 마크를 쓴다.
 interface LogoProps {
@@ -21,21 +21,8 @@ export function LogoMark({ size = 36 }: { size?: number }) {
       aria-hidden="true"
       className="shrink-0"
     >
-      <defs>
-        <linearGradient
-          id="sage-gradient"
-          x1="0"
-          y1="0"
-          x2="32"
-          y2="32"
-          gradientUnits="userSpaceOnUse"
-        >
-          {/* 색은 테마 토큰(index.css --color-logo-*)을 따른다 — 매거진 테마에서는 갈색 */}
-          <stop style={{ stopColor: 'rgb(var(--color-logo-from))' }} />
-          <stop offset="1" style={{ stopColor: 'rgb(var(--color-logo-to))' }} />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="9" fill="url(#sage-gradient)" />
+      {/* 단색 — 색은 테마 토큰(index.css --color-logo)을 따른다. 매거진 테마에서는 갈색 */}
+      <rect width="32" height="32" rx="9" style={{ fill: 'rgb(var(--color-logo))' }} />
       <path
         d="M21.5 9.5C20.2 8 18.2 7 16 7c-3.2 0-5.5 1.7-5.5 4s2.3 3.3 5.5 4 5.5 1.7 5.5 4-2.3 4-5.5 4c-2.2 0-4.2-1-5.5-2.5"
         stroke="white"

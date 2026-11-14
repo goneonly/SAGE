@@ -1,4 +1,4 @@
-// PLAN.md §5 — 왼쪽 메뉴: 홈·뉴스·스크랩·단어장·급상승 종목·포트폴리오·AI 투자 인사이트, 하단 설정
+// PLAN.md §5 — 왼쪽 메뉴: 홈·뉴스·스크랩·단어장·급상승 종목·AI 투자 인사이트, 하단 설정
 // icon 은 Icon.tsx 의 아이콘 이름이다.
 import type { IconName } from './Icon'
 
@@ -14,7 +14,6 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/scrap', label: '스크랩', icon: 'scrap' },
   { to: '/vocab', label: '단어장', icon: 'vocab' },
   { to: '/top-movers', label: '급상승 종목', icon: 'trending' },
-  { to: '/portfolio', label: '포트폴리오', icon: 'portfolio' },
   { to: '/insights', label: 'AI 투자 인사이트', icon: 'insights' },
 ]
 

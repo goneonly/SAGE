@@ -40,8 +40,8 @@ export const seedNotifications: AppNotification[] = [
   },
   {
     id: 'n5',
-    title: '주간 포트폴리오 요약',
-    body: '이번 주 내 관심 종목 수익률 요약이 준비됐습니다.',
+    title: '주간 관심 종목 요약',
+    body: '이번 주 내 관심 종목 등락 요약이 준비됐습니다.',
     time: '어제',
     read: true,
   },

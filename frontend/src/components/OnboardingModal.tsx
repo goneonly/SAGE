@@ -3,7 +3,7 @@ import { markOnboardingDone } from '../lib/onboarding'
 import { useDialog } from '../lib/useDialog'
 
 // 회원가입 완료 후 홈 화면 위에 1회 뜨는 온보딩 팝업.
-// 3개 슬라이드(하이라이트 → 레벨별 설명 → 단어장·포트폴리오)를 "다음" 버튼으로 넘기고,
+// 3개 슬라이드(하이라이트 → 레벨별 설명 → 단어장·관심 종목)를 "다음" 버튼으로 넘기고,
 // 마지막 슬라이드에서 "확인"을 누르면 다시 뜨지 않는다(localStorage 플래그).
 
 // 슬라이드별 미니 화면 목업 — 실제 앱 분위기(라이트 + 브랜드 그린)를 SVG로 그린다.
@@ -132,8 +132,8 @@ const SLIDES: { title: string; description: string; Preview: () => ReactElement 
     Preview: ParaphrasePreview,
   },
   {
-    title: '단어장과 포트폴리오까지',
-    description: '배운 용어는 단어장에, 관심 종목은 포트폴리오에 차곡차곡 쌓여요.',
+    title: '단어장과 관심 종목까지',
+    description: '배운 용어는 단어장에 쌓이고, 관심 종목은 홈에서 바로 관리해요.',
     Preview: VocabPreview,
   },
 ]
