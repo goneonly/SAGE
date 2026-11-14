@@ -30,7 +30,7 @@ const THEME_OPTIONS: { value: Theme; label: string; description: string }[] = [
   {
     value: 'magazine',
     label: '매거진 모드',
-    description: '신문지 같은 종이색 배경의 기본 테마예요.',
+    description: '깔끔한 회색 배경에 잉크 브라운 포인트를 준 기본 테마예요.',
   },
   { value: 'light', label: '라이트 모드', description: '밝은 배경에 그린 포인트를 쓴 테마예요.' },
   { value: 'dark', label: '다크 모드', description: '어두운 배경으로 눈의 부담을 줄여줘요.' },
