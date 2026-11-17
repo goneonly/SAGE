@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom'
 import { useScrapStore } from '../../lib/store/scrapStore'
 import { usePageTitle } from '../../lib/usePageTitle'
 import PageTitle from '../../components/ui/PageTitle'
+import Container from '../../components/ui/Container'
 import EmptyState from '../../components/ui/EmptyState'
 import Icon from '../../components/Icon'
 import { formatDateTimeShort } from '../../lib/format'
 
-// 스크랩 화면 — 스크랩한 기사 카드 그리드, 각 카드 X로 삭제(PLAN.md §5).
+// 스크랩 화면 — 스크랩한 기사 목록, 각 카드 X로 삭제(PLAN.md §5).
+// 폭·카드 크기는 뉴스 목록과 같게 맞춘다(Container lg · 한 줄 목록 · ArticleCard 와 같은 p-5 카드).
 // X 버튼은 카드(Link) 바깥에 겹쳐 배치해 카드 클릭(기사 이동)과 삭제 클릭이 서로 간섭하지 않게 한다.
 function ScrapPage() {
   usePageTitle('스크랩')
@@ -16,7 +18,7 @@ function ScrapPage() {
   const sorted = [...entries].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 
   return (
-    <div>
+    <Container size="lg">
       <PageTitle title="스크랩" />
 
       {sorted.length === 0 ? (
@@ -35,19 +37,19 @@ function ScrapPage() {
           }
         />
       ) : (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 space-y-3">
           {sorted.map((entry) => (
             <div key={entry.id} className="relative">
               <Link
                 to={`/article/${entry.articleId}`}
-                className="block rounded-xl border border-line bg-surface p-4 transition hover:border-primary-500 hover:shadow-md"
+                className="block rounded-xl border border-line bg-surface p-5 transition-all duration-300 hover:border-primary-600 hover:shadow-eco-hover-soft"
               >
                 <div className="flex items-center gap-2 text-xs text-muted">
                   <span>{entry.source}</span>
                   <span>·</span>
                   <time dateTime={entry.publishedAt}>{formatDateTimeShort(entry.publishedAt)}</time>
                 </div>
-                <h2 className="mt-2 pr-8 text-base font-semibold text-ink">{entry.title}</h2>
+                <h2 className="mt-2 pr-8 font-semibold text-ink">{entry.title}</h2>
               </Link>
               <button
                 type="button"
@@ -61,7 +63,7 @@ function ScrapPage() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   )
 }
 
