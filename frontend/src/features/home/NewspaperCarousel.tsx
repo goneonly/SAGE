@@ -35,36 +35,27 @@ function DoubleRule() {
   return <div className="h-2 shrink-0 border-y-[3px] border-ink" aria-hidden="true" />
 }
 
-// 신문 1면처럼 조판한 추천 기사 카드 — 제호 · 발행 정보 · 섹션명 · 헤드라인 · 리드문.
+// 신문 1면처럼 조판한 추천 기사 카드 — 제호 · 발행 정보 · 헤드라인 · 리드문.
 // 글자·여백은 전부 cqw(카드 폭 대비 %) 단위라 카드가 커지면 지면 전체가 같은 비율로 커진다.
 // 카드는 화면보다 길게 잡혀 아래쪽이 잘리므로, 헤드라인 아래 리드문은 몇 줄만 보인다.
 // memo: 드래그 중에는 캐러셀이 포인터 이동마다 다시 그려지는데, 카드 내용은 바뀌지 않으므로 건너뛴다.
-const NewspaperCard = memo(function NewspaperCard({
-  article,
-  issue,
-}: {
-  article: Article
-  issue: number
-}) {
+const NewspaperCard = memo(function NewspaperCard({ article }: { article: Article }) {
   return (
     <article className="flex h-full flex-col overflow-hidden border border-ink/20 bg-surface p-[max(14px,4cqw)] text-ink shadow-xl">
       <DoubleRule />
       <p
-        className="mt-[2cqw] text-center text-[length:17cqw] font-black uppercase leading-none tracking-tighter"
+        className="mt-[2cqw] text-center text-[length:8cqw] font-black uppercase leading-none tracking-tighter"
         aria-hidden="true"
       >
         The Sage
       </p>
-      <div className="mt-[2cqw] flex items-center justify-between gap-2 border-y border-ink py-[0.8cqw] text-[length:max(12px,2cqw)] font-bold tracking-wide">
+      <div className="mb-[1cqw] mt-[2cqw] flex items-center justify-between gap-2 border-t border-ink py-[0.8cqw] text-[length:max(12px,2cqw)] font-bold tracking-wide">
         <span className="truncate">{article.source}</span>
         <span aria-hidden="true">✱</span>
         <time dateTime={article.publishedAt} className="shrink-0">
           {formatDateLong(article.publishedAt)}
         </time>
       </div>
-      <p className="py-[1.5cqw] text-center text-[length:max(18px,4.6cqw)] leading-tight tracking-widest">
-        오늘의 추천 <span className="tabular-nums">{issue}</span>
-      </p>
       <DoubleRule />
       <h3 className="mt-[3cqw] line-clamp-3 text-[length:max(18px,5cqw)] font-bold leading-[1.3]">
         {article.title}
@@ -198,7 +189,7 @@ function NewspaperCarousel({ articles, footer }: NewspaperCarouselProps) {
           }}
           className="block h-full select-none"
         >
-          <NewspaperCard article={article} issue={articleIndex + 1} />
+          <NewspaperCard article={article} />
         </Link>
       </div>
     )
