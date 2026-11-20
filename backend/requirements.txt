@@ -12,6 +12,7 @@ psycopg[binary]          # PostgreSQL 드라이버 (DATABASE_URL의 +psycopg)
 
 # --- 설정 / 환경변수 ---
 pydantic-settings        # .env 로드 → 타입 검증된 Settings 클래스
+pydantic[email]          # EmailStr(이메일 형식 검증)에 필요한 email-validator 포함
 
 # --- 인증 (Phase 1) ---
 pyjwt                    # JWT 발급/검증

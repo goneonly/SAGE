@@ -2,9 +2,19 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
-## 미커밋 — `fix/scrap-card-size` (2026-11-17)
+## feat: day 04 인증 — 비밀번호 검증, 토큰 해독, get_current_user (2026-11-21)
 
-커밋할 때 이 제목을 커밋 메시지로 바꾼다.
+### 추가
+- `decode_access_token(token) -> int | None` — 알고리즘을 `HS256` 하나로 고정해 해독(`alg=none` 위조 차단), 위조·만료·`sub` 없음·숫자 아님이면 `None` (`backend/app/core/security.py`)
+- `get_current_user` 의존성 — `Authorization: Bearer` 헤더의 토큰 → 유저 조회, 해독 실패·DB에 없는 유저(탈퇴)는 모두 같은 401 + `WWW-Authenticate: Bearer` 로 응답 (`backend/app/api/deps.py` 신규)
+- 회원가입 비밀번호 검증 — 최소 8자, 72바이트 초과 시 422 "비밀번호가 너무 깁니다."(bcrypt 한도, 한글 1자 = 3바이트) (`backend/app/schemas/auth.py`)
+- `pydantic[email]` 의존성 — `EmailStr` 검증에 필요한 email-validator (`backend/requirements.txt`)
+
+### 수정
+- `verify_password` 반환 타입을 `bool` 로 바로잡고 `bcrypt.checkpw` 로 비교 (`backend/app/core/security.py`)
+- CHANGELOG 의 남아 있던 "미커밋" 제목을 실제 커밋(`0b9b3e2`)으로 정리 (`docs/CHANGELOG.md`)
+
+## fix: 스크랩 화면 카드 크기를 다른 화면과 통일 (2026-11-17, `0b9b3e2`)
 
 ### 수정
 - 스크랩 화면 카드 크기를 다른 화면과 통일 — 화면 전체 폭 3열 그리드 → 뉴스 목록과 같은 가운데 정렬 폭(`Container lg`)의 한 줄 목록, 카드 여백·hover 스타일도 `ArticleCard` 와 동일하게 (`ScrapPage.tsx`)
