@@ -58,9 +58,11 @@ function HomePage() {
         {/* 제목·배너만 안쪽 여백을 주고, 캐러셀 무대는 좌우 끝까지 쓴다 */}
         <div className="px-4 pt-4 md:px-6 md:pt-6">
           <LevelUpBanner />
-          <h2 className="text-2xl font-bold text-ink">추천 뉴스</h2>
-          {/* 왼쪽 메뉴 열기 — 다른 화면의 PageTitle 과 같은 자리(제목 바로 아래) */}
-          <SidebarToggle className="mt-3" />
+          {/* 왼쪽 메뉴 열기 — 다른 화면의 PageTitle 과 같은 자리(제목 왼쪽) */}
+          <div className="flex items-center gap-3">
+            <SidebarToggle />
+            <h2 className="text-2xl font-bold text-ink">추천 뉴스</h2>
+          </div>
         </div>
         <NewspaperCarousel
           articles={recommended}

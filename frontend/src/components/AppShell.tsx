@@ -69,15 +69,20 @@ function TopBar() {
     // 데모 navbar-eco — 반투명 배경(#FAFAF5 90%) + backdrop blur + 하단 보더
     // sticky top-0 — 스크롤해도 상단에 고정. z-30 으로 본문·캐러셀 화살표(z-20) 위에 둔다
     <header className="sticky top-0 z-30 shrink-0 border-b border-line bg-bg/90 backdrop-blur-[10px]">
-      <div className="flex h-16 items-center pr-4 md:h-[76px]">
+      <div className="relative flex h-16 items-center pr-4 md:h-[76px]">
         <div className="flex items-center px-2 md:w-56 md:shrink-0 md:px-4">
           {/* md:-translate-y-1: 로고를 4px 위로 올려 시각적 중앙 보정(데스크톱) */}
           <Link to="/" aria-label="홈으로 이동" className="md:-translate-y-1">
             <Logo size={36} wordmarkClassName="text-xl md:text-2xl" />
           </Link>
         </div>
-        {/* 데스크톱 검색 — 모바일에서는 collapse(돋보기 아이콘 토글로 대체) */}
-        <form onSubmit={handleSearch} className="ml-8 hidden w-2/5 md:block">
+        {/* 데스크톱 검색 — 모바일에서는 collapse(돋보기 아이콘 토글로 대체).
+            왼쪽 끝을 홈 추천 뉴스 맨 앞 신문 카드의 왼쪽 끝((폭 − 카드 폭) ÷ 2)에 맞춘다 — 카드 폭은 index.css 의 --hero-card-w.
+            좁은 데스크톱에서 로고(오른쪽 끝 약 120px)와 겹치지 않도록 최소 9rem */}
+        <form
+          onSubmit={handleSearch}
+          className="absolute left-[max(9rem,calc((100%-var(--hero-card-w))/2))] top-1/2 hidden w-2/5 -translate-y-1/2 md:block"
+        >
           <SearchField query={query} onQueryChange={setQuery} inputClassName="py-3" />
         </form>
         {/* md:mr-1.5 — 데스크톱에서 알림벨·사용자명 묶음의 오른쪽 여백 6px */}
@@ -125,6 +130,8 @@ function TopBar() {
 function SidebarOverlay() {
   const isOpen = useSidebarStore((state) => state.isOpen)
   const close = useSidebarStore((state) => state.close)
+  // 연 버튼의 위치 — 없으면(예: 키보드 외 경로) 왼쪽 위 기본 자리
+  const anchor = useSidebarStore((state) => state.anchor) ?? { top: 16, left: 16 }
   const location = useLocation()
   const panelRef = useDialog<HTMLDivElement>(close, {
     enabled: isOpen,
@@ -167,9 +174,10 @@ function SidebarOverlay() {
         aria-hidden="true"
         className="absolute inset-0 bg-bg/85 backdrop-blur-md [mask-image:linear-gradient(to_right,#000_55%,transparent)]"
       />
-      {/* 열린 상태의 여닫기 버튼 — 제목 아래 버튼이 사이드바에 가려지므로 맨 위에 하나 더 둔다 */}
-      <div className="relative px-4 pt-4">
-        <SidebarToggle />
+      {/* 열린 상태의 닫기 버튼 — 제목 왼쪽 버튼이 사이드바에 가려지므로, 연 버튼과 정확히 같은 자리에
+          하나 더 둔다(열고 닫아도 버튼 위치가 고정). 메뉴 목록은 그 아래(버튼 높이 40px)부터 시작한다 */}
+      <div className="relative shrink-0" style={{ height: anchor.top + 40 }}>
+        <SidebarToggle className="absolute" style={{ top: anchor.top, left: anchor.left }} />
       </div>
       {/* 메뉴 링크를 누르면 닫는다(같은 화면 링크는 화면 이동이 없으므로) — 이벤트 위임 */}
       <div

@@ -2,6 +2,13 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## feat: 메뉴 버튼을 제목 왼쪽으로, 열어도 위치 고정, 검색창을 신문 왼쪽 끝에 정렬 (2026-11-21)
+
+### 변경
+- 메뉴 버튼(`SidebarToggle`)을 제목 아래에서 **제목 왼쪽**으로 — 홈 "추천 뉴스", `PageTitle` 을 쓰는 모든 화면 (`HomePage.tsx`, `PageTitle.tsx`)
+- 사이드바를 열어도 메뉴 버튼이 움직이지 않게 — 연 버튼의 위치를 스토어에 넘겨, 열린 사이드바의 닫기 버튼을 정확히 같은 자리에 둔다 (`SidebarToggle.tsx`, `sidebarStore.ts` 의 `anchor`, `AppShell.tsx`)
+- 데스크톱 상단 검색창의 왼쪽 끝을 홈 추천 뉴스 맨 앞 신문 카드의 왼쪽 끝에 맞춤 — 카드 폭 식을 `--hero-card-w` CSS 변수로 빼서 캐러셀과 상단바가 공유, 좁은 화면에서는 로고와 겹치지 않게 최소 9rem (`index.css`, `NewspaperCarousel.tsx`, `AppShell.tsx`)
+
 ## feat: 메뉴 버튼을 화면 제목 아래로, 사이드바를 반투명 겹침으로 (2026-11-21)
 
 ### 추가
