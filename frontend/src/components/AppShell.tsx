@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/store/authStore'
 import Sidebar from './Sidebar'
@@ -11,13 +11,8 @@ import Logo from './Logo'
 import { useDialog } from '../lib/useDialog'
 import { useHomeViewStore } from '../lib/store/homeViewStore'
 import Icon from './Icon'
-
-interface TopBarProps {
-  onMenuOpen: () => void
-  /** 데스크톱 사이드바가 펼쳐져 있는지 — 토글 버튼의 aria-expanded 에 쓴다 */
-  isSidebarOpen: boolean
-  onSidebarToggle: () => void
-}
+import SidebarToggle from './SidebarToggle'
+import { useSidebarStore } from '../lib/store/sidebarStore'
 
 interface SearchFieldProps {
   query: string
@@ -52,7 +47,7 @@ function SearchField({ query, onQueryChange, inputClassName, autoFocus }: Search
   )
 }
 
-function TopBar({ onMenuOpen, isSidebarOpen, onSidebarToggle }: TopBarProps) {
+function TopBar() {
   const user = useAuthStore((state) => state.user)
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
@@ -69,26 +64,13 @@ function TopBar({ onMenuOpen, isSidebarOpen, onSidebarToggle }: TopBarProps) {
 
   return (
     // 데스크톱: 높이 h-[84px], 로고는 사이드바 폭(w-56) 컬럼에 두고 검색바 왼쪽 끝을
-    // 사이드바 경계(x=224px)에 맞춘다. 모바일: h-16, 햄버거 + 로고 + 돋보기 + 알림벨만
-    // 남기고 검색창(인라인)·사용자명·로그아웃은 omit(드로어/검색 토글로 이동).
+    // 사이드바 폭(x=224px)에 맞춘다. 모바일: h-16, 로고 + 돋보기 + 알림벨만 남기고
+    // 검색창(인라인)·사용자명은 omit(검색 토글로 이동). 메뉴 버튼은 상단바가 아니라 각 화면 제목 아래(SidebarToggle).
     // 데모 navbar-eco — 반투명 배경(#FAFAF5 90%) + backdrop blur + 하단 보더
     // sticky top-0 — 스크롤해도 상단에 고정. z-30 으로 본문·캐러셀 화살표(z-20) 위에 둔다
     <header className="sticky top-0 z-30 shrink-0 border-b border-line bg-bg/90 backdrop-blur-[10px]">
       <div className="flex h-16 items-center pr-4 md:h-[76px]">
-        <div className="flex items-center px-2 md:w-56 md:shrink-0 md:gap-2 md:px-3">
-          {/* 데스크톱 — 왼쪽 사이드바 접기·펼치기(기본은 접힘). 모바일은 오른쪽 햄버거 드로어를 쓴다 */}
-          <button
-            type="button"
-            aria-label={isSidebarOpen ? '메뉴 접기' : '메뉴 펼치기'}
-            aria-expanded={isSidebarOpen}
-            aria-controls="app-sidebar"
-            onClick={onSidebarToggle}
-            className={`hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-primary-100 hover:text-ink md:inline-flex ${
-              isSidebarOpen ? 'bg-primary-100 text-ink' : ''
-            }`}
-          >
-            <Icon name="sidebar" className="h-5 w-5" />
-          </button>
+        <div className="flex items-center px-2 md:w-56 md:shrink-0 md:px-4">
           {/* md:-translate-y-1: 로고를 4px 위로 올려 시각적 중앙 보정(데스크톱) */}
           <Link to="/" aria-label="홈으로 이동" className="md:-translate-y-1">
             <Logo size={36} wordmarkClassName="text-xl md:text-2xl" />
@@ -125,15 +107,6 @@ function TopBar({ onMenuOpen, isSidebarOpen, onSidebarToggle }: TopBarProps) {
               </Link>
             </div>
           )}
-          {/* 모바일 — 사이드바 드로어를 여는 햄버거. PublicHeader 와 동일하게 우측 끝에 배치 */}
-          <button
-            type="button"
-            aria-label="메뉴 열기"
-            onClick={onMenuOpen}
-            className="rounded p-1.5 text-muted transition-colors hover:text-primary-600 md:hidden"
-          >
-            <Icon name="menu" className="h-5 w-5" />
-          </button>
         </div>
       </div>
       {/* 모바일 — 돋보기 탭 시 펼쳐지는 검색바 */}
@@ -146,36 +119,66 @@ function TopBar({ onMenuOpen, isSidebarOpen, onSidebarToggle }: TopBarProps) {
   )
 }
 
-// 모바일(<md) 사이드바 드로어 — 모달 다이얼로그로 동작한다.
-// Esc·백드롭·메뉴 링크 클릭으로 닫히고, 열려 있는 동안 Tab 포커스는 드로어 안에 머문다(useDialog).
-function MobileDrawer({ onClose }: { onClose: () => void }) {
-  const dialogRef = useDialog<HTMLDivElement>(onClose)
+// 왼쪽 사이드바(메뉴) — 모든 폭에서 본문을 밀지 않고 위에 겹쳐 열린다(기본은 닫힘).
+// 배경은 반투명하고 오른쪽 끝으로 갈수록 점점 투명해져, 아래 본문(신문 지면 등)이 비쳐 보인다.
+// 닫기: 맨 위 메뉴 버튼 · Esc · 바깥 클릭 · 메뉴 링크 클릭 · 화면 이동. 본문을 계속 쓸 수 있는 패널이라 포커스는 가두지 않는다.
+function SidebarOverlay() {
+  const isOpen = useSidebarStore((state) => state.isOpen)
+  const close = useSidebarStore((state) => state.close)
+  const location = useLocation()
+  const panelRef = useDialog<HTMLDivElement>(close, {
+    enabled: isOpen,
+    trapFocus: false,
+    lockScroll: false,
+  })
+
+  // 다른 화면으로 이동하면 닫는다
+  useEffect(() => {
+    close()
+  }, [location.pathname, close])
+
+  // 바깥(본문)을 누르면 닫는다 — 제목 아래 여닫기 버튼은 자기 onClick 으로 처리하므로 제외
+  useEffect(() => {
+    if (!isOpen) return
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target as HTMLElement
+      if (panelRef.current?.contains(target) || target.closest('[data-sidebar-toggle]')) return
+      close()
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [isOpen, close, panelRef])
 
   return (
-    <div className="fixed inset-0 z-30 md:hidden">
+    <div
+      ref={panelRef}
+      id="app-sidebar"
+      tabIndex={-1}
+      aria-label="메뉴"
+      inert={!isOpen}
+      // 상단바 바로 아래부터 화면 아래까지 고정. 열릴 때 왼쪽에서 미끄러지며 나타난다.
+      // z-20: 상단바(z-30) 아래, 본문 위
+      className={`fixed bottom-0 left-0 top-[var(--header-h)] z-20 flex w-72 flex-col transition-[opacity,transform] duration-300 ease-out focus:outline-none motion-reduce:transition-none ${
+        isOpen ? 'translate-x-0 opacity-100' : 'pointer-events-none -translate-x-8 opacity-0'
+      }`}
+    >
+      {/* 반투명 배경 — mask-image 로 오른쪽 45% 구간이 점점 투명해진다(흐림 효과도 같이 옅어진다) */}
       <div
-        className="absolute inset-0 bg-black/40 motion-safe:animate-fade-in"
-        onClick={onClose}
         aria-hidden="true"
+        className="absolute inset-0 bg-bg/85 backdrop-blur-md [mask-image:linear-gradient(to_right,#000_55%,transparent)]"
       />
-      {/* 햄버거 버튼이 우측에 있으므로 드로어도 오른쪽에서 슬라이드 */}
+      {/* 열린 상태의 여닫기 버튼 — 제목 아래 버튼이 사이드바에 가려지므로 맨 위에 하나 더 둔다 */}
+      <div className="relative px-4 pt-4">
+        <SidebarToggle />
+      </div>
+      {/* 메뉴 링크를 누르면 닫는다(같은 화면 링크는 화면 이동이 없으므로) — 이벤트 위임 */}
       <div
-        ref={dialogRef}
-        tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
-        aria-label="메뉴"
-        className="absolute inset-y-0 right-0 flex w-56 flex-col bg-bg shadow-xl motion-safe:animate-slide-in-right"
+        className="relative flex min-h-0 flex-1"
+        onClick={(event) => {
+          if ((event.target as HTMLElement).closest('a')) close()
+        }}
       >
-        {/* 드로어 안에서 메뉴(링크)를 누르면 드로어를 닫는다 — 이벤트 위임 */}
-        <div
-          className="flex min-h-0 flex-1 overflow-y-auto"
-          onClick={(event) => {
-            if ((event.target as HTMLElement).closest('a')) onClose()
-          }}
-        >
-          <Sidebar />
-        </div>
+        <Sidebar />
       </div>
     </div>
   )
@@ -184,7 +187,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
 // 공통 레이아웃 셸 — 상단바 + 왼쪽 메뉴 + 본문(Outlet) + 우측 바.
 // 보호 라우트 하위의 레이아웃 라우트로 사용 (routes/router.tsx 참고).
 // 우측 바는 홈(전체 뉴스 구간)과 기사 리더에서만 보인다 — 아래 hasRightBar 참고.
-// 모바일(<md): 사이드바는 고정 컬럼 대신 햄버거로 여는 오프캔버스 드로어로 전환.
+// 왼쪽 메뉴는 고정 컬럼이 아니라 겹쳐 열리는 SidebarOverlay(모든 폭 공통).
 function AppShell() {
   const location = useLocation()
   const isHome = location.pathname === '/'
@@ -193,9 +196,6 @@ function AppShell() {
   const hasRightBar = isHome || location.pathname.startsWith('/article/')
   const isHeroActive = useHomeViewStore((state) => state.isHeroActive)
   const isRightBarCollapsed = isHome && isHeroActive
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  // 데스크톱 사이드바 — 기본은 접어 두고, 상단바 왼쪽 버튼으로 펼친다
-  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(false)
   // 회원가입 직후 1회 뜨는 온보딩 팝업 — SignupPage 가 심어둔 플래그로 판단한다.
   const [showOnboarding, setShowOnboarding] = useState(() => isOnboardingPending())
 
@@ -208,30 +208,8 @@ function AppShell() {
       >
         본문으로 건너뛰기
       </a>
-      <TopBar
-        onMenuOpen={() => setSidebarOpen(true)}
-        isSidebarOpen={desktopSidebarOpen}
-        onSidebarToggle={() => setDesktopSidebarOpen((open) => !open)}
-      />
+      <TopBar />
       <div className="flex flex-1">
-        {/* 데스크톱 사이드바 — 기본은 접힘. 상단바 왼쪽 버튼으로 펼치면 폭이 0 → w-56 으로 부드럽게 늘고
-            안쪽 메뉴는 왼쪽에서 미끄러지며 나타난다(우측 바와 같은 방식). 접힌 동안에는 inert 로 포커스에서 뺀다.
-            상단바(--header-h) 바로 아래에 고정되어 스크롤해도 따라온다. 모바일에서는 드로어로 대체 */}
-        <div
-          id="app-sidebar"
-          inert={!desktopSidebarOpen}
-          className={`sticky top-[var(--header-h)] hidden h-[calc(100dvh-var(--header-h))] shrink-0 self-start overflow-clip transition-[width] duration-300 ease-out motion-reduce:transition-none md:block ${
-            desktopSidebarOpen ? 'w-56' : 'w-0'
-          }`}
-        >
-          <div
-            className={`h-full w-56 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none ${
-              desktopSidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-6 opacity-0'
-            }`}
-          >
-            <Sidebar />
-          </div>
-        </div>
         <main
           id="main-content"
           tabIndex={-1}
@@ -264,8 +242,7 @@ function AppShell() {
       {/* 회원가입 완료 온보딩 팝업 (1회성) */}
       {showOnboarding && <OnboardingModal onClose={() => setShowOnboarding(false)} />}
 
-      {/* 모바일 — 오프캔버스 드로어 + 백드롭 */}
-      {sidebarOpen && <MobileDrawer onClose={() => setSidebarOpen(false)} />}
+      <SidebarOverlay />
     </div>
   )
 }
