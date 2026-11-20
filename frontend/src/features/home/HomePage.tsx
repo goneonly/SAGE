@@ -12,6 +12,7 @@ import { useWatchlistStore } from '../../lib/store/watchlistStore'
 import { useHomeViewStore } from '../../lib/store/homeViewStore'
 import { usePageTitle } from '../../lib/usePageTitle'
 import Icon from '../../components/Icon'
+import SidebarToggle from '../../components/SidebarToggle'
 
 // 홈의 "전체 뉴스"는 최신 몇 건만 미리보기로 보여주고,
 // 나머지는 "전체 더보기" 버튼으로 뉴스 화면(/news, 페이지네이션)에서 이어 본다.
@@ -58,6 +59,8 @@ function HomePage() {
         <div className="px-4 pt-4 md:px-6 md:pt-6">
           <LevelUpBanner />
           <h2 className="text-2xl font-bold text-ink">추천 뉴스</h2>
+          {/* 왼쪽 메뉴 열기 — 다른 화면의 PageTitle 과 같은 자리(제목 바로 아래) */}
+          <SidebarToggle className="mt-3" />
         </div>
         <NewspaperCarousel
           articles={recommended}

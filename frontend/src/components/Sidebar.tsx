@@ -16,7 +16,8 @@ function navLinkClassName({ isActive }: { isActive: boolean }): string {
 
 function Sidebar() {
   return (
-    <nav className="flex h-full w-56 shrink-0 flex-col justify-between gap-4 overflow-y-auto border-r border-line bg-bg p-4">
+    // 배경·테두리는 없다 — AppShell 의 겹침 사이드바가 반투명 페이드 배경을 깐다
+    <nav className="flex h-full w-56 shrink-0 flex-col justify-between gap-4 overflow-y-auto p-4">
       <ul className="space-y-1">
         {NAV_ITEMS.map((item) => (
           <li key={item.to}>

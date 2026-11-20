@@ -11,6 +11,7 @@ import { useLearningStore } from '../../lib/store/learningStore'
 import { usePageTitle } from '../../lib/usePageTitle'
 import Container from '../../components/ui/Container'
 import { formatDateTimeLong } from '../../lib/format'
+import SidebarToggle from '../../components/SidebarToggle'
 
 // 기사 상세 리더 — 이 제품의 심장(PLAN.md §5). 스마트 하이라이트된 용어를 클릭하면
 // 페이지 이동 없이 ParaphrasePanel 이 열려 설명을 보여준다(PLAN.md §1 원칙 1).
@@ -123,9 +124,13 @@ function ArticleReaderPage() {
     // 본문이 패널 밑으로 들어가지 않게 한다 — "읽는 흐름 유지"(PLAN.md §1 원칙 1)
     <div className={isPanelOpen ? 'lg:pr-32' : undefined}>
       <Container size="md">
-        <Link to="/" className="text-sm text-primary-600 hover:underline">
-          ← 홈으로
-        </Link>
+        {/* 왼쪽 메뉴 열기 + 홈으로 — 기사 제목이 길어 버튼은 제목 위 첫 줄에 함께 둔다 */}
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <Link to="/" className="text-sm text-primary-600 hover:underline">
+            ← 홈으로
+          </Link>
+        </div>
 
         <header className="mt-4 flex items-start justify-between gap-4 border-b border-line pb-4">
           <div>
