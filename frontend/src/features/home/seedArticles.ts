@@ -207,6 +207,11 @@ export const seedArticles: Article[] = [
   },
 ]
 
+// 최신순 정렬본 — seed 는 바뀌지 않으므로 화면마다 매 렌더 정렬하지 않고 한 번만 만들어 둔다.
+export const seedArticlesByLatest: Article[] = [...seedArticles].sort((a, b) =>
+  b.publishedAt.localeCompare(a.publishedAt),
+)
+
 export function getArticleById(id: string): Article | undefined {
   return seedArticles.find((article) => article.id === id)
 }

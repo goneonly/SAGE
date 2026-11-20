@@ -1,12 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ArticleCard from '../home/ArticleCard'
-import { seedArticles } from '../home/seedArticles'
+import { seedArticlesByLatest } from '../home/seedArticles'
 import { usePageTitle } from '../../lib/usePageTitle'
 import type { Article } from '../../types/article'
 import Container from '../../components/ui/Container'
 import PageTitle from '../../components/ui/PageTitle'
 import EmptyState from '../../components/ui/EmptyState'
+import Icon from '../../components/Icon'
 
 const PAGE_SIZE = 10
 
@@ -34,8 +35,13 @@ function NewsPage() {
     window.scrollTo({ top: 0 })
   }, [query])
 
-  const sorted = [...seedArticles].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-  const filtered = query ? sorted.filter((article) => matchesQuery(article, query)) : sorted
+  const filtered = useMemo(
+    () =>
+      query
+        ? seedArticlesByLatest.filter((article) => matchesQuery(article, query))
+        : seedArticlesByLatest,
+    [query],
+  )
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
 
   const rawPage = Number(searchParams.get('page') ?? '1')
@@ -80,7 +86,7 @@ function NewsPage() {
         ))}
         {query && filtered.length === 0 && (
           <EmptyState
-            icon="🔍"
+            icon={<Icon name="search" className="h-8 w-8" />}
             title={`"${query}"에 해당하는 기사가 없어요`}
             description="맞춤법을 확인하거나 종목코드·언론사명 등 다른 검색어로 시도해 보세요."
             action={
@@ -114,7 +120,7 @@ function NewsPage() {
             aria-current={pageNumber === page ? 'page' : undefined}
             className={`h-9 w-9 rounded-lg text-sm font-medium transition-colors ${
               pageNumber === page
-                ? 'bg-primary-600 font-semibold text-white'
+                ? 'bg-primary-600 font-semibold text-on-primary'
                 : 'text-muted hover:bg-primary-50 hover:text-ink'
             }`}
           >

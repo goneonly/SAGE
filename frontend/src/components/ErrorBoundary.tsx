@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from 'react'
+import Icon from './Icon'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -20,10 +21,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6 text-center text-ink">
-          <p aria-hidden="true" className="text-3xl">
-            ⚠️
-          </p>
+        <div className="flex min-h-dvh flex-col items-center justify-center bg-bg px-6 text-center text-ink">
+          <Icon name="warning" className="h-10 w-10 text-muted" />
           <h1 className="mt-4 text-xl font-bold">화면을 표시하지 못했어요</h1>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             일시적인 오류일 수 있어요. 아래 버튼으로 다시 시도해 주세요.
@@ -31,7 +30,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="mt-6 rounded-full bg-primary-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90"
+            className="mt-6 rounded-full bg-primary-600 px-6 py-2 text-sm font-semibold text-on-primary transition hover:bg-primary-600/90"
           >
             다시 시도
           </button>

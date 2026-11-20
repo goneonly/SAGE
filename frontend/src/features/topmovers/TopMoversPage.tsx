@@ -2,15 +2,7 @@ import { mockTopMovers } from './mockTopMovers'
 import { usePageTitle } from '../../lib/usePageTitle'
 import Container from '../../components/ui/Container'
 import PageTitle from '../../components/ui/PageTitle'
-
-function formatPrice(value: number): string {
-  return `${value.toLocaleString('ko-KR')}원`
-}
-
-function formatPercent(value: number): string {
-  const sign = value > 0 ? '+' : ''
-  return `${sign}${value.toFixed(2)}%`
-}
+import { formatSignedPercent, formatWon } from '../../lib/format'
 
 // 급상승 종목 — 등락률 내림차순 랭킹. 등락 색은 브랜드 그린과 분리(PLAN.md §6):
 // 상승 = rise(빨강), 하락 = fall(파랑), 한국 증시 관례를 그대로 따른다.
@@ -36,11 +28,11 @@ function TopMoversPage() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-sm text-ink">{formatPrice(mover.price)}</p>
+              <p className="text-sm text-ink">{formatWon(mover.price)}</p>
               <p
                 className={`text-sm font-semibold ${mover.changePercent >= 0 ? 'text-rise' : 'text-fall'}`}
               >
-                {formatPercent(mover.changePercent)}
+                {formatSignedPercent(mover.changePercent)}
               </p>
             </div>
           </li>

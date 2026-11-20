@@ -37,7 +37,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg p-6">
+    <div className="flex min-h-dvh items-center justify-center bg-bg p-6">
       <div className="w-full max-w-sm">
         {/* 카드 왼쪽 상단 위 — 서비스 소개(About) 랜딩으로 돌아가기 */}
         <Link
@@ -64,6 +64,7 @@ function LoginPage() {
             <input
               type="email"
               required
+              autoComplete="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -75,18 +76,23 @@ function LoginPage() {
             <input
               type="password"
               required
+              autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               className="w-full rounded-lg border border-line px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
 
-          {error && <p className="text-sm text-rise">{error}</p>}
+          {error && (
+            <p role="alert" className="text-sm text-danger">
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-primary-600 py-2 font-medium text-white transition hover:bg-primary-600/90 disabled:opacity-50"
+            className="w-full rounded-lg bg-primary-600 py-2 font-medium text-on-primary transition hover:bg-primary-600/90 disabled:opacity-50"
           >
             {isSubmitting ? '로그인 중...' : '로그인'}
           </button>

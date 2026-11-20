@@ -8,7 +8,7 @@ const SIZE_CLASS = {
   sm: 'max-w-lg',
   /** 읽기 폭 — 리더·단어장 등 (max-w-2xl) */
   md: 'max-w-2xl',
-  /** 목록 폭 — 뉴스·공지·포트폴리오 등 (max-w-3xl) */
+  /** 목록 폭 — 뉴스·공지 등 (max-w-3xl) */
   lg: 'max-w-3xl',
   /** 풀폭 레이아웃 — 하단 바 등 (max-w-7xl) */
   xl: 'max-w-7xl',

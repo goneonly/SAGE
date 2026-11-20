@@ -29,7 +29,7 @@ function HeroSection() {
         </p>
       </Reveal>
       <Reveal delay={600} className="mt-16">
-        <div aria-hidden="true" className="animate-bounce text-2xl text-subtle">
+        <div aria-hidden="true" className="text-2xl text-subtle motion-safe:animate-bounce">
           ↓
         </div>
       </Reveal>

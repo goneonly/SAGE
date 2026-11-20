@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import AppShell from './components/AppShell'
 import ErrorBoundary from './components/ErrorBoundary'
+import ScrollToTop from './components/ScrollToTop'
 import ProtectedRoute from './routes/ProtectedRoute'
 
 // 페이지 코드 스플리팅 — 라우트 진입 시점에 해당 청크만 내려받는다.
@@ -18,7 +19,6 @@ const SettingsPage = lazy(() => import('./routes/SettingsPage'))
 const AdminPage = lazy(() => import('./routes/AdminPage'))
 const VocabPage = lazy(() => import('./features/vocab/VocabPage'))
 const ScrapPage = lazy(() => import('./features/scrap/ScrapPage'))
-const PortfolioPage = lazy(() => import('./features/portfolio/PortfolioPage'))
 const TopMoversPage = lazy(() => import('./features/topmovers/TopMoversPage'))
 const InsightsPage = lazy(() => import('./features/insights/InsightsPage'))
 
@@ -37,6 +37,7 @@ function RouteFallback() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       {/* 렌더링 예외 최후 방어선 — 어떤 화면에서 터져도 재시도 UI 를 보여준다 */}
       <ErrorBoundary>
         <Suspense fallback={<RouteFallback />}>
@@ -55,7 +56,6 @@ function App() {
                 <Route path="/scrap" element={<ScrapPage />} />
                 <Route path="/vocab" element={<VocabPage />} />
                 <Route path="/top-movers" element={<TopMoversPage />} />
-                <Route path="/portfolio" element={<PortfolioPage />} />
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 {/* 운영자 전용 — AdminPage 내부에서 role 검사 후 비운영자는 홈으로 돌려보낸다 */}

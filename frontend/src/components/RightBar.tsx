@@ -4,6 +4,8 @@ import { useWatchlistStore } from '../lib/store/watchlistStore'
 import { useVocabStore } from '../lib/store/vocabStore'
 import { useAuthStore } from '../lib/store/authStore'
 import { getDailyTerm } from '../features/paraphrase/dailyTerm'
+import DailyGoalWidget from '../features/learning/DailyGoalWidget'
+import Icon from './Icon'
 
 const RECENT_VOCAB_LIMIT = 5
 
@@ -37,9 +39,9 @@ function WatchlistWidget() {
                 type="button"
                 onClick={() => removeTicker(item.id)}
                 aria-label={`${item.ticker} 삭제`}
-                className="rounded px-1 text-xs text-muted hover:bg-primary-50 hover:text-rise"
+                className="flex h-7 w-7 items-center justify-center rounded text-muted transition-colors hover:bg-primary-50 hover:text-danger"
               >
-                ✕
+                <Icon name="close" className="h-3.5 w-3.5" />
               </button>
             </li>
           ))}
@@ -56,7 +58,7 @@ function WatchlistWidget() {
         />
         <button
           type="submit"
-          className="shrink-0 rounded-lg bg-primary-600 px-2 py-1 text-xs font-medium text-white hover:bg-primary-600/90"
+          className="shrink-0 rounded-lg bg-primary-600 px-2 py-1 text-xs font-medium text-on-primary hover:bg-primary-600/90"
         >
           추가
         </button>
@@ -78,7 +80,10 @@ function DailyTermWidget() {
       <p className="mt-1 text-xs leading-relaxed text-muted">{dailyTerm.explanations[level]}</p>
       {dailyTerm.impact && (
         <p className="mt-2 border-t border-line pt-2 text-xs leading-relaxed text-muted">
-          <span className="font-semibold text-primary-700">👉 </span>
+          <Icon
+            name="lightbulb"
+            className="mr-1 inline h-3.5 w-3.5 align-[-2px] text-primary-700"
+          />
           {dailyTerm.impact}
         </p>
       )}
@@ -114,14 +119,29 @@ function RecentVocabWidget() {
   )
 }
 
-// 우측 바 — 홈 화면 전용 3위젯(PLAN.md §5): 내 관심 종목 · 오늘의 주식 단어 · 내가 스크랩한 단어.
-// 어느 라우트에서 보일지는 AppShell 이 결정한다(현재는 홈에서만 렌더링).
-function RightBar() {
+// 홈 3위젯(PLAN.md §5): 내 관심 종목 · 오늘의 주식 단어 · 내가 스크랩한 단어.
+// lg+ 에서는 우측 바(RightBar)에, 그보다 좁으면 홈 본문 하단(HomePage)에 같은 위젯을 렌더링한다.
+// 관심 종목 추가·삭제는 여기서만 가능하므로 어느 폭에서든 반드시 노출돼야 한다.
+export function HomeWidgets() {
   return (
-    <aside className="hidden w-64 shrink-0 space-y-4 border-l border-line bg-bg p-4 lg:block">
+    <>
       <WatchlistWidget />
       <DailyTermWidget />
       <RecentVocabWidget />
+    </>
+  )
+}
+
+// 우측 바 — 넓은 화면(lg+) 전용. sticky 라서 페이지를 내려도 고정된 상단바(--header-h) 바로 아래에 붙어 따라온다
+// (홈에서 전체 뉴스로 내려갔을 때 위젯이 화면 밖에 남지 않도록). 세로 구분선·배경은 AppShell 의 래퍼가 그린다.
+// 언제 보일지는 AppShell 이 결정한다(홈의 전체 뉴스 구간 · 기사 리더).
+// 짝: HomePage 의 lg:hidden 위젯 섹션.
+function RightBar() {
+  return (
+    <aside className="sticky top-[var(--header-h)] hidden max-h-[calc(100dvh-var(--header-h))] w-64 shrink-0 space-y-4 overflow-y-auto p-4 lg:block">
+      {/* 오늘의 목표 — <lg 에서는 HomePage 가 본문 맨 위에 따로 렌더링한다(짝: lg:hidden) */}
+      <DailyGoalWidget />
+      <HomeWidgets />
     </aside>
   )
 }

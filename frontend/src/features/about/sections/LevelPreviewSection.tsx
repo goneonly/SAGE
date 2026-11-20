@@ -1,23 +1,24 @@
 import Reveal from '../Reveal'
 import Badge from '../../../components/ui/Badge'
+import { LEVEL_NAME } from '../../../lib/levels'
 
 // 레벨별 설명 미리보기 — 같은 용어(코스피)가 레벨에 따라 어떻게 달라지는지 발췌
 const LEVEL_PREVIEWS = [
   {
-    level: '초보',
+    level: LEVEL_NAME.beginner,
     text: '우리나라 주식시장의 "건강 점수판" 같은 것. 이 숫자가 오르면 대체로 시장 전체가 좋아졌다는 뜻.',
   },
   {
-    level: '중급',
+    level: LEVEL_NAME.intermediate,
     text: '유가증권시장 전체 종목의 시가총액을 기준 시점(1980년=100)과 비교해 산출하는 시가총액 가중 지수.',
   },
   {
-    level: '고급',
+    level: LEVEL_NAME.advanced,
     text: '시총 가중이라 대형주 쏠림이 크고, 코스피200 선물·옵션 베이시스를 함께 봐야 방향성 판단이 정확함.',
   },
 ]
 
-// 3. 레벨 맞춤 설명 — 초보/중급/고급 카드 3장을 스태거로 노출한다.
+// 3. 레벨 맞춤 설명 — 기초/성장/심화 카드 3장을 스태거로 노출한다.
 function LevelPreviewSection() {
   return (
     <section className="px-6 py-28">
@@ -30,7 +31,7 @@ function LevelPreviewSection() {
         </Reveal>
         <Reveal delay={150}>
           <p className="mt-6 text-base leading-relaxed text-muted">
-            초보·중급·고급 — 같은 용어도 당신이 고른 레벨에 따라 완전히 다르게 읽혀요.
+            기초·성장·심화 — 같은 용어도 당신이 고른 레벨에 따라 완전히 다르게 읽혀요.
           </p>
         </Reveal>
         <div className="mt-12 grid gap-4 text-left md:grid-cols-3">

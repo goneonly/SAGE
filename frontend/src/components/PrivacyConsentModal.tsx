@@ -1,16 +1,22 @@
 // 개인정보 수집·이용 동의 전문 모달 — 회원가입 화면의 "자세히 보기"에서 연다.
-// 백드롭 클릭 또는 닫기 버튼으로 닫는다.
+// 백드롭 클릭, 닫기 버튼, Esc 로 닫는다.
+import { useDialog } from '../lib/useDialog'
+
 interface PrivacyConsentModalProps {
   onClose: () => void
 }
 
 function PrivacyConsentModal({ onClose }: PrivacyConsentModalProps) {
+  const dialogRef = useDialog<HTMLDivElement>(onClose)
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label="개인정보 수집 및 이용 동의"
@@ -58,7 +64,7 @@ function PrivacyConsentModal({ onClose }: PrivacyConsentModalProps) {
         <button
           type="button"
           onClick={onClose}
-          className="mt-5 w-full rounded-lg border-2 border-primary-600 py-2 text-sm font-semibold text-primary-600 transition-colors hover:bg-primary-600 hover:text-white"
+          className="mt-5 w-full rounded-lg border-2 border-primary-600 py-2 text-sm font-semibold text-primary-600 transition-colors hover:bg-primary-600 hover:text-on-primary"
         >
           닫기
         </button>

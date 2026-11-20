@@ -5,15 +5,7 @@ import Container from '../../components/ui/Container'
 import PageTitle from '../../components/ui/PageTitle'
 import Badge from '../../components/ui/Badge'
 import Card from '../../components/ui/Card'
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleString('ko-KR', {
-    month: 'numeric',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
+import { formatDateTimeShort } from '../../lib/format'
 
 // AI 투자 인사이트 — mock 코멘트 카드 목록. 실제로는 백엔드가 Claude를 호출해 생성한다(§3).
 function InsightsPage() {
@@ -25,8 +17,8 @@ function InsightsPage() {
         description="지금은 mock 코멘트입니다. 실제 AI 생성 연동은 추후 지원됩니다."
       />
 
-      {/* AI 생성 콘텐츠 고지 — 경고 문구이므로 등락 색상(rise)과 같은 계열의 옅은 빨강 톤으로 노출 */}
-      <p className="mt-4 rounded-lg border border-rise/20 bg-rise/10 px-4 py-3 text-xs leading-relaxed text-rise">
+      {/* AI 생성 콘텐츠 고지 — 경고 문구라 danger 톤. 등락 색(rise)은 주가 의미로만 쓰므로 여기에 쓰지 않는다 */}
+      <p className="mt-4 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-xs leading-relaxed text-danger">
         {AI_DISCLAIMER}
       </p>
 
@@ -39,7 +31,7 @@ function InsightsPage() {
                 {insight.ticker && <Badge>{insight.ticker}</Badge>}
               </div>
               <time dateTime={insight.generatedAt} className="shrink-0 text-xs text-muted">
-                {formatDate(insight.generatedAt)}
+                {formatDateTimeShort(insight.generatedAt)}
               </time>
             </div>
             <p className="mt-2 text-sm leading-relaxed text-ink">{insight.comment}</p>

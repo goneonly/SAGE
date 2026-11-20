@@ -15,7 +15,7 @@ function scoreArticle(article: Article, watchlistTickers: Set<string>): number {
 export function getRecommendedArticles(
   articles: Article[],
   watchlistTickers: string[],
-  limit = 3,
+  limit = 5,
 ): Article[] {
   const tickerSet = new Set(watchlistTickers)
 

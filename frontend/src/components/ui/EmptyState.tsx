@@ -4,7 +4,7 @@ import { cn } from '../../lib/cn'
 // 빈 상태 공용 컴포넌트 — 아이콘 + 제목 + 설명 + (선택) CTA.
 // "데이터가 없어요" 한 줄 대신 다음 행동을 안내해 빈 화면이 막다른 길이 되지 않게 한다.
 interface EmptyStateProps {
-  /** 이모지 또는 아이콘 노드 — 장식이므로 스크린리더에는 숨긴다 */
+  /** 아이콘 노드(components/Icon) — 장식이므로 스크린리더에는 숨긴다 */
   icon?: ReactNode
   title: string
   description?: string
@@ -22,7 +22,7 @@ function EmptyState({ icon, title, description, action, className }: EmptyStateP
       )}
     >
       {icon && (
-        <div aria-hidden="true" className="text-3xl">
+        <div aria-hidden="true" className="text-muted">
           {icon}
         </div>
       )}

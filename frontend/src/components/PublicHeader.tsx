@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from './Logo'
+import Icon from './Icon'
 
 // 공개 화면(About·공지사항)이 공유하는 상단 바.
 // 좌측: 로고(→ About) + 공지사항(→ 공지사항 페이지), 우측: 로그인/회원가입.
@@ -20,7 +21,7 @@ function PublicHeader() {
           {/* 공지사항 — 모바일에서는 숨기고(omit) 더보기 메뉴로 이동 */}
           <Link
             to="/notices"
-            className="ml-5 hidden whitespace-nowrap text-m font-semibold text-muted transition-colors hover:text-primary-600 sm:block"
+            className="ml-5 hidden whitespace-nowrap text-base font-semibold text-muted transition-colors hover:text-primary-600 sm:block"
           >
             공지사항
           </Link>
@@ -36,7 +37,7 @@ function PublicHeader() {
           {/* 회원가입 — 핵심 CTA, 최저 폭에서도 유지 */}
           <Link
             to="/signup"
-            className="whitespace-nowrap rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-600/90 sm:px-5"
+            className="whitespace-nowrap rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-on-primary transition hover:bg-primary-600/90 sm:px-5"
           >
             회원가입
           </Link>
@@ -48,17 +49,7 @@ function PublicHeader() {
             onClick={() => setMenuOpen((open) => !open)}
             className="rounded p-2 text-muted transition-colors hover:text-primary-600 sm:hidden"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              className="h-5 w-5"
-              aria-hidden="true"
-            >
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
+            <Icon name="menu" className="h-5 w-5" />
           </button>
         </div>
       </div>
