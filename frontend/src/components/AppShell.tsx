@@ -14,6 +14,9 @@ import Icon from './Icon'
 
 interface TopBarProps {
   onMenuOpen: () => void
+  /** 데스크톱 사이드바가 펼쳐져 있는지 — 토글 버튼의 aria-expanded 에 쓴다 */
+  isSidebarOpen: boolean
+  onSidebarToggle: () => void
 }
 
 interface SearchFieldProps {
@@ -49,7 +52,7 @@ function SearchField({ query, onQueryChange, inputClassName, autoFocus }: Search
   )
 }
 
-function TopBar({ onMenuOpen }: TopBarProps) {
+function TopBar({ onMenuOpen, isSidebarOpen, onSidebarToggle }: TopBarProps) {
   const user = useAuthStore((state) => state.user)
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
@@ -72,7 +75,20 @@ function TopBar({ onMenuOpen }: TopBarProps) {
     // sticky top-0 — 스크롤해도 상단에 고정. z-30 으로 본문·캐러셀 화살표(z-20) 위에 둔다
     <header className="sticky top-0 z-30 shrink-0 border-b border-line bg-bg/90 backdrop-blur-[10px]">
       <div className="flex h-16 items-center pr-4 md:h-[76px]">
-        <div className="flex items-center px-2 md:w-56 md:shrink-0 md:px-4">
+        <div className="flex items-center px-2 md:w-56 md:shrink-0 md:gap-2 md:px-3">
+          {/* 데스크톱 — 왼쪽 사이드바 접기·펼치기(기본은 접힘). 모바일은 오른쪽 햄버거 드로어를 쓴다 */}
+          <button
+            type="button"
+            aria-label={isSidebarOpen ? '메뉴 접기' : '메뉴 펼치기'}
+            aria-expanded={isSidebarOpen}
+            aria-controls="app-sidebar"
+            onClick={onSidebarToggle}
+            className={`hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-primary-100 hover:text-ink md:inline-flex ${
+              isSidebarOpen ? 'bg-primary-100 text-ink' : ''
+            }`}
+          >
+            <Icon name="sidebar" className="h-5 w-5" />
+          </button>
           {/* md:-translate-y-1: 로고를 4px 위로 올려 시각적 중앙 보정(데스크톱) */}
           <Link to="/" aria-label="홈으로 이동" className="md:-translate-y-1">
             <Logo size={36} wordmarkClassName="text-xl md:text-2xl" />
@@ -178,6 +194,8 @@ function AppShell() {
   const isHeroActive = useHomeViewStore((state) => state.isHeroActive)
   const isRightBarCollapsed = isHome && isHeroActive
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  // 데스크톱 사이드바 — 기본은 접어 두고, 상단바 왼쪽 버튼으로 펼친다
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(false)
   // 회원가입 직후 1회 뜨는 온보딩 팝업 — SignupPage 가 심어둔 플래그로 판단한다.
   const [showOnboarding, setShowOnboarding] = useState(() => isOnboardingPending())
 
@@ -190,12 +208,29 @@ function AppShell() {
       >
         본문으로 건너뛰기
       </a>
-      <TopBar onMenuOpen={() => setSidebarOpen(true)} />
+      <TopBar
+        onMenuOpen={() => setSidebarOpen(true)}
+        isSidebarOpen={desktopSidebarOpen}
+        onSidebarToggle={() => setDesktopSidebarOpen((open) => !open)}
+      />
       <div className="flex flex-1">
-        {/* 데스크톱 — 상시 노출 사이드바. 모바일에서는 드로어로 대체.
-            상단바(--header-h) 바로 아래에 고정되어 스크롤해도 따라온다 */}
-        <div className="sticky top-[var(--header-h)] hidden h-[calc(100dvh-var(--header-h))] self-start md:flex">
-          <Sidebar />
+        {/* 데스크톱 사이드바 — 기본은 접힘. 상단바 왼쪽 버튼으로 펼치면 폭이 0 → w-56 으로 부드럽게 늘고
+            안쪽 메뉴는 왼쪽에서 미끄러지며 나타난다(우측 바와 같은 방식). 접힌 동안에는 inert 로 포커스에서 뺀다.
+            상단바(--header-h) 바로 아래에 고정되어 스크롤해도 따라온다. 모바일에서는 드로어로 대체 */}
+        <div
+          id="app-sidebar"
+          inert={!desktopSidebarOpen}
+          className={`sticky top-[var(--header-h)] hidden h-[calc(100dvh-var(--header-h))] shrink-0 self-start overflow-clip transition-[width] duration-300 ease-out motion-reduce:transition-none md:block ${
+            desktopSidebarOpen ? 'w-56' : 'w-0'
+          }`}
+        >
+          <div
+            className={`h-full w-56 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none ${
+              desktopSidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-6 opacity-0'
+            }`}
+          >
+            <Sidebar />
+          </div>
         </div>
         <main
           id="main-content"
