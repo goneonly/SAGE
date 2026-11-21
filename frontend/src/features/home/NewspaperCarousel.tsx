@@ -204,13 +204,12 @@ function NewspaperCarousel({ articles, footer }: NewspaperCarouselProps) {
       className="relative flex flex-1 flex-col [container-type:inline-size]"
     >
       {/* 무대 — 남은 세로 공간을 전부 쓴다. 카드는 무대보다 길어(h-110%) 아래쪽이 잘린다.
-          카드 폭은 "헤드라인 + 리드문 3줄쯤"이 화면에 들어오도록 화면 높이에서 역산한다:
-          (100dvh − 상단바·제목·하단 버튼 자리 310px) ÷ 0.9(그 지점까지의 높이/폭 비율),
-          거기에 가로만 1.3배 넓힌다(본문 글자는 그만큼 cqw 를 줄여 크기를 유지). 좁은 화면에서는 무대 폭이 상한.
+          카드 폭은 index.css 의 --hero-card-w(화면 높이에서 역산, 상단바 검색창 정렬과 공유).
           --wheel-radius: 카드가 도는 원의 반지름(카드 윗변에서 원 중심까지). 캐러셀 폭의 144% —
-          폭에 비례시켜, 우측 바가 접혀 무대가 넓어져도 옆 장이 늘 양 끝까지 닿게 한다 */}
+          폭에 비례시켜, 우측 바가 접혀 무대가 넓어져도 옆 장이 늘 양 끝까지 닿게 한다.
+          mask-image: 무대 아래쪽 8rem 은 지면이 점점 반투명해지며 사라진다 — 하단 조작부가 그 위에 겹친다 */}
       <div
-        className="relative min-h-[420px] w-full flex-1 touch-pan-y overflow-hidden [--card-w:min(calc((100dvh-310px)/0.9*1.3),calc(100%-3rem))] [--wheel-radius:144cqw]"
+        className="relative min-h-[420px] w-full flex-1 touch-pan-y overflow-hidden [mask-image:linear-gradient(to_bottom,#000_calc(100%-8rem),rgb(0_0_0/0.15))] [--card-w:var(--hero-card-w)] [--wheel-radius:144cqw]"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
@@ -243,8 +242,8 @@ function NewspaperCarousel({ articles, footer }: NewspaperCarouselProps) {
         </button>
       </div>
 
-      {/* 하단 조작부 — 무대 아래에 따로 둔다. 지면은 무대 아래 경계에서 그대로 잘린다(그라데이션 없음) */}
-      <div className="flex shrink-0 flex-col items-center border-t border-line bg-bg pb-1 pt-2">
+      {/* 하단 조작부 — 따로 띠를 두지 않고, 반투명하게 사라지는 지면 아래쪽 위에 겹쳐 띄운다 */}
+      <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center pb-1 pt-2">
         <span className="text-sm tabular-nums text-muted" aria-hidden="true">
           {activeIndex + 1} / {count}
         </span>
