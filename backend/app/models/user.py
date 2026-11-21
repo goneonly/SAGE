@@ -15,6 +15,11 @@ class UserLevel (str, enum.Enum):
     advanced = "advanced"
 
 
+class UserRole (str, enum.Enum):
+    user = "user"
+    admin = "admin"
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -25,3 +30,14 @@ class User(Base):
         Enum(UserLevel, name="user_level"), default=UserLevel.beginner
     )
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    # 프로필(선택 입력) — `| None` 이라 비워 둘 수 있다(nullable)
+    name: Mapped[str | None] = mapped_column(String(50))
+    phone: Mapped[str | None] = mapped_column(String(20))
+    age: Mapped[int | None]
+    # 권한 — 회원가입 요청으로는 받지 않는다(받으면 누구나 admin 으로 가입 가능)
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole, name="user_role"),
+        default=UserRole.user,  # 파이썬에서 새 유저를 만들 때
+        server_default=UserRole.user.value,  # DB 가 채움 — 이미 있는 유저 행도 'user' 로
+    )

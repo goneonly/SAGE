@@ -1,12 +1,16 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
-from app.models.user import UserLevel
+from app.models.user import UserLevel, UserRole
 
 
 class SignupRequest (BaseModel):
     email: EmailStr
     password: str = Field(min_length=8)
     level: UserLevel = UserLevel.beginner
+
+    name: str | None = Field(default=None, max_length=50)
+    phone: str | None = Field(default=None, max_length=20)
+    age: int | None = Field(default=None, ge=0, le=150)  # 0 이상 150 이하, 벗어나면 422
 
     @field_validator("password")
     @classmethod
@@ -22,14 +26,17 @@ class UserOut (BaseModel):
     email: EmailStr
     level: UserLevel
 
+    role: UserRole
+    name: str | None
+    phone: str | None
+    age: int | None
+
     model_config = {"from_attributes": True}
 
 
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
-
-# EmailStr 은 pip install "pydantic[email]" 필요할 수 있음.
 
 
 class LevelUpdate(BaseModel):

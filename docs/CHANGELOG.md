@@ -2,6 +2,13 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## feat: day 04 — pytest 자동 테스트, User 프로필·권한 필드 (2026-11-21)
+
+### 추가
+- pytest 설정과 인증 API 테스트 10개 — 테스트 전용 DB(`sage_test`)를 `dependency_overrides` 로 끼워 넣고 테스트마다 빈 테이블에서 시작. 가입·중복 409·짧은 비밀번호 422·로그인 401·`/me` 401/200·레벨 변경·없는 레벨 422·`role` 요청 무시 (`backend/pytest.ini`, `backend/tests/conftest.py`, `backend/tests/test_auth.py`)
+- User 에 `name`·`phone`·`age`(선택 입력) 와 `role`(user/admin, 기본 user) — 프론트 `User` 타입과 맞춤. `role` 은 가입 요청으로 받지 않음 (`backend/app/models/user.py`, `backend/app/schemas/auth.py`, `backend/app/api/routes/auth.py`)
+- 마이그레이션 `4b0b84d10e45` — 컬럼 4개 추가, PostgreSQL enum `user_role` 은 `add_column` 이 만들지 않아 직접 생성·삭제, 기존 유저는 `server_default` 로 `user` (`backend/alembic/versions/4b0b84d10e45_add_profile_fields_and_role_to_users.py`)
+
 ## feat: day 04 인증 — 내 정보 조회·레벨 변경 API (2026-11-21)
 
 ### 추가

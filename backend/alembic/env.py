@@ -5,11 +5,12 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# 개별적으로 추가함:
+# SAGE 설정 — DB 주소는 .env(settings)에서, 테이블 정의는 Base.metadata 에서 가져온다
 from app.core.config import settings
 from app.db.base import Base
 
-from app.models.user import User
+# 모델을 import 해야 Base.metadata 에 테이블이 등록돼 autogenerate 가 비교할 수 있다(새 모델도 여기 추가)
+from app.models.user import User  # noqa: F401
 
 
 # this is the Alembic Config object, which provides
@@ -23,16 +24,7 @@ config.set_main_option("sqlalchemy.url", settings.database_url)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
+target_metadata = Base.metadata  # autogenerate 가 DB 와 비교할 기준
 
 
 def run_migrations_offline() -> None:

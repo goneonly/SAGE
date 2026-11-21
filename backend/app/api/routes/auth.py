@@ -3,7 +3,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-# from app.api.deps import ...  # 아직 없음 — get_db는 db.session에서 직접 import
 from app.api.deps import get_current_user
 from app.core.security import create_access_token, hash_password, verify_password
 from app.db.session import get_db
@@ -22,21 +21,23 @@ def signup(body: SignupRequest, db: Session = Depends(get_db)):
         email=body.email,
         hashed_password=hash_password(body.password),
         level=body.level,
+        name=body.name,
+        phone=body.phone,
+        age=body.age,
     )
     db.add(user)
     db.commit()
-    db.refresh(user)    # DB 가 채운 id, create_at 을 다시 읽어옴
+    db.refresh(user)  # DB 가 채운 id·created_at·role 기본값을 다시 읽어옴
     return user
 
 
+# OAuth2 표준 폼은 username 필드를 쓴다 — 거기에 email 을 넣는 규칙
 @router.post("/login", response_model=TokenResponse)
 def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.scalar(select(User).where(User.email == form.username))
     if not user or not verify_password(form.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="이메일 또는 비밀번호가 올바르지 않습니다.")
     return TokenResponse(access_token=create_access_token(user.id))
-
-# OAuth2 표준 폼은 username 필드를 쓴다  --  거기에 email 을 넣는 규칙
 
 
 @router.get("/me", response_model=UserOut)
