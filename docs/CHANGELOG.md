@@ -2,9 +2,45 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## chore: main 머지 — 사이드바·검색창 정렬 작업을 BE 에 반영 (2026-11-21)
+
+### 변경
+
+- main 의 프론트 변경(사이드바 겹침·메뉴 버튼 위치·검색창 정렬)을 BE 에 합침, CHANGELOG 충돌은 양쪽 항목 모두 유지 (`docs/CHANGELOG.md`)
+
+## feat: day 04 — pytest 자동 테스트, User 프로필·권한 필드 (2026-11-21)
+
+### 추가
+
+- pytest 설정과 인증 API 테스트 10개 — 테스트 전용 DB(`sage_test`)를 `dependency_overrides` 로 끼워 넣고 테스트마다 빈 테이블에서 시작. 가입·중복 409·짧은 비밀번호 422·로그인 401·`/me` 401/200·레벨 변경·없는 레벨 422·`role` 요청 무시 (`backend/pytest.ini`, `backend/tests/conftest.py`, `backend/tests/test_auth.py`)
+- User 에 `name`·`phone`·`age`(선택 입력) 와 `role`(user/admin, 기본 user) — 프론트 `User` 타입과 맞춤. `role` 은 가입 요청으로 받지 않음 (`backend/app/models/user.py`, `backend/app/schemas/auth.py`, `backend/app/api/routes/auth.py`)
+- 마이그레이션 `4b0b84d10e45` — 컬럼 4개 추가, PostgreSQL enum `user_role` 은 `add_column` 이 만들지 않아 직접 생성·삭제, 기존 유저는 `server_default` 로 `user` (`backend/alembic/versions/4b0b84d10e45_add_profile_fields_and_role_to_users.py`)
+
+## feat: day 04 인증 — 내 정보 조회·레벨 변경 API (2026-11-21)
+
+### 추가
+
+- `GET /api/auth/me` — 토큰의 주인(`get_current_user`) 정보 반환, 비밀번호 해시는 `UserOut` 으로 제외 (`backend/app/api/routes/auth.py`)
+- `PATCH /api/auth/me` — 레벨만 변경, 허용 값(beginner·intermediate·advanced) 외에는 422 (`backend/app/api/routes/auth.py`, `backend/app/schemas/auth.py` 의 `LevelUpdate`)
+
+## feat: day 04 인증 — 비밀번호 검증, 토큰 해독, get_current_user (2026-11-21)
+
+### 추가
+
+- `decode_access_token(token) -> int | None` — 알고리즘을 `HS256` 하나로 고정해 해독(`alg=none` 위조 차단), 위조·만료·`sub` 없음·숫자 아님이면 `None` (`backend/app/core/security.py`)
+- `get_current_user` 의존성 — `Authorization: Bearer` 헤더의 토큰 → 유저 조회, 해독 실패·DB에 없는 유저(탈퇴)는 모두 같은 401 + `WWW-Authenticate: Bearer` 로 응답 (`backend/app/api/deps.py` 신규)
+- 회원가입 비밀번호 검증 — 최소 8자, 72바이트 초과 시 422 "비밀번호가 너무 깁니다."(bcrypt 한도, 한글 1자 = 3바이트) (`backend/app/schemas/auth.py`)
+- `pydantic[email]` 의존성 — `EmailStr` 검증에 필요한 email-validator (`backend/requirements.txt`)
+
+### 수정
+
+- `verify_password` 반환 타입을 `bool` 로 바로잡고 `bcrypt.checkpw` 로 비교 (`backend/app/core/security.py`)
+- CHANGELOG 의 남아 있던 "미커밋" 제목을 실제 커밋(`0b9b3e2`)으로 정리 (`docs/CHANGELOG.md`)
+
 ## feat: 메뉴 버튼을 제목 왼쪽으로, 열어도 위치 고정, 검색창을 신문 왼쪽 끝에 정렬 (2026-11-21)
 
 ### 변경
+
 - 메뉴 버튼(`SidebarToggle`)을 제목 아래에서 **제목 왼쪽**으로 — 홈 "추천 뉴스", `PageTitle` 을 쓰는 모든 화면 (`HomePage.tsx`, `PageTitle.tsx`)
 - 사이드바를 열어도 메뉴 버튼이 움직이지 않게 — 연 버튼의 위치를 스토어에 넘겨, 열린 사이드바의 닫기 버튼을 정확히 같은 자리에 둔다 (`SidebarToggle.tsx`, `sidebarStore.ts` 의 `anchor`, `AppShell.tsx`)
 - 데스크톱 상단 검색창의 왼쪽 끝을 홈 추천 뉴스 맨 앞 신문 카드의 왼쪽 끝에 맞춤 — 카드 폭 식을 `--hero-card-w` CSS 변수로 빼서 캐러셀과 상단바가 공유, 좁은 화면에서는 로고와 겹치지 않게 최소 9rem (`index.css`, `NewspaperCarousel.tsx`, `AppShell.tsx`)
@@ -12,41 +48,50 @@
 ## feat: 메뉴 버튼을 화면 제목 아래로, 사이드바를 반투명 겹침으로 (2026-11-21)
 
 ### 추가
+
 - `SidebarToggle` — 둥근 버튼 + 끝이 둥근 가로 막대 3개 아이콘. 모든 폭·모든 화면에서 제목 바로 아래에 둔다(홈 "추천 뉴스" 아래, `PageTitle` 아래, 기사 화면은 "← 홈으로" 옆) (`components/SidebarToggle.tsx`, `PageTitle.tsx`, `HomePage.tsx`, `ArticleReaderPage.tsx`)
 - 사이드바 열림 상태 전역 스토어 (`lib/store/sidebarStore.ts`)
 
 ### 변경
+
 - 왼쪽 사이드바를 본문을 미는 고정 컬럼에서 **본문 위에 겹치는 패널**로 — 배경은 반투명 + 흐림이고 오른쪽 끝으로 갈수록 점점 투명해져 아래 지면이 비쳐 보인다. 왼쪽에서 미끄러지며 열리고, 맨 위 메뉴 버튼·Esc·바깥 클릭·메뉴 링크·화면 이동으로 닫힌다 (`AppShell.tsx`, `Sidebar.tsx` 배경·테두리 제거)
 - 메뉴 아이콘을 세로 막대에서 가로 막대로 (`Icon.tsx` 의 `sidebar`)
 
 ### 삭제
+
 - 상단바 왼쪽의 사이드바 토글 버튼, 모바일 상단바 오른쪽 햄버거와 오른쪽 슬라이드 드로어 — 제목 아래 버튼 + 겹침 사이드바로 통합 (`AppShell.tsx`)
 
 ## feat: 왼쪽 사이드바 기본 접힘 + 토글 버튼, 추천 뉴스 지면 하단 페이드 (2026-11-21)
 
 ### 추가
+
 - 상단바 왼쪽에 사이드바 접기·펼치기 버튼(둥근 버튼 + 끝이 둥근 세로 막대 3개 아이콘) — 데스크톱 전용, 모바일은 기존 오른쪽 햄버거 드로어 유지 (`AppShell.tsx`, `Icon.tsx` 의 `sidebar`)
 
 ### 변경
+
 - 데스크톱 왼쪽 사이드바를 기본 접힘으로 — 펼치면 폭 0 → 224px 로 늘며 메뉴가 왼쪽에서 미끄러져 나타나고, 접힌 동안은 `inert` 로 포커스에서 제외 (`AppShell.tsx`)
 - 추천 뉴스 하단의 빈 조작부 띠를 없애고 지면이 화면 아래 끝까지 이어지게 — 아래쪽 8rem 은 `mask-image` 로 점점 반투명해지며, "n / 5"·"전체 뉴스" 버튼은 그 위에 겹쳐 띄움 (`NewspaperCarousel.tsx`)
 
 ## fix: 스크랩 화면 카드 크기를 다른 화면과 통일 (2026-11-17, `0b9b3e2`)
 
 ### 수정
+
 - 스크랩 화면 카드 크기를 다른 화면과 통일 — 화면 전체 폭 3열 그리드 → 뉴스 목록과 같은 가운데 정렬 폭(`Container lg`)의 한 줄 목록, 카드 여백·hover 스타일도 `ArticleCard` 와 동일하게 (`ScrapPage.tsx`)
 
 ## feat: 추천 뉴스 제목 축소, 오늘의 추천 번호 제거 (2026-11-17, `c872486`)
 
 ### 변경
+
 - 추천 뉴스 신문 카드의 제호 "THE SAGE" 크기 축소 — 카드 폭의 17% → 8% (`NewspaperCarousel.tsx`)
 
 ### 삭제
+
 - 신문 카드의 "오늘의 추천 N" 줄 — 발행 정보 줄 바로 아래 이중선이 오도록 정리, 쓰지 않게 된 `issue` prop 제거 (`NewspaperCarousel.tsx`)
 
 ## feat: 기존 테마를 표준 웹 배경 색상으로 변경 (2026-11-15, `8d0e614`)
 
 ### 변경
+
 - 매거진(기본) 테마 배경을 톤온톤 종이색에서 표준 웹 배경으로 — 바탕 연회색 `#F7F8FA`, 보조 바탕 `#F1F3F5`, 카드·위젯 흰색 `#FFFFFF`, 구분선 회색 `#E5E7EB`. 버튼·활성 메뉴의 에스프레소 브라운과 등락색은 그대로 (`index.css`)
 - 매거진 테마의 옅은 강조색(`primary-50/100/200`)을 베이지에서 중립 회색으로 — 사이드바 hover 채움·탭/알림 hover·학습 배지가 새 배경과 어울리도록 (`index.css`)
 - 다크 테마를 초록빛 어두운 톤에서 표준 다크 모드 중립 회색으로 — 바탕 `#121212`, 보조 바탕 `#181818`, 카드 `#1E1E1E`, 구분선 `#333333`, 본문 `#ECECEC`·보조 글자 `#A3A3A3`/`#8C8C8C`, 옅은 강조색도 회색. 브랜드 그린·등락색은 그대로 (`index.css`)
@@ -55,31 +100,38 @@
 ## chore: 포트폴리오 제거, 그라데이션 제거, 사이드바 hover 애니메이션 (2026-11-14, `f8eec9e`)
 
 ### 추가
+
 - 왼쪽 사이드바 메뉴 hover·키보드 포커스 시 배경이 왼쪽에서 차오르는 애니메이션 (`Sidebar.tsx`)
 
 ### 변경
+
 - 그라데이션 전면 제거 — 로고 마크·favicon 단색, 추천 뉴스 하단 조작부의 페이드 제거(조작부를 지면 아래로 분리), 미사용 `gradient-nature` 삭제 (`Logo.tsx`, `public/favicon.svg`, `NewspaperCarousel.tsx`, `tailwind.config.js`, `index.css` 의 `--color-logo`)
 
 ### 삭제
+
 - **포트폴리오 기능 전체** — 사이드바 메뉴, `/portfolio` 라우트, `features/portfolio/`(페이지·차트·mock 보유 종목·시세·지표 계산), `types/portfolio.ts`, `Icon` 의 `portfolio` 아이콘
 - 온보딩 3번째 슬라이드·알림 mock 문구에서 포트폴리오 언급 제거(→ 관심 종목)
 
 ### 수정
+
 - 앱 버전 표기 0.1.0 → 0.4.0 — `npm version` 을 루트에서만 올려 `frontend/package.json` 이 그대로였음
 - macOS 동기화가 만든 `* 2.ts(x)` 중복 파일 16개 삭제(커밋된 적 없음)
 
 ## fix: 소개 페이지 UI 수정 (2026-11-13, `668f337`)
 
 ### 추가
+
 - 화면 이동 시 맨 위에서 시작 — `components/ScrollToTop.tsx`(뒤로/앞으로 가기는 이전 위치 유지)
 
 ### 변경
+
 - 서비스 소개(`/about`)는 화면 테마와 상관없이 항상 브랜드 그린(라이트) 팔레트 — 로고·버튼 포함. `.theme-light` 클래스(`index.css`, `AboutPage.tsx`)
 - "지금 시작하기" 버튼 — 그림자 제거(단색), 로그인 상태면 홈 맨 위(추천 뉴스)로 이동 (`CtaSection.tsx`)
 
 ## chore: CHANGELOG 를 docs/ 로 이동, docs 는 CHANGELOG 만 공개 (2026-11-13)
 
 ### 변경
+
 - `CHANGELOG.md` 를 루트에서 `docs/CHANGELOG.md` 로 이동 (`CLAUDE.md` 규칙의 경로도 갱신)
 - `.gitignore` — `docs/` 전체 무시 → `docs/*` + `!docs/CHANGELOG.md` 로 바꿔 `docs/` 안에서는 CHANGELOG 만 GitHub 에 올린다. PLAN·스프린트 백로그·백엔드 가이드는 계속 로컬 전용
 
@@ -88,6 +140,7 @@
 브랜치 `fix/ui-a11y-priority`.
 
 ### 추가
+
 - **매거진 테마(기본값)** — 종이색 배경 + 잉크 브라운. 설정의 화면 테마가 매거진 · 라이트 · 다크 3종이 됨 (`index.css`, `themeStore.ts`, `SettingsPage.tsx`)
 - **추천 뉴스 원형 캐러셀** — 신문 1면처럼 조판한 카드가 원호를 따라 무한 회전. 버튼 · 방향키 · 드래그 · 옆 장 클릭으로 넘김. 추천 기사 3 → 5개 (`features/home/NewspaperCarousel.tsx`, `recommend.ts`)
 - **홈 2단 스크롤 전환** — 추천 뉴스(첫 화면) ↔ 전체 뉴스를 휠 한 번·버튼으로 부드럽게 이동 (`features/home/useSectionSnap.ts`)
@@ -100,6 +153,7 @@
 - `on-primary` 색 토큰(primary 배경 위 글자색)
 
 ### 리팩토링
+
 - 날짜·금액·등락률 포매터를 `lib/format.ts` 로 통합(7개 파일에 흩어져 있던 복사본 제거)
 - 투자 이해도 표기를 `lib/levels.ts` 한 곳으로 통일 — 단어장(입문/중급/고급)·소개 페이지(초보/중급/고급)도 설정과 같은 기초/성장/심화로
 - 진행 막대 `components/ui/ProgressBar.tsx`, 상단바 검색 입력 `SearchField`(AppShell) 로 중복 제거
@@ -108,6 +162,7 @@
 - `min-h-screen` → `min-h-dvh`(모바일 주소창 높이 변화 대응)
 
 ### 변경
+
 - 색 토큰 `danger` 추가 — 오류 문구·필수 표시·삭제·알림 배지·AI 고지에 쓰던 등락색(`rise`)을 분리. `primary-200` 추가(하이라이트 용어 hover 가 동작하지 않던 문제 해결)
 - 접근성 — 본문 바로가기 링크, 폼 오류 `role="alert"`, 로그인 입력칸 `autocomplete`, 검색창 접근성 이름, 삭제 버튼 24 → 32px, 10~11px 글자를 12px 로, 모든 버튼·링크 누름 피드백
 - 캐러셀 넘김 화살표를 무대 양 끝의 < > 모양으로
@@ -123,6 +178,7 @@
 - 캐러셀 넘김 버튼 — 하단 둥근 버튼 → 가운데 장 양옆의 화살표
 
 ### 수정
+
 - 용어 패널이 기사 본문 오른쪽을 가리던 문제
 - 모달·드로어·패널·드롭다운이 Esc 로 닫히지 않고 포커스가 이동하지 않던 문제
 - 모달이 열려 있어도 뒤 페이지가 스크롤되던 문제
