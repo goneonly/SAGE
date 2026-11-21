@@ -4,10 +4,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 # from app.api.deps import ...  # 아직 없음 — get_db는 db.session에서 직접 import
+from app.api.deps import get_current_user
 from app.core.security import create_access_token, hash_password, verify_password
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.auth import SignupRequest, TokenResponse, UserOut
+from app.schemas.auth import LevelUpdate, SignupRequest, TokenResponse, UserOut
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -36,3 +37,20 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
     return TokenResponse(access_token=create_access_token(user.id))
 
 # OAuth2 표준 폼은 username 필드를 쓴다  --  거기에 email 을 넣는 규칙
+
+
+@router.get("/me", response_model=UserOut)
+def read_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+
+@router.patch("/me", response_model=UserOut)
+def update_me(
+    body: LevelUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    current_user.level = body.level
+    db.commit()
+    db.refresh(current_user)
+    return current_user

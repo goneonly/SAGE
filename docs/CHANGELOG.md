@@ -2,6 +2,12 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## feat: day 04 인증 — 내 정보 조회·레벨 변경 API (2026-11-21)
+
+### 추가
+- `GET /api/auth/me` — 토큰의 주인(`get_current_user`) 정보 반환, 비밀번호 해시는 `UserOut` 으로 제외 (`backend/app/api/routes/auth.py`)
+- `PATCH /api/auth/me` — 레벨만 변경, 허용 값(beginner·intermediate·advanced) 외에는 422 (`backend/app/api/routes/auth.py`, `backend/app/schemas/auth.py` 의 `LevelUpdate`)
+
 ## feat: day 04 인증 — 비밀번호 검증, 토큰 해독, get_current_user (2026-11-21)
 
 ### 추가

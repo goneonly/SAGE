@@ -30,3 +30,7 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 # EmailStr 은 pip install "pydantic[email]" 필요할 수 있음.
+
+
+class LevelUpdate(BaseModel):
+    level: UserLevel
