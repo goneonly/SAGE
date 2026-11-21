@@ -2,6 +2,18 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## feat: 소개 페이지를 스크롤·클릭으로 체험하는 인터랙티브 랜딩으로 개편 (2026-11-21)
+
+### 추가
+- 6구간 구성(첫 화면 → 기능 소개 → 숫자 → 원문 비교 → 기능 카드 → 마무리), 상단 스크롤 진행 막대 (`features/about/AboutPage.tsx`, `features/about/sections/`)
+- 첫 화면 브라우저 창 — 뒤로 누워 있다가 스크롤하면 일어서고 마우스를 따라 기울어짐 (`sections/Hero.tsx`, `about.css`, `BrowserMockup.tsx`)
+- 기능 소개 — 화면을 고정해 두고 스크롤로 발견·이해·맞춤·축적 4단계를 넘김. 창 속 하이라이트를 누르면 설명 패널, 레벨 버튼을 누르면 설명이 바뀜. 단계 점으로 이동 (`sections/Showcase.tsx`, `screens.tsx` — 가짜 데이터)
+- 숫자 카운트업, 원문 ↔ SAGE 기초 설명을 가운데 선으로 끌어 비교(키보드 좌우 화살표 지원), 기능 카드 6개 (`sections/Numbers.tsx`, `sections/Compare.tsx`, `sections/Features.tsx`)
+- 움직임 훅(스크롤 진행도·화면 진입·마우스 기울기)과 등장·카운트업 부품, 움직임 줄이기 설정 존중 (`motion.ts`, `Reveal.tsx`), 문구는 한 파일에 모음 (`content.ts`)
+
+### 삭제
+- 기존 정적 섹션 5개와 예전 `Reveal` — 새 구간으로 대체 (`HeroSection`, `HighlightDemoSection`, `LevelPreviewSection`, `LearningStepsSection`, `CtaSection`)
+
 ## chore: main 머지 — 사이드바·검색창 정렬 작업을 BE 에 반영 (2026-11-21)
 
 ### 변경
