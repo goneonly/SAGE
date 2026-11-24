@@ -2,6 +2,20 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## chore: 하네스·루프 엔지니어링 — CI 게이트, 평가 루프, 단위 테스트 (2026-11-24)
+
+### 추가
+- 백엔드 CI — Postgres 서비스 위에서 `alembic upgrade head`·`alembic check`(모델↔마이그레이션 불일치)·downgrade/upgrade 왕복·pytest·paraphrase 평가 (`.github/workflows/backend-ci.yml`)
+- 저장소 규칙 게이트 — PR 마다 CHANGELOG 변경 필수(`skip-changelog` 라벨 예외), gitleaks·프론트 Anthropic 키·`.env` 커밋 차단, `font-serif`/`font-mono` 금지 (`.github/workflows/repo-guards.yml`)
+- paraphrase 평가 루프 — 용어×레벨 정답 세트, 규칙 채점(길이·투자 권유 표현·레벨별 어려운 말), 실행기(통과율 기준 미달 시 실패), 채점기 테스트 (`backend/evals/`, `backend/tests/test_eval_rubric.py`)
+- 프론트 단위 테스트(vitest) — 추천 뉴스 정렬, 포매터 6개 + `npm test`, 프론트 CI 에 단계 추가 (`frontend/src/features/home/recommend.test.ts`, `frontend/src/lib/format.test.ts`, `frontend/package.json`, `.github/workflows/frontend-ci.yml`)
+
+### 변경
+- CLAUDE.md 검증 섹션에 백엔드 테스트·평가 명령과 자동 장치 목록 추가 (`CLAUDE.md`)
+
+### 수정
+- users 마이그레이션 downgrade 가 enum 타입 `user_level` 을 남겨 다시 upgrade 할 때 실패하던 문제 — 왕복 검사로 발견 (`backend/alembic/versions/5068fdc7cf5e_create_users_table.py`)
+
 ## feat: 소개 페이지를 스크롤·클릭으로 체험하는 인터랙티브 랜딩으로 개편 (2026-11-21)
 
 ### 추가

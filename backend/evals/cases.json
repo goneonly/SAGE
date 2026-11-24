@@ -1,0 +1,35 @@
+{
+  "_설명": "paraphrase 평가 정답 세트 — 용어 × 레벨. avoid: 그 레벨 설명에 나오면 안 되는 어려운 말(기초 레벨 위주). 프롬프트를 바꾸면 run_paraphrase_eval.py 로 다시 채점한다.",
+  "cases": [
+    {
+      "id": "netbuy",
+      "term": "순매수",
+      "context": "코스피가 외국인 순매수에 힘입어 2650선을 회복했다.",
+      "levels": {
+        "beginner": { "avoid": ["수급", "매수 우위", "순유입"] },
+        "intermediate": { "avoid": [] },
+        "advanced": { "avoid": [] }
+      }
+    },
+    {
+      "id": "kospi",
+      "term": "코스피",
+      "context": "반도체 대형주가 코스피 상승을 이끌었다.",
+      "levels": {
+        "beginner": { "avoid": ["시가총액 가중", "베이시스", "유가증권시장"] },
+        "intermediate": { "avoid": [] },
+        "advanced": { "avoid": [] }
+      }
+    },
+    {
+      "id": "per",
+      "term": "PER",
+      "context": "은행 업종의 PER은 여전히 낮은 수준에 머물러 있다.",
+      "levels": {
+        "beginner": { "avoid": ["주당순이익", "EPS", "멀티플"] },
+        "intermediate": { "avoid": [] },
+        "advanced": { "avoid": [] }
+      }
+    }
+  ]
+}

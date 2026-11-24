@@ -1,0 +1,62 @@
+# 저장소 규칙 게이트 — CLAUDE.md 의 "규칙"·"금지"를 사람 기억 대신 CI 가 지킨다.
+#   1) CHANGELOG: PR 마다 docs/CHANGELOG.md 를 고쳐야 한다 (라벨 skip-changelog 로 예외)
+#   2) 비밀값: gitleaks 로 키·토큰 커밋 차단 + 프론트에 Anthropic 키 흔적 금지
+#   3) 디자인: Pretendard 외 글꼴 클래스(font-serif·font-mono) 금지
+name: repo-guards
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  changelog:
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'skip-changelog')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: docs/CHANGELOG.md 변경 확인
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          if git diff --name-only "$base"...HEAD | grep -qx 'docs/CHANGELOG.md'; then
+            echo "CHANGELOG 갱신 확인"
+          else
+            echo "::error::이 PR 에 docs/CHANGELOG.md 변경이 없습니다. 커밋마다 맨 위에 항목을 추가하세요(CLAUDE.md 규칙). 예외면 'skip-changelog' 라벨."
+            exit 1
+          fi
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks (키·토큰 커밋 검사)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 프론트엔드에 Anthropic 키 흔적 금지
+        run: |
+          if grep -rnE 'ANTHROPIC_API_KEY|sk-ant-' frontend/src frontend/index.html; then
+            echo "::error::프론트엔드 코드에 Anthropic 키 관련 문자열이 있습니다 — 키는 backend/.env 에만 둡니다(CLAUDE.md 금지)."
+            exit 1
+          fi
+      - name: .env 파일 커밋 금지
+        run: |
+          if git ls-files | grep -E '(^|/)\.env(\.local)?$'; then
+            echo "::error::.env 파일이 커밋되어 있습니다. 즉시 제거하고 시크릿을 로테이션하세요."
+            exit 1
+          fi
+
+  design:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pretendard 외 글꼴 클래스 금지
+        run: |
+          if grep -rnE '\bfont-(serif|mono)\b' frontend/src; then
+            echo "::error::font-serif / font-mono 는 쓰지 않습니다 — 글꼴은 Pretendard(font-sans)만(CLAUDE.md)."
+            exit 1
+          fi
