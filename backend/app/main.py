@@ -1,14 +1,12 @@
-"""SAGE 백엔드 — FastAPI 진입점.
-
-Phase 0(스캐폴딩): 지금은 DB·인증·Claude 없이 서버가 뜨는지만 확인한다.
-DoD(PLAN.md §8) — `/health` 가 200 을 반환하면 이 단계 완료.
-"""
+# 서버 진입점 — FastAPI 앱을 만들고 라우터(auth·news)를 연결, 루트·헬스체크 제공
 
 from fastapi import FastAPI
 from app.api.routes.auth import router as auth_router
+from app.api.routes.news import router as news_router
 
 app = FastAPI(title="SAGE API", version="0.1.0")
 app.include_router(auth_router)
+app.include_router(news_router)
 
 
 @app.get("/")

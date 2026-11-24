@@ -1,3 +1,5 @@
+# 보안 도구 — 비밀번호 해싱/검증, JWT 토큰 발급/해독
+
 from datetime import datetime, timedelta, timezone
 
 import bcrypt

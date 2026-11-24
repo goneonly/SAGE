@@ -1,3 +1,5 @@
+# 인증 API 의 요청/응답 모양 — 입력 검증(422)과 응답에서 비밀번호 숨기기
+
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.models.user import UserLevel, UserRole

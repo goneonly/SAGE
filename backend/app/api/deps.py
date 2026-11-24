@@ -1,3 +1,5 @@
+# 라우터 공용 의존성 — 요청의 토큰을 읽어 현재 로그인 유저를 꺼내 준다(get_current_user)
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session

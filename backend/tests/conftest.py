@@ -1,3 +1,5 @@
+# 테스트 공용 준비물 — 빈 sage_test DB 에 연결한 client, 로그인 토큰 헤더(auth_headers)
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -7,6 +9,7 @@ from app.core.config import settings
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
+from app.models.article import Article  # noqa: F401 — create_all 이 articles 테이블을 알도록
 from app.models.user import User  # noqa: F401 — create_all 이 users 테이블을 알도록
 
 # .env 의 DATABASE_URL 에서 DB 이름만 sage_test 로 바꾼다
