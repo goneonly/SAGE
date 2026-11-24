@@ -44,7 +44,14 @@ npm run format          # prettier --write
 PR 또는 작업 완료 전:
 
 ```bash
-cd frontend && npx tsc -b && npm run lint && npm run format:check && npm run build
+cd frontend && npx tsc -b && npm run lint && npm run format:check && npm test && npm run build
+cd backend && .venv/bin/pytest -q          # DB 필요: docker start sage-db
+cd backend && .venv/bin/python -m evals.run_paraphrase_eval --fixture evals/fixtures/sample_outputs.json
 ```
+
+자동 장치(하네스·루프):
+- CI — `frontend-ci`(타입·린트·포맷·단위 테스트·빌드), `backend-ci`(Postgres + 마이그레이션 왕복·`alembic check`·pytest·paraphrase 평가), `repo-guards`(PR 마다 CHANGELOG 변경 필수 — 예외는 `skip-changelog` 라벨, gitleaks·프론트 Anthropic 키·`.env` 커밋 차단, `font-serif`/`font-mono` 금지).
+- Claude 훅(로컬 `.claude/settings.json`, gitignore) — `git push` 차단·그 외 git 은 확인, 파일 수정 직후 backend `.py` → pytest / frontend `.ts(x)` → tsc 자동 실행.
+- paraphrase 프롬프트·모델을 바꾸면 평가(`evals/`)를 다시 돌려 통과율이 떨어지지 않았는지 본다.
 
 UI가 걸린 변경은 Preview 도구로 실제 브라우저에서 동작을 확인한다(모바일 360px, 데스크톱 1280px 두 폭 모두 — `md:` 분기가 많으므로).
