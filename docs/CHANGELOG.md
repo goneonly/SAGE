@@ -2,6 +2,14 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## fix: 뉴스 카드에 마우스 올릴 때 생기던 초록 그림자 없애기 (2026-11-25)
+
+### 수정
+- 뉴스 카드 hover 시 아래로 번지던 초록 그라데이션 그림자 제거 — 테두리 색 변화만 남김 (`frontend/src/features/home/ArticleCard.tsx`, `frontend/src/features/scrap/ScrapPage.tsx`)
+
+### 변경
+- 더 이상 쓰지 않는 그림자 토큰 `eco-hover-soft` 삭제 (`frontend/tailwind.config.js`)
+
 ## feat: 뉴스 API — 기사 테이블·목록/상세·시드 (Day 5, 2026-11-25)
 
 ### 추가
