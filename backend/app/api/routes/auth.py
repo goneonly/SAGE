@@ -1,3 +1,5 @@
+# 인증 API — 회원가입·로그인(토큰 발급)·내 정보 조회/레벨 변경 (/api/auth/*)
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select

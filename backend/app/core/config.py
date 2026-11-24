@@ -1,3 +1,5 @@
+# 설정값 — .env 에서 DB 주소·JWT 비밀키·API 키를 읽어 settings 로 제공
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

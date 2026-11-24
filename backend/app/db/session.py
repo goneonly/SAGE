@@ -1,4 +1,4 @@
-# backend/app/db/session.py
+# DB 연결 — 엔진(연결 1개)과 요청마다 세션을 빌려주는 get_db
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

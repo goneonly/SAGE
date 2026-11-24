@@ -2,6 +2,19 @@
 
 커밋마다 무엇이 추가·변경·수정됐는지 기록한다. 최신 항목이 위. 작성 규칙은 [CLAUDE.md](../CLAUDE.md) "규칙" 참고.
 
+## feat: 뉴스 API — 기사 테이블·목록/상세·시드 (Day 5, 2026-11-25)
+
+### 추가
+- 기사 테이블 모델 — 원문 URL 중복 금지(unique), 발행 시각 색인, 종목 코드 배열 (`backend/app/models/article.py`)
+- articles 테이블 마이그레이션 (`backend/alembic/versions/fbfa60b71bee_create_articles_table.py`, `backend/alembic/env.py`)
+- 뉴스 응답 스키마 — 목록(본문 제외)·상세(본문 포함)·페이지 묶음(전체 개수) (`backend/app/schemas/news.py`)
+- `GET /api/news`(최신순, `limit` 1~100·`offset` 페이지네이션, `q` 제목 검색)·`GET /api/news/{id}`(없으면 404), 로그인 불필요 (`backend/app/api/routes/news.py`, `backend/app/main.py`)
+- 샘플 기사 시드 15건 — 프론트 mock 과 같은 기사, url 로 중복 검사해 여러 번 실행해도 안전 (`backend/scripts/seed_articles.py`, `backend/scripts/seed_articles.json`)
+- 뉴스 API 테스트 11개 — 정렬·페이지네이션·검색·범위 422·404·시드 중복 방지 (`backend/tests/test_news.py`, `backend/tests/conftest.py`)
+
+### 변경
+- 백엔드 파일마다 맨 위에 역할 한 줄 주석, 낡은 Phase 0 설명 정리 (`backend/app/**`, `backend/alembic/env.py`, `backend/tests/conftest.py`)
+
 ## chore: 하네스·루프 엔지니어링 — CI 게이트, 평가 루프, 단위 테스트 (2026-11-24)
 
 ### 추가

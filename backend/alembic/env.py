@@ -1,3 +1,5 @@
+# 알렘빅 실행 설정 — DB 주소와 모델 목록을 알려줘 마이그레이션을 만들고 적용하게 한다
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -11,7 +13,7 @@ from app.db.base import Base
 
 # 모델을 import 해야 Base.metadata 에 테이블이 등록돼 autogenerate 가 비교할 수 있다(새 모델도 여기 추가)
 from app.models.user import User  # noqa: F401
-
+from app.models.article import Article  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
